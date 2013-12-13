@@ -1,3 +1,4 @@
 eclipse.preferences.version=1
 include_path=5;org.eclipse.dltk.USER_LIBRARY/org.eclipse.php.core.PHPNature\#Zend Framework 2\u00050;/pjroombooking
+org.eclipse.php.core.phpDoc=false
 use_asp_tags_as_php=false
