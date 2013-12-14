@@ -11,8 +11,8 @@ Database: MySQL 5.1
 
 CREATE TABLE Users
 (
-  userid Text NOT NULL
-  COMMENT 'The users LDAP userid / uid',
+  userid Varchar(767) NOT NULL
+  COMMENT 'The users LDAP userid / uid. Accepts uids up to 767 chars only.',
   roleid Int,
   role Int NOT NULL DEFAULT 0
   COMMENT 'The role of the user according to the Roles table'
@@ -27,7 +27,7 @@ ALTER TABLE Users ADD PRIMARY KEY (userid)
 CREATE TABLE Roles
 (
   roleid Int NOT NULL,
-  rolename Varchar(120)
+  rolename Varchar(767)
 )
 ;
 
@@ -107,7 +107,6 @@ CREATE TABLE Roomcontainments
   title Varchar(120) NOT NULL,
   description Text
 )
-  COMMENT = 'Storing the room containments as a tree'
 ;
 
 ALTER TABLE Roomcontainments ADD PRIMARY KEY (containmentid)
@@ -118,7 +117,7 @@ ALTER TABLE Roomcontainments ADD PRIMARY KEY (containmentid)
 CREATE TABLE Roombookings
 (
   bookingid Int NOT NULL AUTO_INCREMENT,
-  userid_booking Text NOT NULL,
+  userid_booking Varchar(767) NOT NULL,
   roomid_booking Int NOT NULL,
   is_prebooking Bool DEFAULT FALSE,
   userid_responsible Text,
@@ -146,10 +145,9 @@ CREATE TABLE Equipmentcontainments
 (
   containmentid Int NOT NULL,
   parent Int,
-  title Varchar(120) NOT NULL DEFAULT title,
+  title Varchar(120) NOT NULL,
   description Text
 )
-  COMMENT = 'Storing the room containments as a tree'
 ;
 
 ALTER TABLE Equipmentcontainments ADD PRIMARY KEY (containmentid)
@@ -194,7 +192,7 @@ ALTER TABLE Equipmentbookings ADD PRIMARY KEY (bookingid,equipmentid)
 ALTER TABLE Rooms ADD CONSTRAINT is_contained_in_1 FOREIGN KEY (containmentid) REFERENCES Roomcontainments (containmentid) ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
 
-ALTER TABLE Powers ADD CONSTRAINT has_3 FOREIGN KEY (roleid) REFERENCES Roles (roleid) ON DELETE NO ACTION ON UPDATE NO ACTION
+ALTER TABLE Powers ADD CONSTRAINT has_3 FOREIGN KEY (roleid) REFERENCES Roles (roleid) ON DELETE CASCADE ON UPDATE NO ACTION
 ;
 
 ALTER TABLE Roombookings ADD CONSTRAINT books_room_1 FOREIGN KEY (userid_booking) REFERENCES Users (userid) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -212,7 +210,7 @@ ALTER TABLE Roomattributes ADD CONSTRAINT has_1 FOREIGN KEY (roomid_attribute) R
 ALTER TABLE Equipmentattributes ADD CONSTRAINT has_2 FOREIGN KEY (equipmentid) REFERENCES Equipments (equipmentid) ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
 
-ALTER TABLE Users ADD CONSTRAINT has_4 FOREIGN KEY (roleid) REFERENCES Roles (roleid) ON DELETE NO ACTION ON UPDATE NO ACTION
+ALTER TABLE Users ADD CONSTRAINT has_4 FOREIGN KEY (roleid) REFERENCES Roles (roleid) ON DELETE RESTRICT ON UPDATE NO ACTION
 ;
 
 ALTER TABLE Equipments ADD CONSTRAINT contains_3 FOREIGN KEY (roomid_equipment) REFERENCES Rooms (roomid) ON DELETE NO ACTION ON UPDATE NO ACTION
