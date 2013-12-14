@@ -1,6 +1,6 @@
 /*
 Created: 06/12/2013
-Modified: 06/12/2013
+Modified: 14/12/2013
 Model: MySQL 5.1
 Database: MySQL 5.1
 */
@@ -13,13 +13,13 @@ CREATE TABLE Users
 (
   userid Text NOT NULL
   COMMENT 'The users LDAP userid / uid',
-  roleid Int NOT NULL,
+  roleid Int,
   role Int NOT NULL DEFAULT 0
   COMMENT 'The role of the user according to the Roles table'
 )
 ;
 
-ALTER TABLE Users ADD PRIMARY KEY (userid,roleid)
+ALTER TABLE Users ADD PRIMARY KEY (userid)
 ;
 
 -- Table Roles
@@ -39,22 +39,38 @@ ALTER TABLE Roles ADD PRIMARY KEY (roleid)
 CREATE TABLE Powers
 (
   roleid Int NOT NULL,
-  show_calendar Bool DEFAULT FALSE,
-  show_appointment_details Bool DEFAULT FALSE,
-  export_appointment Bool DEFAULT FALSE,
-  show_room_list Bool DEFAULT FALSE,
-  show_room_details Bool DEFAULT FALSE,
-  show_equipment_list Bool DEFAULT FALSE,
-  show_equipment_details Bool DEFAULT FALSE,
-  show_user_details Bool DEFAULT FALSE,
-  edit_user_roles Bool DEFAULT FALSE,
-  add_appointment Bool DEFAULT FALSE,
-  edit_own_appointment Bool DEFAULT FALSE,
-  delete_own_appointment Bool DEFAULT FALSE,
-  delete_foreign_appointment Bool DEFAULT FALSE,
-  edit_foreign_appointment Bool DEFAULT FALSE,
-  generate_appointment_suggestion Bool DEFAULT FALSE,
-  add_prebooking Bool DEFAULT FALSE,
+  show_calendar Bool DEFAULT FALSE
+  COMMENT 'Whether the user is allowed to show the calendar',
+  show_appointment_details Bool DEFAULT FALSE
+  COMMENT 'Whether the user is allowed to show appointment details',
+  export_appointment Bool DEFAULT FALSE
+  COMMENT 'Whether the user is allowed to export appointments as ICS file',
+  show_room_list Bool DEFAULT FALSE
+  COMMENT 'Whether the user is allowed to show the room list',
+  show_room_details Bool DEFAULT FALSE
+  COMMENT 'Whether the user is allowed to show room details',
+  show_equipment_list Bool DEFAULT FALSE
+  COMMENT 'Whether the user is allowed to show the equipment list',
+  show_equipment_details Bool DEFAULT FALSE
+  COMMENT 'Whether the user is allowed to show equipment details',
+  show_user_details Bool DEFAULT FALSE
+  COMMENT 'Whether the user is allowed to show user details',
+  edit_user_roles Bool DEFAULT FALSE
+  COMMENT 'Whether the user is allowed to edit user roles',
+  add_appointment Bool DEFAULT FALSE
+  COMMENT 'Whether the user is allowed to add appointments',
+  edit_own_appointment Bool DEFAULT FALSE
+  COMMENT 'Whether the user is allowed to edit her/his own appointments',
+  delete_own_appointment Bool DEFAULT FALSE
+  COMMENT 'Whether the user is allowed to delete her/his own appointments',
+  delete_foreign_appointment Bool DEFAULT FALSE
+  COMMENT 'Whether the user is allowed to delete other users appointments',
+  edit_foreign_appointment Bool DEFAULT FALSE
+  COMMENT 'Whether the user is allowed to edit other users appointments',
+  generate_appointment_suggestion Bool DEFAULT FALSE
+  COMMENT 'Whether the user is allowed to generate appointment suggestions',
+  add_prebooking Bool DEFAULT FALSE
+  COMMENT 'Whether the user is allowed to make pre-bookings',
   edit_own_prebooking Bool DEFAULT FALSE,
   delete_own_prebooking Bool DEFAULT FALSE,
   delete_foreign_prebooking Bool DEFAULT FALSE,
@@ -78,7 +94,7 @@ CREATE TABLE Rooms
   roomid Int NOT NULL AUTO_INCREMENT,
   containmentid Int NOT NULL,
   description Varchar(120) NOT NULL,
- PRIMARY KEY (roomid,containmentid)
+ PRIMARY KEY (roomid)
 )
 ;
 
@@ -91,7 +107,7 @@ CREATE TABLE Roomcontainments
   title Varchar(120) NOT NULL,
   description Text
 )
-  COMMENT = 'http://stackoverflow.com/questions/2175882/how-to-represent-a-data-tree-in-sql#answer-2175926'
+  COMMENT = 'Storing the room containments as a tree'
 ;
 
 ALTER TABLE Roomcontainments ADD PRIMARY KEY (containmentid)
@@ -102,18 +118,14 @@ ALTER TABLE Roomcontainments ADD PRIMARY KEY (containmentid)
 CREATE TABLE Roombookings
 (
   bookingid Int NOT NULL AUTO_INCREMENT,
-  is_prebooking Bool DEFAULT FALSE,
   userid_booking Text NOT NULL,
+  roomid_booking Int NOT NULL,
+  is_prebooking Bool DEFAULT FALSE,
   userid_responsible Text,
-  roleid_booking Int NOT NULL,
-  roomid Int NOT NULL,
-  containmentid Int NOT NULL,
   booking_from Datetime NOT NULL,
-  booking_to Datetime NOT NULL
+  booking_to Datetime NOT NULL,
+ PRIMARY KEY (bookingid)
 )
-;
-
-ALTER TABLE Roombookings ADD PRIMARY KEY (userid_booking,roleid_booking,roomid,containmentid,bookingid)
 ;
 
 -- Table Equipments
@@ -121,9 +133,10 @@ ALTER TABLE Roombookings ADD PRIMARY KEY (userid_booking,roleid_booking,roomid,c
 CREATE TABLE Equipments
 (
   equipmentid Int NOT NULL AUTO_INCREMENT,
+  roomid_equipment Int NOT NULL,
   containmentid Int NOT NULL,
   description Varchar(120),
- PRIMARY KEY (equipmentid,containmentid)
+ PRIMARY KEY (equipmentid)
 )
 ;
 
@@ -136,51 +149,44 @@ CREATE TABLE Equipmentcontainments
   title Varchar(120) NOT NULL DEFAULT title,
   description Text
 )
+  COMMENT = 'Storing the room containments as a tree'
 ;
 
 ALTER TABLE Equipmentcontainments ADD PRIMARY KEY (containmentid)
-;
-
--- Table Equipmentbookings
-
-CREATE TABLE Equipmentbookings
-(
-  userid Text NOT NULL,
-  roleid Int NOT NULL,
-  equipmentid Int NOT NULL,
-  equipment_containmentid Int NOT NULL,
-  roomid Int,
-  room_containmentid Int,
-  booking_from Datetime NOT NULL,
-  booking_to Datetime NOT NULL
-)
-;
-
-ALTER TABLE Equipmentbookings ADD PRIMARY KEY (userid,roleid,equipmentid,equipment_containmentid)
 ;
 
 -- Table Roomattributes
 
 CREATE TABLE Roomattributes
 (
-  roomid Int NOT NULL,
-  containmentid Int NOT NULL
+  roomid_attribute Int NOT NULL
 )
 ;
 
-ALTER TABLE Roomattributes ADD PRIMARY KEY (roomid,containmentid)
+ALTER TABLE Roomattributes ADD PRIMARY KEY (roomid_attribute)
 ;
 
 -- Table Equipmentattributes
 
 CREATE TABLE Equipmentattributes
 (
-  equipmentid Int NOT NULL,
-  containmentid Int NOT NULL
+  equipmentid Int NOT NULL
 )
 ;
 
-ALTER TABLE Equipmentattributes ADD PRIMARY KEY (equipmentid,containmentid)
+ALTER TABLE Equipmentattributes ADD PRIMARY KEY (equipmentid)
+;
+
+-- Table Equipmentbookings
+
+CREATE TABLE Equipmentbookings
+(
+  bookingid Int NOT NULL,
+  equipmentid Int NOT NULL
+)
+;
+
+ALTER TABLE Equipmentbookings ADD PRIMARY KEY (bookingid,equipmentid)
 ;
 
 -- Create relationships section ------------------------------------------------- 
@@ -188,33 +194,33 @@ ALTER TABLE Equipmentattributes ADD PRIMARY KEY (equipmentid,containmentid)
 ALTER TABLE Rooms ADD CONSTRAINT is_contained_in_1 FOREIGN KEY (containmentid) REFERENCES Roomcontainments (containmentid) ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
 
-ALTER TABLE Users ADD CONSTRAINT has_role FOREIGN KEY (roleid) REFERENCES Roles (roleid) ON DELETE NO ACTION ON UPDATE NO ACTION
+ALTER TABLE Powers ADD CONSTRAINT has_3 FOREIGN KEY (roleid) REFERENCES Roles (roleid) ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
 
-ALTER TABLE Powers ADD CONSTRAINT has_powers FOREIGN KEY (roleid) REFERENCES Roles (roleid) ON DELETE NO ACTION ON UPDATE NO ACTION
+ALTER TABLE Roombookings ADD CONSTRAINT books_room_1 FOREIGN KEY (userid_booking) REFERENCES Users (userid) ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
 
-ALTER TABLE Roombookings ADD CONSTRAINT books_room_1 FOREIGN KEY (userid_booking, roleid_booking) REFERENCES Users (userid, roleid) ON DELETE NO ACTION ON UPDATE NO ACTION
-;
-
-ALTER TABLE Roombookings ADD CONSTRAINT books_room_2 FOREIGN KEY (roomid, containmentid) REFERENCES Rooms (roomid, containmentid) ON DELETE NO ACTION ON UPDATE NO ACTION
+ALTER TABLE Roombookings ADD CONSTRAINT books_room_2 FOREIGN KEY (roomid_booking) REFERENCES Rooms (roomid) ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
 
 ALTER TABLE Equipments ADD CONSTRAINT is_contained_in_2 FOREIGN KEY (containmentid) REFERENCES Equipmentcontainments (containmentid) ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
 
-ALTER TABLE Equipmentbookings ADD CONSTRAINT books_equipment_1 FOREIGN KEY (userid, roleid) REFERENCES Users (userid, roleid) ON DELETE NO ACTION ON UPDATE NO ACTION
+ALTER TABLE Roomattributes ADD CONSTRAINT has_1 FOREIGN KEY (roomid_attribute) REFERENCES Rooms (roomid) ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
 
-ALTER TABLE Equipmentbookings ADD CONSTRAINT books_equipment_2 FOREIGN KEY (equipmentid, equipment_containmentid) REFERENCES Equipments (equipmentid, containmentid) ON DELETE NO ACTION ON UPDATE NO ACTION
+ALTER TABLE Equipmentattributes ADD CONSTRAINT has_2 FOREIGN KEY (equipmentid) REFERENCES Equipments (equipmentid) ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
 
-ALTER TABLE Equipmentbookings ADD CONSTRAINT belongs_to FOREIGN KEY (roomid, room_containmentid) REFERENCES Rooms (roomid, containmentid) ON DELETE NO ACTION ON UPDATE NO ACTION
+ALTER TABLE Users ADD CONSTRAINT has_4 FOREIGN KEY (roleid) REFERENCES Roles (roleid) ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
 
-ALTER TABLE Roomattributes ADD CONSTRAINT has_1 FOREIGN KEY (roomid, containmentid) REFERENCES Rooms (roomid, containmentid) ON DELETE NO ACTION ON UPDATE NO ACTION
+ALTER TABLE Equipments ADD CONSTRAINT contains_3 FOREIGN KEY (roomid_equipment) REFERENCES Rooms (roomid) ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
 
-ALTER TABLE Equipmentattributes ADD CONSTRAINT has_2 FOREIGN KEY (equipmentid, containmentid) REFERENCES Equipments (equipmentid, containmentid) ON DELETE NO ACTION ON UPDATE NO ACTION
+ALTER TABLE Equipmentbookings ADD CONSTRAINT contains_1 FOREIGN KEY (bookingid) REFERENCES Roombookings (bookingid) ON DELETE NO ACTION ON UPDATE NO ACTION
+;
+
+ALTER TABLE Equipmentbookings ADD CONSTRAINT contains_2 FOREIGN KEY (equipmentid) REFERENCES Equipments (equipmentid) ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
 
