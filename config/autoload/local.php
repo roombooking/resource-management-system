@@ -1,7 +1,9 @@
 <?php
 return array(
-		'db' => array(
-				'username' => 'qu',
-				'password' => '557PqYeQyN5EYMxR',
-		),
+        'dbParams' => array(
+        		'database' => '',
+        		'hostname' => 'localhost',
+        		'username' => 'qu',
+        		'password' => '557PqYeQyN5EYMxR',
+        ),
 );

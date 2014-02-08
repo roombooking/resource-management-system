@@ -3,7 +3,7 @@
  * Zend Framework (http://framework.zend.com/)
  *
  * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
@@ -20,12 +20,23 @@ return array(
                     ),
                 ),
             ),
+            'login' => array(
+            		'type' => 'Zend\Mvc\Router\Http\Literal',
+            		'options' => array(
+            				'route'    => '/login',
+            				'defaults' => array(
+            						'controller' => 'Application\Controller\Auth',
+            						'action'     => 'login',
+            				),
+            		),
+            ),
+        
             // The following is a route to simplify getting started creating
             // new controllers and actions without needing to create a new
             // module. Simply drop new controllers in, and you can access them
             // using the path /application/:controller/:action
             'application' => array(
-                'type'    => 'Literal',
+                'type'    => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/application',
                     'defaults' => array(
@@ -53,9 +64,29 @@ return array(
         ),
     ),
     'service_manager' => array(
-        'factories' => array(
-            'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
+        'abstract_factories' => array(
+            'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
+            'Zend\Log\LoggerAbstractServiceFactory',
         ),
+        'aliases' => array(
+            'translator' => 'MvcTranslator',
+        ),
+        'factories' => array(
+        	'Zend\Db\Adapter\Adapter' => function ($sm) {
+        	   $config = $sm->get('Config');
+        	   $dbParams = $config['dbParams'];
+        	   
+        	   return new Zend\Db\Adapter\Adapter(array(
+        	       'driver'    => 'Pdo_Mysql',
+        	       'dsn'       => 'mysql:dbname='.$dbParams['database'].';host='.$dbParams['hostname'],
+        	       'database'  => $dbParams['hostname'],
+        	       'username'  => $dbParams['username'],
+        	       'password'  => $dbParams['password'],
+        	       'hostname'  => $dbParams['hostname'],
+        	   ));
+            },
+            'Application\Service\AuthService' => 'Application\Service\AuthServiceFactory'
+        )
     ),
     'translator' => array(
         'locale' => 'en_US',
@@ -69,7 +100,10 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Index' => 'Application\Controller\IndexController'
+                'Application\Controller\Index' => 'Application\Controller\IndexController',
+        ),
+        'factories' => array(
+                'Application\Controller\Auth' => 'Application\Controller\AuthControllerFactory',
         ),
     ),
     'view_manager' => array(
@@ -80,12 +114,20 @@ return array(
         'exception_template'       => 'error/index',
         'template_map' => array(
             'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
+            'layout/login'           => __DIR__ . '/../view/layout/login.phtml',
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
+        ),
+    ),
+    // Placeholder for console routes
+    'console' => array(
+        'router' => array(
+            'routes' => array(
+            ),
         ),
     ),
 );

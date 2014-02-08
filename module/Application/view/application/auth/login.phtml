@@ -1,0 +1,9 @@
+<?php 
+$this->form->prepare();
+echo $this->form()->openTag($this->form);
+echo '<h2 class="form-signin-heading">Please sign in</h2>';
+echo $this->formRow($this->form->get('username'));
+echo $this->formRow($this->form->get('password'));
+echo $this->formHidden($this->form->get('csrf'));
+echo $this->formElement($this->form->get('submit'));
+echo $this->form()->closeTag();

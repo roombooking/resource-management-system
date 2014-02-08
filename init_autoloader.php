@@ -3,7 +3,7 @@
  * Zend Framework (http://framework.zend.com/)
  *
  * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
@@ -24,11 +24,9 @@ if (file_exists('vendor/autoload.php')) {
 $zf2Path = false;
 
 if (is_dir('vendor/ZF2/library')) {
-    $zf2Path = __DIR__.'/vendor/ZF2/library';
+    $zf2Path = 'vendor/ZF2/library';
 } elseif (getenv('ZF2_PATH')) {      // Support for ZF2_PATH environment variable or git submodule
     $zf2Path = getenv('ZF2_PATH');
-} elseif (function_exists('zend_deployment_library_path') && zend_deployment_library_path ('Zend Framework 2')) {
-	$zf2Path = zend_deployment_library_path ('Zend Framework 2');
 } elseif (get_cfg_var('zf2_path')) { // Support for zf2_path directive value
     $zf2Path = get_cfg_var('zf2_path');
 }
