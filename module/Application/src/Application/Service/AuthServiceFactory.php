@@ -3,7 +3,7 @@ namespace Application\Service;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Authentication\Storage\Session;
-use Zend\Authentication\Adapter\DbTable;
+use Zend\Authentication\Adapter\Ldap;
 
 class AuthServiceFactory implements FactoryInterface
 {
@@ -12,13 +12,11 @@ class AuthServiceFactory implements FactoryInterface
     
     public function createService (ServiceLocatorInterface $serviceLocator)
     {
-        $dbAdapter = $serviceLocator->get('Zend\Db\Adapter\Adapter');
+        $config = $serviceLocator->get('Config');
+        $options = $config['ldap'];
         $service = new \Zend\Authentication\AuthenticationService(
                 new Session(),
-                new DbTable($dbAdapter,
-                        self::TABLE_NAME,
-                        self::IDENTITY_COLUMN
-                )
+                new Ldap($options)
         );
         
         return $service;

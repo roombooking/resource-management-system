@@ -4,64 +4,65 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
+
 class AuthController extends AbstractActionController
 {
     private $loginForm;
-    private $authService;
+    private $authService;    
     
     public function loginAction()
     {
         $this->layout('layout/login');
-        ini_set('display_errors', 'On');
-        if(!$this->loginForm)
-            throw new \BadMethodCallException('Login Form not yet set!');
-        if(!$this->authService)
-            throw new \BadFunctionCallException('Auth Server not yet set!');
+        if(!$this->loginForm) {
+        	throw new \BadMethodCallException('Login Form not yet set!');
+        }
+        if(!$this->authService) {
+        	throw new \BadFunctionCallException('Auth Service not yet set!');
+        }
         
         if($this->authService->hasIdentity()) {
             return new ViewModel(
             		array(
             				'loginSuccess' => true,
-            				'userLoggedIn' => $authResult->getIdentity()
+            				'userLoggedIn' => $this->authService->getIdentity()
             		)
             );
-        }
-        
-        if($this->getRequest()->isPost())
+        } elseif($this->getRequest()->isPost())
         {
-            $this->loginForm->setData($this->getRequest()->getData());
-            
-            if($this->loginForm->isValid()) {
-                $data = $this->loginForm->getData();
-                
-                $this->authService->getAdapter()->setIdentity($data['username']);
-                $this->authService->getAdapter()->setCredential($data['password']);
-                
-                $authResult = $this->authService->authenticate();
-                
-                if(!$authResult->isValid())
-                {
-                    return new ViewModel(
-	                      array(
-                    	      'form' => $this->loginForm,
-                              'loginError' => true
-                          )
-                    );
-                } else {
-                    return new ViewModel(
-                    		array(
-                    				'loginSuccess' => true,
-                    				'userLoggedIn' => $authResult->getIdentity()
-                    		)
-                    );
-                }
-            } else {
-                return new ViewModel(
-                		array(
-                				'form' => $this->loginForm,
-                		)
-                );
-            }
+        	$this->loginForm->setData($this->getRequest()->getPost());
+        
+        	if($this->loginForm->isValid()) {
+        		$data = $this->loginForm->getData();
+                $ldapAdapter = $this->authService->getAdapter();
+        		$ldapAdapter->setIdentity($data['username']);
+        		$ldapAdapter->setCredential($data['password']);
+        		
+        		$authResult = $this->authService->authenticate();
+        
+        		if(!$authResult->isValid())
+        		{
+        			return new ViewModel(
+        					array(
+        							'form' => $this->loginForm,
+        							'loginError' => true
+        					)
+        			);
+        		} else {
+        			return new ViewModel(
+        					array(
+        							'loginSuccess' => true,
+        							'userLoggedIn' => $authResult->getIdentity()
+        					)
+        			);
+        		}
+        	} else {
+        		return new ViewModel(
+        				array(
+        						'form' => $this->loginForm,
+        				        'loginError' => true
+        				)
+        		);
+        	}
         } else {
             return new ViewModel(
             		array(
@@ -71,27 +72,78 @@ class AuthController extends AbstractActionController
         }
     }
     
+    public function checkAction() {
+        if(!$this->loginForm) {
+        	throw new \BadMethodCallException('Login Form not yet set!');
+        }
+        if(!$this->authService) {
+        	throw new \BadFunctionCallException('Auth Service not yet set!');
+        }
+
+        if($this->getRequest()->isPost())
+        {
+        	$this->loginForm->setData($this->getRequest()->getPost());
+        
+        	if($this->loginForm->isValid()) {
+        		$data = $this->loginForm->getData();
+                
+        		$this->authService->getAdapter()->setIdentity($data['username']);
+        		$this->authService->getAdapter()->setCredential($data['password']);
+        
+        		$authResult = $this->authService->authenticate();
+        
+        		if(!$authResult->isValid())
+        		{
+        			return new ViewModel(
+        					array(
+        							'form' => $this->loginForm,
+        							'loginError' => true
+        					)
+        			);
+        		} else {
+        			return new ViewModel(
+        					array(
+        							'loginSuccess' => true,
+        							'userLoggedIn' => $authResult->getIdentity()
+        					)
+        			);
+        		}
+        	} else {
+        		return new ViewModel(
+        				array(
+        						'form' => $this->loginForm,
+        				)
+        		);
+        	}
+        } else {
+            $this->redirect()->toUrl('/login');
+        }
+    }
+    
     public function logoutAction() {
+        if(!$this->authService) {
+        	throw new \BadFunctionCallException('Auth Service not yet set!');
+        }
         if($this->authService->hasIdentity()) {
-            $this->authService->clearIdentity;
+            $this->authService->clearIdentity();
         }
         
         $this->redirect()->toUrl('/login');
     }
     
     public function setLoginForm($loginForm) {
-        $this->loginForm = $loginForm;
+    	$this->loginForm = $loginForm;
     }
     
     public function getLoginForm() {
-        return $this->loginForm;
+    	return $this->loginForm;
     }
     
     public function setAuthService($authService) {
-        $this->authService = $authService;
+    	$this->authService = $authService;
     }
     
     public function getAuthService() {
-        return $this->authService;
+    	return $this->authService;
     }
 }

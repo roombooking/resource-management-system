@@ -11,55 +11,52 @@ return array(
     'router' => array(
         'routes' => array(
             'home' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route'    => '/',
-                    'defaults' => array(
-                        'controller' => 'Application\Controller\Index',
-                        'action'     => 'index',
+                    'type' => 'Literal',
+                    'options' => array(
+                            'route'    => '/',
+                            'scheme'   => 'https',
+                            'defaults' => array(
+                                    '__NAMESPACE__' => 'Application\Controller',    
+                                    'controller' => 'Index',
+                                    'action'     => 'index',
+                            ),
                     ),
-                ),
             ),
             'login' => array(
-            		'type' => 'Zend\Mvc\Router\Http\Literal',
+            		'type' => 'Literal',
             		'options' => array(
             				'route'    => '/login',
+            				'scheme'   => 'https',
             				'defaults' => array(
-            						'controller' => 'Application\Controller\Auth',
+            				        '__NAMESPACE__' => 'Application\Controller',
+            						'controller' => 'Auth',
             						'action'     => 'login',
             				),
             		),
+            		'may_terminate' => true,
+            		'child_routes' => array(
+            				'loginCheck' => array(
+            						'type'    => 'Literal',
+            						'options' => array(
+            								'route'    => '/check',
+            								'defaults' => array(
+            										'action' => 'check',
+            								),
+            						),
+            				),
+            		),
             ),
-        
-            // The following is a route to simplify getting started creating
-            // new controllers and actions without needing to create a new
-            // module. Simply drop new controllers in, and you can access them
-            // using the path /application/:controller/:action
-            'application' => array(
-                'type'    => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route'    => '/application',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Application\Controller',
-                        'controller'    => 'Index',
-                        'action'        => 'index',
-                    ),
-                ),
-                'may_terminate' => true,
-                'child_routes' => array(
-                    'default' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/[:controller[/:action]]',
-                            'constraints' => array(
-                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-                            ),
-                        ),
-                    ),
-                ),
+            'logout' => array(
+            		'type' => 'Literal',
+            		'options' => array(
+            				'route'    => '/logout',
+            				'scheme'   => 'https',
+            				'defaults' => array(
+            				        '__NAMESPACE__' => 'Application\Controller',
+            						'controller' => 'Auth',
+            						'action'     => 'logout',
+            				),
+            		),
             ),
         ),
     ),
@@ -77,7 +74,7 @@ return array(
         	   $dbParams = $config['dbParams'];
         	   
         	   return new Zend\Db\Adapter\Adapter(array(
-        	       'driver'    => 'Pdo_Mysql',
+        	       'driver'    => 'pdo',
         	       'dsn'       => 'mysql:dbname='.$dbParams['database'].';host='.$dbParams['hostname'],
         	       'database'  => $dbParams['hostname'],
         	       'username'  => $dbParams['username'],
@@ -100,10 +97,10 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-                'Application\Controller\Index' => 'Application\Controller\IndexController',
+            'Application\Controller\Index' => 'Application\Controller\IndexController',
         ),
         'factories' => array(
-                'Application\Controller\Auth' => 'Application\Controller\AuthControllerFactory',
+            'Application\Controller\Auth' => 'Application\Controller\AuthControllerFactory',
         ),
     ),
     'view_manager' => array(
@@ -121,6 +118,9 @@ return array(
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
+        ),
+        'strategies' => array(
+        		'ViewJsonStrategy',
         ),
     ),
     // Placeholder for console routes
