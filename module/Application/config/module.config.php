@@ -58,32 +58,31 @@ return array(
             				),
             		),
             ),
+            'user' => array(
+            		'type' => 'Literal',
+            		'options' => array(
+            				'route'    => '/users',
+            				'scheme'   => 'https',
+            				'defaults' => array(
+            						'__NAMESPACE__' => 'Application\Controller',
+            						'controller' => 'User',
+            						'action'     => 'index',
+            				),
+            		),
+            		'may_terminate' => true,
+            		'child_routes' => array(
+            				'loginCheck' => array(
+            						'type'    => 'Segment',
+            						'options' => array(
+            								'route'    => '/refresh',
+            								'defaults' => array(
+            										'action' => 'refresh',
+            								),
+            						),
+            				),
+            		),
+            ),
         ),
-    ),
-    'service_manager' => array(
-        'abstract_factories' => array(
-            'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
-            'Zend\Log\LoggerAbstractServiceFactory',
-        ),
-        'aliases' => array(
-            'translator' => 'MvcTranslator',
-        ),
-        'factories' => array(
-        	'Zend\Db\Adapter\Adapter' => function ($sm) {
-        	   $config = $sm->get('Config');
-        	   $dbParams = $config['dbParams'];
-        	   
-        	   return new Zend\Db\Adapter\Adapter(array(
-        	       'driver'    => 'pdo',
-        	       'dsn'       => 'mysql:dbname='.$dbParams['database'].';host='.$dbParams['hostname'],
-        	       'database'  => $dbParams['hostname'],
-        	       'username'  => $dbParams['username'],
-        	       'password'  => $dbParams['password'],
-        	       'hostname'  => $dbParams['hostname'],
-        	   ));
-            },
-            'Application\Service\AuthService' => 'Application\Service\AuthServiceFactory'
-        )
     ),
     'translator' => array(
         'locale' => 'en_US',
@@ -93,14 +92,6 @@ return array(
                 'base_dir' => __DIR__ . '/../language',
                 'pattern'  => '%s.mo',
             ),
-        ),
-    ),
-    'controllers' => array(
-        'invokables' => array(
-            'Application\Controller\Index' => 'Application\Controller\IndexController',
-        ),
-        'factories' => array(
-            'Application\Controller\Auth' => 'Application\Controller\AuthControllerFactory',
         ),
     ),
     'view_manager' => array(

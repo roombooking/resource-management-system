@@ -11,13 +11,20 @@ class LoginFilter extends InputFilter
         //TODO: Filter/Validator
         $this->add(array(
         	'name' => 'username',
-            'required' => true
+            'required' => true,
+            'filters'  => array(
+            		array('name' => 'StripTags'),
+            		array('name' => 'StringTrim'),
+            ),
         ));
         
         //TODO: Filter/Validator
         $this->add(array(
         		'name' => 'password',
-        		'required' => true
+        		'required' => true,
+                'filters'  => array(
+                		array('name' => 'StringTrim'),
+                ),
         ));
     }
 }

@@ -10,6 +10,7 @@ class AuthController extends AbstractActionController
     private $loginForm;
     private $authService;    
     
+    //TODO: aufsplitten auf checkAction()
     public function loginAction()
     {
         $this->layout('layout/login');
@@ -109,14 +110,10 @@ class AuthController extends AbstractActionController
         			);
         		}
         	} else {
-        		return new ViewModel(
-        				array(
-        						'form' => $this->loginForm,
-        				)
-        		);
+        		$this->redirect()->toRoute('login');
         	}
         } else {
-            $this->redirect()->toUrl('/login');
+            $this->redirect()->toRoute('login');
         }
     }
     
@@ -128,7 +125,7 @@ class AuthController extends AbstractActionController
             $this->authService->clearIdentity();
         }
         
-        $this->redirect()->toUrl('/login');
+        $this->redirect()->toRoute('login');
     }
     
     public function setLoginForm($loginForm) {
