@@ -3,15 +3,15 @@ namespace Application\Entity;
 
 class Role
 {
-    protected $roleid = 0;
+    protected $id = 0;
     protected $name = '';
     
-    public function setRoleid($roleid) {
-        $this->roleid = $roleid;
+    public function setId($roleid) {
+        $this->id = $roleid;
     }
     
-    public function getRoleid() {
-        return $this->roleid;
+    public function getId() {
+        return $this->id;
     }
     
     public function setName($name) {

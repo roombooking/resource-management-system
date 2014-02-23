@@ -34,5 +34,10 @@ return array(
         					$sm->get('Zend\Db\Adapter\Adapter')
         			);
         		},
+        		'Application\Mapper\Role' => function ($sm) {
+        			return new \Application\Mapper\Role(
+        					$sm->get('Zend\Db\Adapter\Adapter')
+        			);
+        		},
         ),
 );

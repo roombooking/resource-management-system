@@ -2,6 +2,7 @@
 namespace Application\Mapper;
 
 use Application\Entity\User as UserEntity;
+use Application\Mapper\Role as RoleMapper;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\TableGateway\Feature\RowGatewayFeature;
@@ -11,43 +12,85 @@ use Zend\Db\Sql\Insert;
 class User extends TableGateway
 {
     protected $tableName = 'Users';
-    protected $idCol = 'userid';
-    protected $entityPrototyp = null;
+    protected $idCol = 'id';
+    protected $entityPrototype = null;
     protected $hydrator = null;
     
-    public function __construct ($adapter)
+    /**
+     * Constructor
+     * 
+     * @param AdapterInterface $adapter
+     */
+    public function __construct($adapter)
     {
         parent::__construct($this->tableName, 
                 $adapter, 
                 new RowGatewayFeature($this->idCol)
         );
-        $this->entityPrototyp = new UserEntity();
-        $this->hydrator = new \Zend\Stdlib\Hydrator\Reflection();
+        $this->entityPrototype = new UserEntity();
+        $this->hydrator = new \Zend\Stdlib\Hydrator\Reflection;
     }
     
-    
-    
-    public function getAllUser() {
+    /**
+     * Retrieves all Users in the Database
+     * 
+     * @return Ambigous <\Zend\Db\ResultSet\ResultSet, \Zend\Db\ResultSet\HydratingResultSet>
+     */
+    public function fetchAll() {
         return $this->hydrate(
         		$this->select()
         );
     }
     
-    public function getUser($id) {
-        return $this->hydrate(
+    /**
+     * 
+     * @param int $id
+     * @throws \Exception
+     * @return Ambigous <multitype:, ArrayObject, NULL, object, \ArrayObject, \Zend\Db\ResultSet\mixed, unknown, boolean>
+     */
+    public function fetchId($id) {
+        $id = (int) $id;
+        $rowset = $this->hydrate(
                 $this->select(array(
                         'id' => $id,
                 ))
         );
+        $user = $rowset->current();
+        if (!$user) {
+        	throw new \Exception("Could not find user with ID: $id");
+        }
+        
+        return $user;
     }
     
-    public function getUser($prename,$lastname) {
-    	return $this->hydrate(
+    public function fetchName($prename,$lastname) {
+    	$rowset = $this->hydrate(
     	        $this->select(array(
     	                'firstname' => $prename,
     	                'lastname'  => $lastname,
     	        ))
     	);
+
+    	$user = $rowset->current();
+    	if (!$user) {
+    		throw new \Exception("Could not find user named: $prename $lastname");
+    	}
+    	
+    	return $user;
+    }
+    
+    public function fetchLdapId($ldapId) {
+        $rowset = $this->hydrate(
+                $this->select(array(
+                        'ldap_id' => $ldapId,
+                ))
+        );
+        $user = $rowset->current();
+        if (!$user) {
+        	throw new \Exception("Could not find user with LdapID: $ldapId");
+        }
+        
+        return $user;
     }
     
     public function insert($entity) {
@@ -55,14 +98,16 @@ class User extends TableGateway
     }
 
     public function hydrate($results) {
+        
 		$users = new \Zend\Db\ResultSet\HydratingResultSet( 
 		        $this->hydrator,
 				$this->entityPrototype
 		);
+		
 		return $users->initialize($results->toArray());
     }
     
-	public function update($entity) {
+	public function updateEntity($entity) {
 		return parent::update( 
 		        $this->hydrator->extract($entity), 
 		        $this->idCol . "=" . $entity->getId()

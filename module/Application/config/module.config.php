@@ -71,12 +71,21 @@ return array(
             		),
             		'may_terminate' => true,
             		'child_routes' => array(
-            				'loginCheck' => array(
-            						'type'    => 'Segment',
+            				'refresh' => array(
+            						'type'    => 'Literal',
             						'options' => array(
             								'route'    => '/refresh',
             								'defaults' => array(
             										'action' => 'refresh',
+            								),
+            						),
+            				),
+            				'update' => array(
+            						'type'    => 'Literal',
+            						'options' => array(
+            								'route'    => '/update',
+            								'defaults' => array(
+            										'action' => 'edit',
             								),
             						),
             				),

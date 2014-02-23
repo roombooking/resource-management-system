@@ -1,0 +1,70 @@
+ <?php
+ // module/Application/view/application/user/index.phtml:
+
+ $title = 'User Overview';
+ $this->headTitle($title);
+ ?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading text-right">&raquo; <a href="<?php echo $this->url('user/refresh');?>">Refresh with LDAP / AC</a></div>
+
+  <!-- Table -->
+  <table class="table">
+    <thead>
+     <tr>
+         <th>#</th>
+         <th>LDAP-ID</th>
+         <th>Username</th>
+         <th>First Name</th>
+         <th>Last Name</th>
+         <th>Email</th>
+         <th>Role</th>
+     </tr>
+    </thead>
+    <tbody>
+     <?php foreach ($users as $user) : ?>
+     <tr>
+         <td><?php echo $this->escapeHtml($user->getId());?></td>
+         <td><?php echo $this->escapeHtml($user->getLdapId());?></td>
+         <td><?php echo $this->escapeHtml($user->getLoginName());?></td>
+         <td><?php echo $this->escapeHtml($user->getFirstName());?></td>
+         <td><?php echo $this->escapeHtml($user->getLastName());?></td>
+         <td><?php echo $this->escapeHtml($user->getEmail());?></td>
+         <td><select data-id="<?php echo $this->escapeHtml($user->getId()); ?>">
+            <?php foreach ($roles as $role) : ?>
+            <option value="<?php echo $role->getId(); ?>"<?php if($role->getId() == $user->getRole()) echo 'selected';?>><?php echo $this->escapeHtml($role->getName());?></option>
+            <?php endforeach; ?>
+            </select> 
+         </td>
+     </tr>
+     <?php endforeach; ?>
+    </tbody>
+  </table>
+  <script type="text/javascript">
+  $( "select" ).on( "change", function() {
+	  var select = $( this );
+	  var userId = select.data('id');
+	  var roleId = this.value;
+	  console.log( 'ID: ' + userId + '\t new RoleID: ' + roleId);
+	  select.after($('<i />').attr('id', 'status_' + userId ).addClass('fa fa-spinner fa-spin'));
+	  $.ajax({
+		  url: "<?php echo $this->url('user/update'); ?>",
+		  type: "POST",
+		  data: { id : userId, role: roleId, },
+		  success: function(data) {
+			  console.log("AJAX call a success! data: " + data.id + ' ' + data.role);
+			  $('#status_' + userId ).removeClass().addClass('fa fa-check');
+          },
+          error: function() {
+        	  $('#status_' + userId ).removeClass().addClass('fa fa-times');
+          },
+          complete: function () {
+        	  setTimeout(function(){ $('#status_' + userId ).remove(); }, 5000);
+          },
+		});
+	    
+	});
+
+  </script>
+</div>

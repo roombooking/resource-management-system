@@ -2,6 +2,7 @@
 namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 
 /**
  * UserController
@@ -17,11 +18,17 @@ class UserController extends AbstractActionController
      * @var Application\Mapper\User
      */
     private $userMapper;
+    
+    /**
+     * @var Application\Mapper\User
+     */
+    private $roleMapper;
+    
  
-    public function __construct($userMapper
-    )
+    public function __construct($userMapper, $roleMapper)
     {
         $this->userMapper = $userMapper;
+        $this->roleMapper = $roleMapper;
     } 
     
     /**
@@ -29,13 +36,30 @@ class UserController extends AbstractActionController
      */
     public function indexAction ()
     {
-        // TODO Auto-generated UserController::indexAction() default action
-        return new ViewModel();
+        $users = $this->userMapper->fetchAll();
+        $roles = $this->roleMapper->fetchAll();
+        return new ViewModel(array(
+        	   'users' => $users,
+               'roles' => $roles, 
+        ));
     }
     
     public function editAction ()
     {
-    	return new ViewModel();
+        if($this->getRequest()->isXmlHttpRequest()) {
+            $data = $this->getRequest()->getPost();
+            //$updateEntity = new User();
+            //$updateEntity->setId($data['id']);
+            //$updateEntity->setRole($data['role']);
+            //$status = $this->userMapper->updateEntity($updateEntity);
+            $this->userMapper->update(array('role_id' => $data['role']), array('id' => $data['id'] ));
+            return new JsonModel(array(
+                    'id' => $data['id'],
+                    'role' => $data['role'] 
+            ));
+        } else {
+            $this->redirect()->toRoute('user');
+        }
     }
     
     public function refreshAction ()

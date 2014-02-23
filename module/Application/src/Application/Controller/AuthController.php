@@ -49,6 +49,8 @@ class AuthController extends AbstractActionController
         					)
         			);
         		} else {
+        		    
+        		    
         			return new ViewModel(
         					array(
         							'loginSuccess' => true,
@@ -73,6 +75,7 @@ class AuthController extends AbstractActionController
         }
     }
     
+    //FIXME: unused
     public function checkAction() {
         if(!$this->loginForm) {
         	throw new \BadMethodCallException('Login Form not yet set!');

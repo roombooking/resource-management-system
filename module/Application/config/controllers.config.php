@@ -13,7 +13,10 @@ return array(
 					return $ctr;
 				},
 				'Application\Controller\User' => function($serviceLocator) {
-					return new \Application\Controller\UserController($serviceLocator->getServiceLocator()->get('Application\Mapper\User'));
+                      return new \Application\Controller\UserController(
+                              $serviceLocator->getServiceLocator()->get('Application\Mapper\User'),
+                              $serviceLocator->getServiceLocator()->get('Application\Mapper\Role')
+		              );
 				},
 		),
 
