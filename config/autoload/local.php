@@ -18,7 +18,7 @@ return array(
                 		'baseDn' => 'DC=roombooking,DC=qu,DC=tu-berlin,DC=de',
                 		'bindRequiresDn' => true,
                 ),
-                'server1' => array
+                'server2' => array
                 (
                 		'host' => '192.168.178.77',
                 		'accountDomainName' => 'roombooking.qu.tu-berlin.de',
