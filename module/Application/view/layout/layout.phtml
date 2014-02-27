@@ -32,12 +32,14 @@
 
     <div class="row" id="titlerow">
         <div class="large-2 columns">
-            <img src="img/TU-Berlin-Logo.svg" id="tulogo" />
+            <a href="<?php echo $this->url('home') ?>">
+                <img src="<?php echo $this->basePath() ?>/img/TU-Berlin-Logo.svg" id="tulogo" title="<?php echo $this->translate('Home') ?>" alt="<?php echo $this->translate('Logo of the TU Berlin') ?>">
+            </a>
         </div>
         
         <div class="large-10 columns">
             <h1>
-                Room Booking System <small>Quality and Usability Lab</small>
+                <?php echo $this->translate('Room Booking System') ?> <small>Quality and Usability Lab</small>
             </h1>
         </div>
     </div>

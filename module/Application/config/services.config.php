@@ -39,5 +39,10 @@ return array(
         					$sm->get('Zend\Db\Adapter\Adapter')
         			);
         		},
+        		'Application\Mapper\Booking' => function ($sm) {
+        			return new \Application\Mapper\Booking(
+        					$sm->get('Zend\Db\Adapter\Adapter')
+        			);
+        		},
         ),
 );

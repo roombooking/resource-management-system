@@ -18,6 +18,11 @@ return array(
                               $serviceLocator->getServiceLocator()->get('Application\Mapper\Role')
 		              );
 				},
+				'Application\Controller\ApiBooking' => function($serviceLocator) {
+					return new \Application\Controller\ApiBookingController(
+							$serviceLocator->getServiceLocator()->get('Application\Mapper\Booking')
+					);
+				},
 		),
 
 );

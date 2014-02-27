@@ -46,6 +46,21 @@ return array(
             				),
             		),
             ),
+            'api' => array(
+            		'type' => 'Literal',
+            		'options' => array(
+            				'route'    => '/api/bookings',
+            				'scheme'   => 'https',
+            				'defaults' => array(
+            						'__NAMESPACE__' => 'Application\Controller',
+            						'controller' => 'ApiBooking',
+            						'action'     => 'apibooking',
+            				),
+            				'constraints' => array(
+            						'type' => '[a-zA-Z0-9_-]+'
+            				),
+            		),
+            ),
             'logout' => array(
             		'type' => 'Literal',
             		'options' => array(
