@@ -13,7 +13,7 @@ class AuthController extends AbstractActionController
     //TODO: aufsplitten auf checkAction()
     public function loginAction()
     {
-        $this->layout('layout/login');
+        //$this->layout('layout/login');
         if(!$this->loginForm) {
         	throw new \BadMethodCallException('Login Form not yet set!');
         }

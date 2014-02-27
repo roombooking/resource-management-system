@@ -1,16 +1,66 @@
-<?php 
-if($this->loginSuccess) {
-    echo 'Hallo, '.$this->userLoggedIn.'!';
-} else {
-    if($this->loginError)
-        echo 'Die eingegebenen Daten sind ungültig.';
+<div class="large-10 columns">
+    <h4><?php echo $this->translate('User Authentication') ?></h4>
     
-    $this->form->prepare();
-    echo $this->form()->openTag($this->form);
-    echo '<h2 class="form-signin-heading">Please sign in</h2>';
-    echo $this->formRow($this->form->get('username'));
-    echo $this->formRow($this->form->get('password'));
-    echo $this->formHidden($this->form->get('csrf'));
-    echo $this->formElement($this->form->get('submit'));
-    echo $this->form()->closeTag();
-}
+    <?php
+    if($this->loginSuccess) {
+        ?>
+            <div data-alert class="alert-box success">
+                <?php echo $this->translate('You are now logged in, ') . $this->userLoggedIn ?>. <a href="#" class="close">&times;</a>
+            </div>
+        <?php 
+    } else {
+        if($this->loginError) {
+            ?>
+                <div data-alert class="alert-box warning">
+                    <?php echo $this->translate('The credencials provided are invalid') ?>.<br>
+                    <?php echo $this->translate('Please try again with the credencials used for other services at the Quality and Usability Lab') ?>. <a href="#" class="close">&times;</a>
+                </div>
+            <?php 
+        } else {
+            echo '<p>' . $this->translate('Authentication is necessary to use the room booking system.') . " " . $this->translate('Please log in with the credencials used for other services at the Quality and Usability Lab.') . '</p>';
+        }
+        
+        $this->form->prepare();
+        echo $this->form()->openTag($this->form);
+    ?>
+    
+    <p>
+        
+    </p>
+    <div class="row">
+        <div class="small-7">
+            <div class="small-3 columns">
+                <label for="right-label" class="right inline"><?php echo $this->translate('Username') ?></label>
+            </div>
+            <div class="small-9 columns">
+                <?php echo $this->formRow($this->form->get('username')) ?>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="small-7">
+            <div class="small-3 columns">
+                <label for="right-label" class="right inline"><?php echo $this->translate('Password') ?></label>
+            </div>
+            <div class="small-9 columns">
+                <?php echo $this->formRow($this->form->get('password')) ?>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="small-7">
+            <div class="small-3 columns"></div>
+            <div class="small-9 columns">
+                <?php echo $this->formElement($this->form->get('submit')) ?>
+            </div>
+        </div>
+    </div>
+    
+    <?php 
+            echo $this->formHidden($this->form->get('csrf'));
+            echo $this->form()->closeTag();
+        }
+    ?>
+</div>

@@ -12,6 +12,13 @@ body {
 	background: rgba(255, 255, 255, 0.9);
 }
 
+.row .row {
+	/*
+	 *	Make sure encapsulated rows don't inflict with semi-transparency.
+	 */
+	background: rgba(255, 255, 255, 0);
+}
+
 #titlerow h1 {
 	font-size: 1.9em;
 	line-height: 1.666;

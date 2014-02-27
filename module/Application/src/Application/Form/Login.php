@@ -19,7 +19,7 @@ class Login extends Form
             'attributes' => array(
                     'type' => 'text',
                     'id' => 'name',
-                    'placeholder' => 'Benutzername',
+                    'placeholder' => 'Username',
                     'required' => 'required',
                     'autofocus' => true,
                     'class' => 'form-control',
@@ -31,7 +31,7 @@ class Login extends Form
     		'attributes' => array(
     				'type' => 'password',
     				'id' => 'password',
-    		        'placeholder' => 'Passwort',
+    		        'placeholder' => 'Password',
                     'required' => true,
     		        'class' => 'form-control',
     		),
@@ -51,8 +51,8 @@ class Login extends Form
         		'name' => 'submit',
                 'type' => 'Submit',
         		'attributes' => array(
-    				    'value' => 'Einloggen',
-        		        'class' => 'btn btn-lg btn-primary btn-block',      
+    				    'value' => 'Log in',
+        		        'class' => 'button',      
         		),
         ));
     }
