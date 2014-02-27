@@ -8,20 +8,29 @@ use Zend\View\Model\ViewModel;
 class AuthController extends AbstractActionController
 {
     private $loginForm;
-    private $authService;    
+    private $authService;
+    private $userMapper;
+
+    public function __construct($authService, $userMapper, $loginForm)
+    {
+        $this->authService = $authService;
+    	$this->userMapper  = $userMapper;
+    	$this->loginForm   = $loginForm;
+    }
     
     //TODO: aufsplitten auf checkAction()
     public function loginAction()
     {
-        //$this->layout('layout/login');
-        if(!$this->loginForm) {
-        	throw new \BadMethodCallException('Login Form not yet set!');
-        }
-        if(!$this->authService) {
-        	throw new \BadFunctionCallException('Auth Service not yet set!');
-        }
         
         if($this->authService->hasIdentity()) {
+            $ldap = $this->authService->getAdapter()->getLdap();
+            $ldap_options = $this->authService->getAdapter()->getOptions();
+            var_dump($ldap_options);
+            $ldap->setOptions($ldap_options['server1']);
+            $ldap->bind();
+            $hm = $ldap->getEntry('cn=Test User,dc=roombooking,dc=qu,dc=tu-berlin,dc=de');
+            
+            var_dump($hm);
             return new ViewModel(
             		array(
             				'loginSuccess' => true,
@@ -39,6 +48,7 @@ class AuthController extends AbstractActionController
         		$ldapAdapter->setCredential($data['password']);
         		
         		$authResult = $this->authService->authenticate();
+        		var_dump($this->authService->getAdapter()->getLdap());
         
         		if(!$authResult->isValid())
         		{
@@ -49,6 +59,7 @@ class AuthController extends AbstractActionController
         					)
         			);
         		} else {
+        		    //LDAP check
         		    
         		    
         			return new ViewModel(
@@ -129,21 +140,5 @@ class AuthController extends AbstractActionController
         }
         
         $this->redirect()->toRoute('login');
-    }
-    
-    public function setLoginForm($loginForm) {
-    	$this->loginForm = $loginForm;
-    }
-    
-    public function getLoginForm() {
-    	return $this->loginForm;
-    }
-    
-    public function setAuthService($authService) {
-    	$this->authService = $authService;
-    }
-    
-    public function getAuthService() {
-    	return $this->authService;
     }
 }
