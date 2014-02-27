@@ -2,247 +2,250 @@
 namespace Application\Entity;
 
 class Booking {
-    protected $bookingid;
-    protected $booking_userid;
-    protected $responsible_userid;
-    protected $resourceid;
-    protected $name;
-    protected $description;
-    protected $participant_description;
-    protected $start;
-    protected $end;
+    /*
+     * SELECT
+     *      Users.firstname AS firstname,
+     *      Users.lastname AS lastname,
+     *      Users.emailaddress AS emailaddress,
+     *      Bookings.name AS bookingname,
+     *      Bookings.description AS bookingdescription,
+     *      Bookings.start AS bookingstart,
+     *      Bookings.end AS bookingend,
+     *      Bookings.isprebooking AS isprebooking,
+     *      Resources.name AS resourcename,
+     *      Resources.description AS resourcedescription 
+     * FROM
+     *      Users RIGHT OUTER JOIN Bookings ON Users.userid = Bookings.booking_userid
+     *      LEFT OUTER JOIN Resources ON Bookings.resourceid = Resources.resourceid
+     * WHERE
+     * 	(
+     *      (UNIX_TIMESTAMP(Bookings.start) >= 1390777200 AND UNIX_TIMESTAMP(Bookings.start) <= 1394406000)
+     *  OR
+     *      (UNIX_TIMESTAMP(Bookings.end) >= 1390777200 AND UNIX_TIMESTAMP(Bookings.end) <= 1394406000)
+     *  )
+     *  AND
+     *      Bookings.isdeleted = false;
+     */
+    
+    protected $firstname;
+    protected $lastname;
+    protected $emailaddress;
+    protected $bookingname;
+    protected $bookingdescription;
+    protected $bookingstart;
+    protected $bookingend;
     protected $isprebooking;
-    protected $isdeleted;
+    protected $resourcename;
+    protected $resourcedescription;
     
     /**
-    * Legt bookingid fest
+    * Legt firstname fest
     *
-    * @param type $bookingid
+    * @param type $firstname
     * @return void
     */
-    public function setbookingid($bookingid)
+    public function setFirstname($firstname)
     {
-            $this->bookingid = $bookingid;
+            $this->firstname = $firstname;
     }
     
     /**
-    * Gibt bookingid zurück
+    * Gibt firstname zurück
     *
     * @return type
     */
-    public function getbookingid()
+    public function getFirstname()
     {
-            return $this->bookingid;
+            return $this->firstname;
     }
     
-	/**
-	* Legt isdeleted fest
-	*
-	* @param type $isdeleted
-	* @return void
-	*/
-	public function setIsdeleted($isdeleted)
-	{
-	        $this->isdeleted = $isdeleted;
-	}
-	
-	/**
-	* Gibt isdeleted zurück
-	*
-	* @return type
-	*/
-	public function getIsdeleted()
-	{
-	        return $this->isdeleted;
-	}
-	
-	/**
-	* Legt isprebooking fest
-	*
-	* @param type $isprebooking
-	* @return void
-	*/
-	public function setIsprebooking($isprebooking)
-	{
-	        $this->isprebooking = $isprebooking;
-	}
-	
-	/**
-	* Gibt isprebooking zurück
-	*
-	* @return type
-	*/
-	public function getIsprebooking()
-	{
-	        return $this->isprebooking;
-	}
-	
-	/**
-	* Legt end fest
-	*
-	* @param type $end
-	* @return void
-	*/
-	public function setEnd($end)
-	{
-	        $this->end = $end;
-	}
-	
-	/**
-	* Gibt end zurück
-	*
-	* @return type
-	*/
-	public function getEnd()
-	{
-	        return $this->end;
-	}
-	
-	/**
-	* Legt start fest
-	*
-	* @param type $start
-	* @return void
-	*/
-	public function setStart($start)
-	{
-	        $this->start = $start;
-	}
-	
-	/**
-	* Gibt start zurück
-	*
-	* @return type
-	*/
-	public function getStart()
-	{
-	        return $this->start;
-	}
-	
-	/**
-	* Legt participant_description fest
-	*
-	* @param type $participant_description
-	* @return void
-	*/
-	public function setParticipant_description($participant_description)
-	{
-	        $this->participant_description = $participant_description;
-	}
-	
-	/**
-	* Gibt participant_description zurück
-	*
-	* @return type
-	*/
-	public function getParticipant_description()
-	{
-	        return $this->participant_description;
-	}
-	
-	/**
-	* Legt description fest
-	*
-	* @param type $description
-	* @return void
-	*/
-	public function setDescription($description)
-	{
-	        $this->description = $description;
-	}
-	
-	/**
-	* Gibt description zurück
-	*
-	* @return type
-	*/
-	public function getDescription()
-	{
-	        return $this->description;
-	}
-	
-	/**
-	* Legt name fest
-	*
-	* @param type $name
-	* @return void
-	*/
-	public function setName($name)
-	{
-	        $this->name = $name;
-	}
-	
-	/**
-	* Gibt name zurück
-	*
-	* @return type
-	*/
-	public function getName()
-	{
-	        return $this->name;
-	}
-	
-	/**
-	* Legt resourceid fest
-	*
-	* @param type $resourceid
-	* @return void
-	*/
-	public function setResourceid($resourceid)
-	{
-	        $this->resourceid = $resourceid;
-	}
-	
-	/**
-	* Gibt resourceid zurück
-	*
-	* @return type
-	*/
-	public function getResourceid()
-	{
-	        return $this->resourceid;
-	}
-	
-	/**
-	* Legt responsible_userid fest
-	*
-	* @param type $responsible_userid
-	* @return void
-	*/
-	public function setResponsible_userid($responsible_userid)
-	{
-	        $this->responsible_userid = $responsible_userid;
-	}
-	
-	/**
-	* Gibt responsible_userid zurück
-	*
-	* @return type
-	*/
-	public function getResponsible_userid()
-	{
-	        return $this->responsible_userid;
-	}
-	
-	/**
-	* Legt booking_userid fest
-	*
-	* @param type $booking_userid
-	* @return void
-	*/
-	public function setBooking_userid($booking_userid)
-	{
-	        $this->booking_userid = $booking_userid;
-	}
-	
-	/**
-	* Gibt booking_userid zurück
-	*
-	* @return type
-	*/
-	public function getBooking_userid()
-	{
-	        return $this->booking_userid;
-	}
+    /**
+    * Legt lastname fest
+    *
+    * @param type $lastname
+    * @return void
+    */
+    public function setLastname($lastname)
+    {
+            $this->lastname = $lastname;
+    }
+    
+    /**
+    * Gibt lastname zurück
+    *
+    * @return type
+    */
+    public function getLastname()
+    {
+            return $this->lastname;
+    }
+    
+    /**
+    * Legt emailaddress fest
+    *
+    * @param type $emailaddress
+    * @return void
+    */
+    public function setEmailaddress($emailaddress)
+    {
+            $this->emailaddress = $emailaddress;
+    }
+    
+    /**
+    * Gibt emailaddress zurück
+    *
+    * @return type
+    */
+    public function getEmailaddress()
+    {
+            return $this->emailaddress;
+    }
+    
+    /**
+    * Legt bookingname fest
+    *
+    * @param type $bookingname
+    * @return void
+    */
+    public function setBookingname($bookingname)
+    {
+            $this->bookingname = $bookingname;
+    }
+    
+    /**
+    * Gibt bookingname zurück
+    *
+    * @return type
+    */
+    public function getBookingname()
+    {
+            return $this->bookingname;
+    }
+    
+    /**
+    * Legt bookingdescription fest
+    *
+    * @param type $bookingdescription
+    * @return void
+    */
+    public function setBookingdescription($bookingdescription)
+    {
+            $this->bookingdescription = $bookingdescription;
+    }
+    
+    /**
+    * Gibt bookingdescription zurück
+    *
+    * @return type
+    */
+    public function getBookingdescription()
+    {
+            return $this->bookingdescription;
+    }
+    
+    /**
+    * Legt bookingstart fest
+    *
+    * @param type $bookingstart
+    * @return void
+    */
+    public function setBookingstart($bookingstart)
+    {
+            $this->bookingstart = $bookingstart;
+    }
+    
+    /**
+    * Gibt bookingstart zurück
+    *
+    * @return type
+    */
+    public function getBookingstart()
+    {
+            return $this->bookingstart;
+    }
+    
+    /**
+    * Legt bookingend fest
+    *
+    * @param type $bookingend
+    * @return void
+    */
+    public function setBookingend($bookingend)
+    {
+            $this->bookingend = $bookingend;
+    }
+    
+    /**
+    * Gibt bookingend zurück
+    *
+    * @return type
+    */
+    public function getBookingend()
+    {
+            return $this->bookingend;
+    }
+    
+    /**
+    * Legt isprebooking fest
+    *
+    * @param type $isprebooking
+    * @return void
+    */
+    public function setIsprebooking($isprebooking)
+    {
+            $this->isprebooking = $isprebooking;
+    }
+    
+    /**
+    * Gibt isprebooking zurück
+    *
+    * @return type
+    */
+    public function getIsprebooking()
+    {
+            return $this->isprebooking;
+    }
+    
+    /**
+    * Legt resourcename fest
+    *
+    * @param type $resourcename
+    * @return void
+    */
+    public function setResourcename($resourcename)
+    {
+            $this->resourcename = $resourcename;
+    }
+    
+    /**
+    * Gibt resourcename zurück
+    *
+    * @return type
+    */
+    public function getResourcename()
+    {
+            return $this->resourcename;
+    }
+    
+    /**
+    * Legt resourcedescription fest
+    *
+    * @param type $resourcedescription
+    * @return void
+    */
+    public function setResourcedescription($resourcedescription)
+    {
+            $this->resourcedescription = $resourcedescription;
+    }
+    
+    /**
+    * Gibt resourcedescription zurück
+    *
+    * @return type
+    */
+    public function getResourcedescription()
+    {
+            return $this->resourcedescription;
+    }
 }
 ?>

@@ -21,8 +21,7 @@ class Login extends Form
                     'id' => 'name',
                     'placeholder' => 'Username',
                     'required' => 'required',
-                    'autofocus' => true,
-                    'class' => 'form-control',
+                    'autofocus' => true
             ),
         ));
         
@@ -32,8 +31,7 @@ class Login extends Form
     				'type' => 'password',
     				'id' => 'password',
     		        'placeholder' => 'Password',
-                    'required' => true,
-    		        'class' => 'form-control',
+                    'required' => true
     		),
         ));
         

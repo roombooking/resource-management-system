@@ -2,18 +2,10 @@
 namespace Application\Mapper;
 
 use Application\Entity\Booking as BookingEntity;
-use Zend\Stdlib\Hydrator\HydratorInterface;
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Db\TableGateway\Feature\RowGatewayFeature;
-use Zend\Db\Sql\Sql;
+use Zend\Db\ResultSet\HydratingResultSet;
 
-class Booking extends TableGateway
-{
-    protected $tableName = 'Bookings';
-    protected $idCol = 'bookingid';
-    protected $entityPrototype = null;
-    protected $hydrator = null;
-    
+class Booking
+{   
     /**
      * Constructor
      * 
@@ -21,36 +13,21 @@ class Booking extends TableGateway
      */
     public function __construct($adapter)
     {
-        parent::__construct($this->tableName, 
-                $adapter, 
-                new RowGatewayFeature($this->idCol)
-        );
         $this->entityPrototype = new BookingEntity();
         $this->hydrator = new \Zend\Stdlib\Hydrator\Reflection;
-    }
-    
-    public function fetchBookings($start, $end) {
-    	$rowset = $this->hydrate(
-    	        $this->select(array(
-    	                /*
-    	                 * FIXME XXX Hier richtiges Query.
-    	                 */
-    	                'isdeleted'  => false
-    	        ))
-    	);
-    	
-    	return $rowset;
+        $this->adapter = $adapter;
     }
 
-
-    public function hydrate($results) {
+    public function fetchBookings ($start, $end)
+    {
+        $statement = $this->adapter->createStatement();
+        $statement->prepare("SELECT Users.firstname AS firstname, Users.lastname AS lastname, Users.emailaddress AS emailaddress, Bookings.name AS bookingname, Bookings.description AS bookingdescription, Bookings.start AS bookingstart, Bookings.end AS bookingend, Bookings.isprebooking AS isprebooking, Resources.name AS resourcename, Resources.description AS resourcedescription FROM Users RIGHT OUTER JOIN Bookings ON Users.userid = Bookings.booking_userid LEFT OUTER JOIN Resources ON Bookings.resourceid = Resources.resourceid WHERE ( (UNIX_TIMESTAMP(Bookings.start) >= " . $start . " AND UNIX_TIMESTAMP(Bookings.start) <= " . $end . ") OR (UNIX_TIMESTAMP(Bookings.end) >= " . $start . " AND UNIX_TIMESTAMP(Bookings.end) <= " . $end . ") ) AND Bookings.isdeleted = false;");
         
-		$users = new \Zend\Db\ResultSet\HydratingResultSet( 
-		        $this->hydrator,
-				$this->entityPrototype
-		);
-		
-		return $users->initialize($results->toArray());
+        $result = $statement->execute();
+        
+        $resultSet = new HydratingResultSet($this->hydrator, $this->entityPrototype);
+        
+        return $resultSet->initialize($result);
     }
 }
 ?>

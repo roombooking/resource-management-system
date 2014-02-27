@@ -41,15 +41,26 @@ img#tulogo {
 	padding: .5em 0;
 }
 
+/*
+ *	ZEND System Error Styles
+ */
+
+h3.error,
+h4.error,
+h5.error {
+	color: rgb(153,0,0);
+	font-weight: bold;
+}
+
+/*
+ *	Full Calendar Styles
+ */
+
 .fc-header-left h2 {
 	font-size: 1.2em;
 	line-height: 2em;
 	color: #6f6f6f;
 }
-
-/*
- *	Event Styles
- */
 
 .fc-event {
 	font-size: .75em;
