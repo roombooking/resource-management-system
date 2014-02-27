@@ -12,5 +12,13 @@
  */
 
 return array(
-    // ...
+        /*
+         * An array of LDAP uids that should be promoted to
+         * Administrators when logged in.
+         * This mechanism prevents locking users out of the system
+         * by accidentially demoting admins.
+         */
+        'superAdmin' => array(
+    		'tuser',
+    ),
 );
