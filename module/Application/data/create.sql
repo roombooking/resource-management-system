@@ -115,26 +115,22 @@ ALTER TABLE Hirachies ADD UNIQUE hirachyid (hirachyid)
 
 CREATE TABLE Equipments
 (
-  equipmentid Int UNSIGNED NOT NULL,
-  resourceid Int UNSIGNED
+  equipmentid Int UNSIGNED NOT NULL AUTO_INCREMENT,
+  resourceid Int UNSIGNED,
+ PRIMARY KEY (equipmentid)
 )
-;
-
-ALTER TABLE Equipments ADD PRIMARY KEY (equipmentid)
 ;
 
 -- Table Places
 
 CREATE TABLE Places
 (
-  placeid Int UNSIGNED NOT NULL,
+  placeid Int UNSIGNED NOT NULL AUTO_INCREMENT,
   resourceid Int UNSIGNED,
   size Float,
-  seatnumber Int
+  seatnumber Int,
+ PRIMARY KEY (placeid)
 )
-;
-
-ALTER TABLE Places ADD PRIMARY KEY (placeid)
 ;
 
 -- Table Bookingrelations
@@ -214,4 +210,5 @@ ALTER TABLE Incidents ADD CONSTRAINT affects_2 FOREIGN KEY (bookingid) REFERENCE
 
 ALTER TABLE Incidents ADD CONSTRAINT affects_3 FOREIGN KEY (resourceid) REFERENCES Resources (resourceid) ON DELETE SET NULL ON UPDATE NO ACTION
 ;
+
 
