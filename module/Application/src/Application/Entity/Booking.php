@@ -155,7 +155,9 @@ class Booking {
     }
     
     /**
-    * Gibt bookingstart zurück
+    * Gibt bookingstart zurück.
+    * 
+    * Uses the International Standard for the representation of dates and times, ISO 8601.
     *
     * @return type
     */
@@ -177,6 +179,8 @@ class Booking {
     
     /**
     * Gibt bookingend zurück
+    *
+    * Uses the International Standard for the representation of dates and times, ISO 8601.
     *
     * @return type
     */

@@ -32,8 +32,10 @@
 					viewRender : function(view, element) {
 					    if(view.name === "agendaWeek" || view.name === "agendaDay") {
 					        /*
-					         * TODO Workaround as suggested in
+					         * Workaround as suggested in
 					         * http://stackoverflow.com/questions/13862942/how-to-make-jquery-fullcalendars-height-fit-its-content#answer-13866473
+					         * 
+					         * TODO Doesn't work perfectly due to Foundation CSS. Fix it! 
 					         */
 					    	view.setHeight(10000);
 					    }
@@ -83,9 +85,29 @@
 					 */
 					eventSources : [
 						{
-							url : "_fake/getEvents"
+							url : "/api/bookings"
 						}
-					]
+					],
+					
+					/*
+					 * Transforms custom data into a standard Event Object.
+					 * 
+					 * This is called seperately for every element in the array.
+					 */
+					eventDataTransform : function(event) {
+						/*
+						 * FIXME Make this more robust.
+						 */
+						var fcEvent = {
+							title : event.bookingname,
+							start : event.bookingstart,
+							end : event.bookingend,
+							allDay : false,	// FIXME XXX Parse actual attribute
+							url : ""
+						};
+						
+						return fcEvent;
+					}
 				});
 			});
 		});
