@@ -149,6 +149,25 @@ CREATE TABLE Bookingrelations
 ALTER TABLE Bookingrelations ADD PRIMARY KEY (slavebookingid,masterbookingid)
 ;
 
+-- Table Incidents
+
+CREATE TABLE Incidents
+(
+  incidentid Mediumint UNSIGNED NOT NULL AUTO_INCREMENT,
+  userid Int UNSIGNED
+  COMMENT 'Optional. If a user is affected by the incident.',
+  bookingid Int UNSIGNED
+  COMMENT 'Optional. If a booking is affected by the incident.',
+  resourceid Int UNSIGNED
+  COMMENT 'Optional. If a resource is affected by the incident.',
+  class Tinyint UNSIGNED NOT NULL DEFAULT 0
+  COMMENT '0 = Info, 1 = Warning, 2 = Error, 3 = critical',
+  description Text NOT NULL,
+  time Timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY (incidentid)
+)
+;
+
 -- Create relationships section ------------------------------------------------- 
 
 ALTER TABLE Powers ADD CONSTRAINT has_1 FOREIGN KEY (roleid) REFERENCES Roles (roleid) ON DELETE CASCADE ON UPDATE NO ACTION
@@ -185,5 +204,14 @@ ALTER TABLE Bookingrelations ADD CONSTRAINT is_3 FOREIGN KEY (masterbookingid) R
 ;
 
 ALTER TABLE Bookingrelations ADD CONSTRAINT is_4 FOREIGN KEY (slavebookingid) REFERENCES Bookings (bookingid) ON DELETE RESTRICT ON UPDATE NO ACTION
+;
+
+ALTER TABLE Incidents ADD CONSTRAINT affects_1 FOREIGN KEY (userid) REFERENCES Users (userid) ON DELETE SET NULL ON UPDATE NO ACTION
+;
+
+ALTER TABLE Incidents ADD CONSTRAINT affects_2 FOREIGN KEY (bookingid) REFERENCES Bookings (bookingid) ON DELETE SET NULL ON UPDATE NO ACTION
+;
+
+ALTER TABLE Incidents ADD CONSTRAINT affects_3 FOREIGN KEY (resourceid) REFERENCES Resources (resourceid) ON DELETE SET NULL ON UPDATE NO ACTION
 ;
 
