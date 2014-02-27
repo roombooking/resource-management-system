@@ -16,6 +16,9 @@ return array(
         					'driver'    => 'Pdo_Mysql',
         					'dsn'       => 'mysql:dbname='.$dbParams['database'].';host='.$dbParams['hostname'],
         					'database'  => $dbParams['hostname'],
+        			        'driver_options' => array(
+                                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
+                            ),
         					'username'  => $dbParams['username'],
         					'password'  => $dbParams['password'],
         					'hostname'  => $dbParams['hostname'],

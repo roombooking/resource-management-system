@@ -45,7 +45,6 @@ class ApiBookingController extends AbstractActionController
         	}
         	$bookings = $this->bookingMapper->fetchBookings($start, $end);
         	
-        	
         	return new JsonModel($bookings);
         } else {
             /*
