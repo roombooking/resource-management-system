@@ -11,7 +11,7 @@ use Zend\Db\Sql\Insert;
 class Role extends TableGateway
 {
     protected $tableName = 'Roles';
-    protected $idCol = 'id';
+    protected $idCol = 'roleid';
     protected $entityPrototype = null;
     protected $hydrator = null;
     
@@ -36,7 +36,7 @@ class Role extends TableGateway
     public function getRole($id) {
         return $this->hydrate(
                 $this->select(array(
-                        'id' => $id,
+                        'roleid' => $id,
                 ))
         );
     }

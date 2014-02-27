@@ -23,6 +23,11 @@
      </tr>
     </thead>
     <tbody>
+     <?php if($users->count() === 0) : ?>
+     <tr>
+        <td colspan="7">No User available!</td>
+     </tr>
+     <?php endif; ?>
      <?php foreach ($users as $user) : ?>
      <tr>
          <td><?php echo $this->escapeHtml($user->getId());?></td>

@@ -4,28 +4,28 @@ namespace Application\Entity;
 class User
 {
     //FIXME: Hydrator?
-    protected $id = 0;
-    protected $role_id = null;
-    protected $ldap_id = '';
+    protected $userid = 0;
+    protected $roleid = null;
+    protected $ldapid = '';
     protected $loginname = '';
     protected $firstname = '';
     protected $lastname = '';
     protected $emailaddress = '';
     
     public function setId($userid) {
-        $this->id = $userid;
+        $this->userid = $userid;
     }
     
     public function getId() {
-        return $this->id;
+        return $this->userid;
     }
     
     public function setLdapId($ldapId) {
-    	$this->ldap_id = $ldapId;
+    	$this->ldapid = $ldapId;
     }
     
     public function getLdapId() {
-    	return $this->ldap_id;
+    	return $this->ldapid;
     }
     
     public function setLoginName($loginName) {
@@ -38,11 +38,11 @@ class User
     
     //FIXME: maybe Type Role?
     public function setRole($role) {
-        $this->role_id = $role;
+        $this->roleid = $role;
     }
     
     public function getRole() {
-    	return $this->role_id;
+    	return $this->roleid;
     }
     
     public function setFirstName($name) {

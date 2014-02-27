@@ -44,7 +44,7 @@ class UserController extends AbstractActionController
         ));
     }
     
-    public function editAction ()
+    public function editAction()
     {
         if($this->getRequest()->isXmlHttpRequest()) {
             $data = $this->getRequest()->getPost();
@@ -52,7 +52,7 @@ class UserController extends AbstractActionController
             //$updateEntity->setId($data['id']);
             //$updateEntity->setRole($data['role']);
             //$status = $this->userMapper->updateEntity($updateEntity);
-            $this->userMapper->update(array('role_id' => $data['role']), array('id' => $data['id'] ));
+            $this->userMapper->update(array('roleid' => $data['role']), array('userid' => $data['id'] ));
             return new JsonModel(array(
                     'id' => $data['id'],
                     'role' => $data['role'] 

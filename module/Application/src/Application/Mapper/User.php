@@ -12,7 +12,7 @@ use Zend\Db\Sql\Insert;
 class User extends TableGateway
 {
     protected $tableName = 'Users';
-    protected $idCol = 'id';
+    protected $idCol = 'userid';
     protected $entityPrototype = null;
     protected $hydrator = null;
     
@@ -52,7 +52,7 @@ class User extends TableGateway
         $id = (int) $id;
         $rowset = $this->hydrate(
                 $this->select(array(
-                        'id' => $id,
+                        'userid' => $id,
                 ))
         );
         $user = $rowset->current();
@@ -63,6 +63,13 @@ class User extends TableGateway
         return $user;
     }
     
+    /**
+     * 
+     * @param string $prename
+     * @param string $lastname
+     * @throws \Exception
+     * @return Ambigous <multitype:, ArrayObject, NULL, object, \ArrayObject, \Zend\Db\ResultSet\mixed, unknown, boolean>
+     */
     public function fetchName($prename,$lastname) {
     	$rowset = $this->hydrate(
     	        $this->select(array(
@@ -79,10 +86,16 @@ class User extends TableGateway
     	return $user;
     }
     
+    /**
+     * 
+     * @param string $ldapId
+     * @throws \Exception
+     * @return Ambigous <multitype:, ArrayObject, NULL, object, \ArrayObject, \Zend\Db\ResultSet\mixed, unknown, boolean>
+     */
     public function fetchLdapId($ldapId) {
         $rowset = $this->hydrate(
                 $this->select(array(
-                        'ldap_id' => $ldapId,
+                        'ldapid' => $ldapId,
                 ))
         );
         $user = $rowset->current();
