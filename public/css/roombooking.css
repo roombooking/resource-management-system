@@ -1,0 +1,60 @@
+body {
+	background: rgb(70, 110, 159);
+	background-image: url("../img/bg_bottom.jpg");
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: bottom;
+}
+
+.row {
+	max-width: 1020px;
+	background: rgba(255, 255, 255, 0.9);
+}
+
+#titlerow h1 {
+	font-size: 1.9em;
+	line-height: 1.666;
+}
+
+#titlerow .large-10 {
+	padding-top: 1em;
+}
+
+table.fc-header {
+	border: none;
+	background: rgba(0, 0, 0, 0);
+}
+
+img#tulogo {
+	display: block;
+	width: 100%;
+	max-width: 6em;
+	height: auto;
+	padding: .5em 0;
+}
+
+.fc-header-left h2 {
+	font-size: 1.2em;
+	line-height: 2em;
+	color: #6f6f6f;
+}
+
+/*
+ *	Event Styles
+ */
+
+.fc-event {
+	font-size: .75em;
+	border-color: #4eb98e;
+	background-color: #51d99a !important;
+	color: #1d1d1d;
+}
+
+.fc-state-highlight {
+	background-color: #FFE8CB;
+}
+
+.fc-event-inner {
+	padding: .1em;
+}
