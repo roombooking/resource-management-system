@@ -110,3 +110,8 @@
     
     <?php endif ?>
 </div>
+
+<!-- Debugging JavaScript Components -->
+<? $this->inlineScript()
+    ->prependFile($this->basePath() . '/js/google-code-prettify/run_prettify.js')
+?>
