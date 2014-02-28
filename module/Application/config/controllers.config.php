@@ -17,6 +17,12 @@ return array(
                              $serviceLocator->getServiceLocator()->get('Application\Mapper\Role')
 		              );
 				},
+				'Application\Controller\Power' => function($serviceLocator) {
+					return new \Application\Controller\PowerController(
+							$serviceLocator->getServiceLocator()->get('Application\Mapper\Power'),
+							$serviceLocator->getServiceLocator()->get('Application\Mapper\Role')
+					);
+				},
 				'Application\Controller\ApiBooking' => function($serviceLocator) {
 					return new \Application\Controller\ApiBookingController(
 							$serviceLocator->getServiceLocator()->get('Application\Mapper\Booking')

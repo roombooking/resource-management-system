@@ -37,6 +37,7 @@ class User extends TableGateway
      * @return Ambigous <\Zend\Db\ResultSet\ResultSet, \Zend\Db\ResultSet\HydratingResultSet>
      */
     public function fetchAll() {
+        $select = $this->select();
         return $this->hydrate(
         		$this->select()
         );

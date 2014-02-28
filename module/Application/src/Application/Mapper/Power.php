@@ -1,17 +1,17 @@
 <?php
 namespace Application\Mapper;
 
-use Application\Entity\Role as RoleEntity;
+use Application\Entity\Power as PowerEntity;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\TableGateway\Feature\RowGatewayFeature;
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Insert;
 
-class Role extends TableGateway
+class Power extends TableGateway
 {
-    protected $tableName = 'Roles';
-    protected $idCol = 'roleid';
+    protected $tableName = 'Powers';
+    protected $idCol = 'powerid';
     protected $entityPrototype = null;
     protected $hydrator = null;
     
@@ -21,7 +21,7 @@ class Role extends TableGateway
                 $adapter, 
                 new RowGatewayFeature($this->idCol)
         );
-        $this->entityPrototype = new RoleEntity();
+        $this->entityPrototype = new PowerEntity();
         $this->hydrator = new \Zend\Stdlib\Hydrator\Reflection();
     }
     
@@ -33,7 +33,7 @@ class Role extends TableGateway
         );
     }
     
-    public function getRole($id) {
+    public function getId($id) {
         return $this->hydrate(
                 $this->select(array(
                         $this->idCol => $id,

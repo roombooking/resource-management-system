@@ -1,0 +1,78 @@
+ <?php
+ // module/Application/view/application/power/overview.phtml:
+
+ $title = 'Power Overview';
+ $this->headTitle($title);
+ ?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading text-right">&raquo; <a href="<?php echo $this->url('power/add');?>"><?php echo $this->translate('Add new Power'); ?></a></div>
+
+  <!-- Table -->
+  <table class="table">
+    <thead>
+     <tr>
+         <th>#</th>
+         <th><?php echo $this->translate('Role') ?></th>
+         <th><?php echo $this->translate('Module') ?></th>
+         <th><?php echo $this->translate('Controller') ?></th>
+         <th><?php echo $this->translate('Action') ?></th>
+         <th>&nbsp;</th>
+     </tr>
+    </thead>
+    <tbody>
+     <?php if($powers->count() === 0) : ?>
+     <tr>
+        <td colspan="7"><?php echo $this->translate('No Powers available!') ?></td>
+     </tr>
+     <?php endif; ?>
+     <?php foreach ($powers as $power) : ?>
+     <tr>
+         <td><?php echo $this->escapeHtml($power->getPowerId());?></td>
+         <td>
+            <select data-id="<?php echo $this->escapeHtml($power->getPowerId()); ?>">
+            <?php foreach ($roles as $role) : ?>
+                <option value="<?php echo $role->getId(); ?>"<?php if($role->getId() == $power->getRoleId()) echo 'selected';?>><?php echo $this->escapeHtml($role->getName());?></option>
+            <?php endforeach; ?>
+            </select> 
+         </td>
+         <td><?php echo $this->escapeHtml($power->getModule());?></td>
+         <td><?php echo $this->escapeHtml($power->getController());?></td>
+         <td><?php echo $this->escapeHtml($power->getAction());?></td>
+         <td><a href="<?php echo $this->url('power/edit');?>"><?php echo $this->translate('Edit') ?></a> <a href="<?php echo $this->url('power/delete');?>"><?php echo $this->translate('Delete') ?></a></td>
+     </tr>
+     <?php endforeach; ?>
+    </tbody>
+  </table>
+  <!-- Default panel contents -->
+  <div class="panel-heading text-right">&raquo; <a href="<?php echo $this->url('power/add');?>"><?php echo $this->translate('Add new Power'); ?></a></div>
+  
+  
+  <script type="text/javascript">
+  $( "select" ).on( "change", function() {
+	  var select = $( this );
+	  var userId = select.data('id');
+	  var roleId = this.value;
+	  console.log( 'ID: ' + userId + '\t new RoleID: ' + roleId);
+	  select.after($('<i />').attr('id', 'status_' + userId ).addClass('fa fa-spinner fa-spin'));
+	  $.ajax({
+		  url: "<?php echo $this->url('user/update'); ?>",
+		  type: "POST",
+		  data: { id : userId, role: roleId, },
+		  success: function(data) {
+			  console.log("AJAX call a success! data: " + data.id + ' ' + data.role);
+			  $('#status_' + userId ).removeClass().addClass('fa fa-check');
+          },
+          error: function() {
+        	  $('#status_' + userId ).removeClass().addClass('fa fa-times');
+          },
+          complete: function () {
+        	  setTimeout(function(){ $('#status_' + userId ).remove(); }, 5000);
+          },
+		});
+	    
+	});
+
+  </script>
+</div>

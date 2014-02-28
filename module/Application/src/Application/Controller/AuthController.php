@@ -25,10 +25,10 @@ class AuthController extends AbstractActionController
         if($this->authService->hasIdentity()) {
             $ldap = $this->authService->getAdapter()->getLdap();
             $ldap_options = $this->authService->getAdapter()->getOptions();
-            var_dump($ldap_options);
+            //var_dump($ldap_options);
             $ldap->setOptions($ldap_options['server1']);
             $ldap->bind();
-            $hm = $ldap->getEntry('cn=Test User,dc=roombooking,dc=qu,dc=tu-berlin,dc=de');
+            $hm = $ldap->getEntry($ldap->getCanonicalAccountName($this->authService->getIdentity(), \Zend\Ldap\Ldap::ACCTNAME_FORM_DN));
             
             var_dump($hm);
             return new ViewModel(
@@ -132,9 +132,6 @@ class AuthController extends AbstractActionController
     }
     
     public function logoutAction() {
-        if(!$this->authService) {
-        	throw new \BadFunctionCallException('Auth Service not yet set!');
-        }
         if($this->authService->hasIdentity()) {
             $this->authService->clearIdentity();
         }

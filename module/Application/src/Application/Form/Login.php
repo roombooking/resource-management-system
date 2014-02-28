@@ -3,7 +3,6 @@ namespace Application\Form;
 
 use Zend\Form\Form;
 use Zend\Form\Element;
-use Application\Form\Login;
 
 class Login extends Form
 {

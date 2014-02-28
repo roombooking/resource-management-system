@@ -22,6 +22,18 @@ return array(
                             ),
                     ),
             ),
+            'api' => array(
+            		'type' => 'Literal',
+            		'options' => array(
+            				'route'    => '/api/bookings',
+            				'scheme'   => 'https',
+            				'defaults' => array(
+            						'__NAMESPACE__' => 'Application\Controller',
+            						'controller' => 'ApiBooking',
+            						'action'     => 'apibooking',
+            				),
+            		),
+            ),
             'login' => array(
             		'type' => 'Literal',
             		'options' => array(
@@ -46,28 +58,13 @@ return array(
             				),
             		),
             ),
-            'api' => array(
-            		'type' => 'Literal',
-            		'options' => array(
-            				'route'    => '/api/bookings',
-            				'scheme'   => 'https',
-            				'defaults' => array(
-            						'__NAMESPACE__' => 'Application\Controller',
-            						'controller' => 'ApiBooking',
-            						'action'     => 'apibooking',
-            				),
-            				'constraints' => array(
-            						'type' => '[a-zA-Z0-9_-]+'
-            				),
-            		),
-            ),
             'logout' => array(
             		'type' => 'Literal',
             		'options' => array(
             				'route'    => '/logout',
             				'scheme'   => 'https',
             				'defaults' => array(
-            				        '__NAMESPACE__' => 'Application\Controller',
+            						'__NAMESPACE__' => 'Application\Controller',
             						'controller' => 'Auth',
             						'action'     => 'logout',
             				),
@@ -101,6 +98,54 @@ return array(
             								'route'    => '/update',
             								'defaults' => array(
             										'action' => 'edit',
+            								),
+            						),
+            				),
+            		),
+            ),
+            'power' => array(
+            		'type' => 'Literal',
+            		'options' => array(
+            				'route'    => '/powers',
+            				'scheme'   => 'https',
+            				'defaults' => array(
+            						'__NAMESPACE__' => 'Application\Controller',
+            						'controller' => 'Power',
+            						'action'     => 'overview',
+            				),
+            		),
+            		'may_terminate' => true,
+            		'child_routes' => array(
+            				'add' => array(
+            						'type'    => 'Literal',
+            						'options' => array(
+            								'route'    => '/add',
+            								'defaults' => array(
+            										'action' => 'add',
+            								),
+            						),
+            				),
+            				'edit' => array(
+            						'type'    => 'Segment',
+            						'options' => array(
+            								'route'    => '/edit/:id',
+            								'constraints' => array(
+            										'id' => '[0-9]+',
+            								),
+            								'defaults' => array(
+            										'action' => 'edit',
+            								),
+            						),
+            				),
+            				'delete' => array(
+            						'type'    => 'Segment',
+            						'options' => array(
+            								'route'    => '/delete/:id',
+            								'constraints' => array(
+            					                    'id' => '[0-9]+',
+            				                ),
+            								'defaults' => array(
+            										'action' => 'delete',
             								),
             						),
             				),
