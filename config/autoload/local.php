@@ -4,8 +4,8 @@ return array(
         		'database' => 'roombooking',
         		'hostname' => 'localhost',
         		'username' => 'root',
-        		'password' => '',                         // Dont' check in passwords
-        ),
+        		'password' => 'qu123',                         // Dont' check in passwords
+        ), 
         'ldap' => array(
                 'server1' => array
                 (
