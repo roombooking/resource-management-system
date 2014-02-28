@@ -52,6 +52,15 @@ h5.error {
 	font-weight: bold;
 }
 
+pre.prettyprint {
+	/* overwrite prettyprinters system style */
+	border: none !important;
+}
+
+pre.prettyprint ol {
+	font-size: .95em;
+}
+
 /*
  *	Full Calendar Styles
  */
