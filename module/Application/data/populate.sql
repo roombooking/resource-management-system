@@ -53,12 +53,12 @@ INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, 
 /*
  *	Fake Räume
  */
-INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`) VALUES (NULL, '1', '0', 'Beispielraum 3001', NULL);
-INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`) VALUES (NULL, '1', '0', 'Beispielraum 3002', NULL);
-INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`) VALUES (NULL, '1', '0', 'Beispielraum 3003', NULL);
-INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`) VALUES (NULL, '1', '0', 'Beispielraum 4001', NULL);
-INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`) VALUES (NULL, '1', '0', 'Beispielraum 4002', NULL);
-INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`) VALUES (NULL, '1', '0', 'Beispielraum 4003', NULL);
+INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`, `color`) VALUES (NULL, '1', '0', 'Beispielraum 3001', NULL, 'royalblue');
+INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`, `color`) VALUES (NULL, '1', '0', 'Beispielraum 3002', NULL, '#fb4');
+INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`, `color`) VALUES (NULL, '1', '0', 'Beispielraum 3003', NULL, 'rgb(248,58,34)');
+INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`, `color`) VALUES (NULL, '1', '0', 'Beispielraum 4001', NULL, 'hsl(286,69,67)');
+INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`, `color`) VALUES (NULL, '1', '0', 'Beispielraum 4002', NULL, '#c2c2c2');
+INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`, `color`) VALUES (NULL, '1', '0', 'Beispielraum 4003', NULL, '#ace');
 
 /*
  *	Fake Raumdetails
@@ -73,10 +73,10 @@ INSERT INTO `roombooking`.`Places` (`placeid`, `resourceid`, `size`, `seatnumber
 /*
  *	Fake Items
  */
-INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`) VALUES (NULL, '1', '0', 'Senheiser HD 598', 'Höchster Audiogenuss, ohne die Nachbarn zu stören. Mit leistungsstarker Technologie, einem tollen Look und viel Komfort ist dieser Kopfhörer die perfekte Ergänzung für Ihr Home-Entertainment-System.');
-INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`) VALUES (NULL, '1', '0', 'Sennehiser e 608', 'Dynamisches Miniatur-Instrumentenmikrofon mit Supernierencharakteristik. Flexibler Schwanenhals mit multifunktionalem Clip für einfache Positionierung. Überträgt hohe Schalldruckpegel verzerrungsfrei. Ideal für Blechbläser, Schlagzeug und Holzbläser.');
-INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`) VALUES (NULL, '1', '0', 'Panasonic HC-V210EG-K Camcorder', 'Der weiter entwickelte BSI Sensor mit gesteigerter Lichtempfindlichkeit und 2,25 Megapixel sowie die Bildverarbeitung Crystal Engine PRO liefern rauscharme Aufnahmen mit natürlicher Farbigkeit, auch bei wenig Licht.');
-INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`) VALUES (NULL, '1', '0', 'Olympus VN-7600 Diktiergerät', 'Mit den Basic-Modellen können Sie Ihre Gedanken, Eindrücke und Ideen ganz einfach zusammentragen und aufbewahren. Diese handlichen, leichten Voice Recorder sind kleine Helfer, die Sie überall mit hinnehmen können.');
+INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`, `color`) VALUES (NULL, '1', '0', 'Senheiser HD 598', 'Höchster Audiogenuss, ohne die Nachbarn zu stören. Mit leistungsstarker Technologie, einem tollen Look und viel Komfort ist dieser Kopfhörer die perfekte Ergänzung für Ihr Home-Entertainment-System.', NULL);
+INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`, `color`) VALUES (NULL, '1', '0', 'Sennehiser e 608', 'Dynamisches Miniatur-Instrumentenmikrofon mit Supernierencharakteristik. Flexibler Schwanenhals mit multifunktionalem Clip für einfache Positionierung. Überträgt hohe Schalldruckpegel verzerrungsfrei. Ideal für Blechbläser, Schlagzeug und Holzbläser.', NULL);
+INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`, `color`) VALUES (NULL, '1', '0', 'Panasonic HC-V210EG-K Camcorder', 'Der weiter entwickelte BSI Sensor mit gesteigerter Lichtempfindlichkeit und 2,25 Megapixel sowie die Bildverarbeitung Crystal Engine PRO liefern rauscharme Aufnahmen mit natürlicher Farbigkeit, auch bei wenig Licht.', NULL);
+INSERT INTO `roombooking`.`Resources` (`resourceid`, `isbookable`, `isdeleted`, `name`, `description`, `color`) VALUES (NULL, '1', '0', 'Olympus VN-7600 Diktiergerät', 'Mit den Basic-Modellen können Sie Ihre Gedanken, Eindrücke und Ideen ganz einfach zusammentragen und aufbewahren. Diese handlichen, leichten Voice Recorder sind kleine Helfer, die Sie überall mit hinnehmen können.', NULL);
 
 /*
  *	Fake Itemdetails

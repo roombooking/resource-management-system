@@ -1,6 +1,6 @@
 /*
 Created: 06/12/2013
-Modified: 27/02/2014
+Modified: 28/02/2014
 Model: MySQL 5.1
 Database: MySQL 5.1
 */
@@ -79,6 +79,8 @@ CREATE TABLE Resources
   isdeleted Bool NOT NULL DEFAULT 0,
   name Varchar(256),
   description Text,
+  color Varchar(32)
+  COMMENT 'An HTML color code such as #123456, red or rgb(12, 34, 56), should the default color be overwritten',
  PRIMARY KEY (resourceid)
 )
 ;
@@ -210,5 +212,4 @@ ALTER TABLE Incidents ADD CONSTRAINT affects_2 FOREIGN KEY (bookingid) REFERENCE
 
 ALTER TABLE Incidents ADD CONSTRAINT affects_3 FOREIGN KEY (resourceid) REFERENCES Resources (resourceid) ON DELETE SET NULL ON UPDATE NO ACTION
 ;
-
 

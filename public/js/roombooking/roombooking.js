@@ -15,7 +15,8 @@
 			"jquery" : "/js/vendor/jquery",
 			"foundation" : "/js/foundation.min",
 			"fullcalendar" : "/js/fullcalendar/fullcalendar",
-			"foldtoascii" : "/js/vendor/fold-to-ascii.js"
+			"foldtoascii" : "/js/vendor/fold-to-ascii",
+			"tinycolor" : "/js/vendor/tinycolor"
 		}
 	});
 	

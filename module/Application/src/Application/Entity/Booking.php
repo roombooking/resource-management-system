@@ -27,6 +27,7 @@ class Booking {
      *      Bookings.isdeleted = false;
      */
     
+    protected $bookingid;
     protected $firstname;
     protected $lastname;
     protected $emailaddress;
@@ -35,8 +36,31 @@ class Booking {
     protected $bookingstart;
     protected $bookingend;
     protected $isprebooking;
+    protected $resourceid;
     protected $resourcename;
     protected $resourcedescription;
+    protected $resourcecolor;
+    
+    /**
+    * Legt bookingid fest
+    *
+    * @param type $bookingid
+    * @return void
+    */
+    public function setbookingid($bookingid)
+    {
+            $this->bookingid = $bookingid;
+    }
+    
+    /**
+    * Gibt bookingid zurück
+    *
+    * @return type
+    */
+    public function getbookingid()
+    {
+            return $this->bookingid;
+    }
     
     /**
     * Legt firstname fest
@@ -211,6 +235,27 @@ class Booking {
     }
     
     /**
+    * Legt resourceid fest
+    *
+    * @param type $resourceid
+    * @return void
+    */
+    public function setresourceid($resourceid)
+    {
+            $this->resourceid = $resourceid;
+    }
+    
+    /**
+    * Gibt resourceid zurück
+    *
+    * @return type
+    */
+    public function getresourceid()
+    {
+            return $this->resourceid;
+    }
+    
+    /**
     * Legt resourcename fest
     *
     * @param type $resourcename
@@ -250,6 +295,27 @@ class Booking {
     public function getResourcedescription()
     {
             return $this->resourcedescription;
+    }
+    
+    /**
+    * Legt resourcecolor fest
+    *
+    * @param type $resourcecolor
+    * @return void
+    */
+    public function setresourcecolor($resourcecolor)
+    {
+            $this->resourcecolor = $resourcecolor;
+    }
+    
+    /**
+    * Gibt resourcecolor zurück
+    *
+    * @return type
+    */
+    public function getresourcecolor()
+    {
+            return $this->resourcecolor;
     }
 }
 ?>
