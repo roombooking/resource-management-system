@@ -1,6 +1,6 @@
 <?php
 return array(
-        'dbParams' => array(
+        'dbParams' => array( 
         		'database' => 'roombooking',
         		'hostname' => 'localhost',
         		'username' => 'root',
