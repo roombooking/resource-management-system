@@ -13,6 +13,7 @@
 		 */
 		paths : {
 			"jquery" : "/js/vendor/jquery",
+			"jqueryui" : "/js/vendor/jquery-ui-1.10.4.custom",
 			"foundation" : "/js/foundation.min",
 			"fullcalendar" : "/js/fullcalendar/fullcalendar",
 			"foldtoascii" : "/js/vendor/fold-to-ascii",

@@ -1,5 +1,5 @@
 /*
- * JavaScript for the calendar view
+ * JavaScript for the calendar view.
  */
 (function() {
 	/*
@@ -20,7 +20,7 @@
 				/*
 				 * Require fullcalendar
 				 */
-				require([ "fullcalendar" ], function() {
+				require([ "fullcalendar", "jqueryui" ], function() {
 					var calendar = $("#calendar");
 					
 					calendar.fullCalendar({
@@ -95,10 +95,6 @@
 							right : "today month,agendaWeek,agendaDay prev,next"
 						},
 						
-						dayClick : function(data) {
-							alert("Tagesdetailseite ausgeben für " + data);
-						},
-						
 						/*
 						 * You can put any number of event arrays, functions, JSON feed URLs, or
 						 * full-out Event Source Objects into the eventSources array.
@@ -125,7 +121,8 @@
 								start : event.bookingstart,
 								end : event.bookingend,
 								allDay : (event.isprebooking === "1" ? true : false),
-								url : ""
+								url : "",
+								editable : true	// FIXME
 							};
 							
 							if (event.resourcecolor !== null) {
@@ -159,10 +156,62 @@
 								}
 								
 							}
-							
 							return fcEvent;
+						},
+						
+						/*
+						 * Allows a user to highlight multiple days or timeslots by clicking and dragging.
+						 * 
+						 * Default settings for events is that they are not editable.
+						 * This gets overwritten by JSON data.
+						 */
+						editable : false,
+						
+						/*
+						 * Allows a user to highlight multiple days or timeslots by clicking and dragging.
+						 */
+						selectable : true,
+						
+						/*
+						 * Whether to draw a "placeholder" event while the user is dragging.
+						 */
+						selectHelper : true,
+						
+						/*
+						 * A callback that will fire after a selection is made.
+						 */
+						select: function(startDate, endDate, allDay, jsEvent, view) {
+							createBooking(startDate, endDate, allDay, jsEvent, view);
+//							var title = prompt("Event Title FIXME: render nice popup here");
+//							
+//							if (title) {
+//								calendar.fullCalendar("renderEvent",
+//									{
+//										title: title,
+//										start: start,
+//										end: end,
+//										allDay: allDay
+//									},
+//									true // make the event "stick"
+//								);
+//							}
+//							calendar.fullCalendar("unselect");
+						},
+						/*
+						 * Triggered when dragging stops and the event has moved to a _different_ day/time.
+						 */
+						eventDrop : function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
+							editBooking(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view);
 						}
 					});
+					
+					var createBooking = function (startDate, endDate, allDay, jsEvent, view) {
+						alert("createBooking (" + startDate + ", " + endDate + ", " + allDay + ")");
+					};
+					
+					var editBooking = function (event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
+						alert("editBooking");
+					};
 				});
 			});
 		});
