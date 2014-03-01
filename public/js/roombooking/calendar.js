@@ -101,7 +101,7 @@
 						 */
 						eventSources : [
 							{
-								url : "/api/bookings"
+								url : "/bookings/list"
 							}
 						],
 						
@@ -206,6 +206,9 @@
 					});
 					
 					var createBooking = function (startDate, endDate, allDay, jsEvent, view) {
+						var startTime = $.fullCalendar.parseDate(startDate).getTime();
+						var endTime = $.fullCalendar.parseDate(endDate).getTime();
+						
 						/*
 						 * TODO Decide whether the screen is wide enough for the tooltip.
 						 * TODO Display tooltip if it is wide enough.
@@ -215,7 +218,7 @@
 						if (displayTooltip) {
 							// TODO
 						} else {
-							
+							window.location.href = "/bookings/add/" + (!allDay ? "normal" : "pre") + "/" + startTime + "/" + endTime;
 						}
 						
 					};

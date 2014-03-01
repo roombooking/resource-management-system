@@ -1,18 +1,19 @@
 <?php
 namespace Application\Controller;
+
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 
 /**
- * ApiBookingController
+ * BookingController
  *
  * @author
  *
  * @version
  *
  */
-class ApiBookingController extends AbstractActionController
+class BookingController extends AbstractActionController
 {
     /**
      * @var Application\Mapper\Booking
@@ -24,10 +25,19 @@ class ApiBookingController extends AbstractActionController
     	$this->bookingMapper = $bookingMapper;
     }
     
+    public function indexAction () {
+        /*
+         * TODO Define an index action should it become
+         * necessary.
+         * 
+         * The route /bookings redirects to this! 
+         */
+    }
+    
     /**
      * The default action - return bookings
      */
-    public function apibookingAction ()
+    public function listAction ()
     {
         $allGetValues = $this->params()->fromQuery();
         $allGetParams = array_keys($allGetValues);

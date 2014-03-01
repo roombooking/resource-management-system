@@ -22,18 +22,6 @@ return array(
                             ),
                     ),
             ),
-            'api' => array(
-            		'type' => 'Literal',
-            		'options' => array(
-            				'route'    => '/api/bookings',
-            				'scheme'   => 'https',
-            				'defaults' => array(
-            						'__NAMESPACE__' => 'Application\Controller',
-            						'controller' => 'ApiBooking',
-            						'action'     => 'apibooking',
-            				),
-            		),
-            ),
             'login' => array(
             		'type' => 'Literal',
             		'options' => array(
@@ -98,6 +86,30 @@ return array(
             								'route'    => '/update',
             								'defaults' => array(
             										'action' => 'edit',
+            								),
+            						),
+            				),
+            		),
+            ),
+            'booking' => array(
+            		'type' => 'Literal',
+            		'options' => array(
+            				'route'    => '/bookings',
+            				'scheme'   => 'https',
+            				'defaults' => array(
+            						'__NAMESPACE__' => 'Application\Controller',
+            						'controller' => 'Booking',
+            						'action'     => 'index',
+            				),
+            		),
+            		'may_terminate' => true,
+            		'child_routes' => array(
+            				'list' => array(
+            						'type'    => 'Literal',
+            						'options' => array(
+            								'route'    => '/list',
+            								'defaults' => array(
+            										'action' => 'list',
             								),
             						),
             				),

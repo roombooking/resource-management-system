@@ -23,8 +23,8 @@ return array(
 							$serviceLocator->getServiceLocator()->get('Application\Mapper\Role')
 					);
 				},
-				'Application\Controller\ApiBooking' => function($serviceLocator) {
-					return new \Application\Controller\ApiBookingController(
+				'Application\Controller\Booking' => function($serviceLocator) {
+					return new \Application\Controller\BookingController(
 							$serviceLocator->getServiceLocator()->get('Application\Mapper\Booking')
 					);
 				},
