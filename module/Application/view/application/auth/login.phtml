@@ -34,6 +34,7 @@
             </div>
             <div class="small-9 columns">
                 <?php echo $this->formRow($this->form->get('username')) ?>
+                <small class="error"><?php echo $this->translate('The user name is required.') ?></small>
             </div>
         </div>
     </div>
@@ -45,6 +46,7 @@
             </div>
             <div class="small-9 columns">
                 <?php echo $this->formRow($this->form->get('password')) ?>
+                <small class="error"><?php echo $this->translate('The password is required.') ?></small>
             </div>
         </div>
     </div>

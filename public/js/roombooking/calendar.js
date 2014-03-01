@@ -206,10 +206,22 @@
 					});
 					
 					var createBooking = function (startDate, endDate, allDay, jsEvent, view) {
-						alert("createBooking (" + startDate + ", " + endDate + ", " + allDay + ")");
+						/*
+						 * TODO Decide whether the screen is wide enough for the tooltip.
+						 * TODO Display tooltip if it is wide enough.
+						 */
+						var displayTooltip = false;	// FIXME
+						
+						if (displayTooltip) {
+							// TODO
+						} else {
+							
+						}
+						
 					};
 					
-					var editBooking = function (event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
+					var editBooking = function (event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {			
+
 						alert("editBooking");
 					};
 				});

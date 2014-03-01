@@ -30,10 +30,23 @@
 		 * Require Foundation
 		 */
 		require(["foundation"], function() {
+			
 			/*
-			 * Run foundation initialisation code
+			 * Overwrite the Foundation default password
+			 * RegEx with a trivial one (non-empty strings) for
+			 * a more failsave password validation on login.
 			 */
-			$(document).foundation();
+			Foundation.libs.abide.settings.patterns.password = /\S/;
+			
+			/*
+			 * Run foundation initialisation code,
+			 * configure foundation
+			 */
+			$(document).foundation({
+				/*
+				 * Foundation config here
+				 */
+			});
 		});
 	});
 })();

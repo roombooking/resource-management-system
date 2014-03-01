@@ -1,75 +1,55 @@
- <?php
- // module/Application/view/application/user/index.phtml:
-
- $title = 'User Overview';
- $this->headTitle($title);
- ?>
-<h1><?php echo $this->escapeHtml($title); ?></h1>
-<div class="panel panel-default">
-  <!-- Default panel contents -->
-  <div class="panel-heading text-right">&raquo; <a href="<?php echo $this->url('user/refresh');?>">Refresh with LDAP / AC</a></div>
-
-  <!-- Table -->
-  <table class="table">
-    <thead>
-     <tr>
-         <th>#</th>
-         <th>LDAP-ID</th>
-         <th>Username</th>
-         <th>First Name</th>
-         <th>Last Name</th>
-         <th>Email</th>
-         <th>Role</th>
-     </tr>
-    </thead>
-    <tbody>
-     <?php if($users->count() === 0) : ?>
-     <tr>
-        <td colspan="7">No User available!</td>
-     </tr>
-     <?php endif; ?>
-     <?php foreach ($users as $user) : ?>
-     <tr>
-         <td><?php echo $this->escapeHtml($user->getId());?></td>
-         <td><?php echo $this->escapeHtml($user->getLdapId());?></td>
-         <td><?php echo $this->escapeHtml($user->getLoginName());?></td>
-         <td><?php echo $this->escapeHtml($user->getFirstName());?></td>
-         <td><?php echo $this->escapeHtml($user->getLastName());?></td>
-         <td><?php echo $this->escapeHtml($user->getEmail());?></td>
-         <td><select data-id="<?php echo $this->escapeHtml($user->getId()); ?>">
-            <?php foreach ($roles as $role) : ?>
-            <option value="<?php echo $role->getId(); ?>"<?php if($role->getId() == $user->getRole()) echo 'selected';?>><?php echo $this->escapeHtml($role->getName());?></option>
-            <?php endforeach; ?>
-            </select> 
-         </td>
-     </tr>
-     <?php endforeach; ?>
-    </tbody>
-  </table>
-  <script type="text/javascript">
-  $( "select" ).on( "change", function() {
-	  var select = $( this );
-	  var userId = select.data('id');
-	  var roleId = this.value;
-	  console.log( 'ID: ' + userId + '\t new RoleID: ' + roleId);
-	  select.after($('<i />').attr('id', 'status_' + userId ).addClass('fa fa-spinner fa-spin'));
-	  $.ajax({
-		  url: "<?php echo $this->url('user/update'); ?>",
-		  type: "POST",
-		  data: { id : userId, role: roleId, },
-		  success: function(data) {
-			  console.log("AJAX call a success! data: " + data.id + ' ' + data.role);
-			  $('#status_' + userId ).removeClass().addClass('fa fa-check');
-          },
-          error: function() {
-        	  $('#status_' + userId ).removeClass().addClass('fa fa-times');
-          },
-          complete: function () {
-        	  setTimeout(function(){ $('#status_' + userId ).remove(); }, 5000);
-          },
-		});
-	    
-	});
-
-  </script>
+<div class="large-10 columns">
+	<h4><?php echo $this->translate('User Overview') ?></h4>
+	
+	<a href="#" class="button synchronize-ldap-button right"><?php echo $this->translate('Synchronize with LDAP') ?></a>
+	
+	<?php if($users->count() === 0) : ?>
+	<div data-alert class="alert-box">
+        <?php echo $this->translate('No users in database.') ?> <a href="#" class="close">&times;</a>
+    </div>
+    <?php endif; ?>
+	<div id="joyrideDiv">
+<ol class="joyride-list" data-joyride>
+  <li data-id="joyridedElement"><p>Here's the explanation</p></li>
+</ol>
 </div>
+	<!-- Table -->
+	<table class="users">
+		<thead>
+			<tr>
+				<th><?php echo $this->translate('Internal ID') ?></th>
+				<th><?php echo $this->translate('LDAP UID') ?></th>
+				<th><?php echo $this->translate('Username') ?></th>
+				<th><?php echo $this->translate('First Name') ?></th>
+				<th><?php echo $this->translate('Last Name') ?></th>
+				<th><?php echo $this->translate('E-Mail') ?></th>
+				<th><?php echo $this->translate('Role') ?></th>
+			</tr>
+		</thead>
+		<tbody>
+         <?php foreach ($users as $user) : ?>
+         <tr class="user-record-row">
+              <td><?php echo $this->escapeHtml($user->getId());?></td>
+              <td><?php echo $this->escapeHtml($user->getLdapId());?></td>
+              <td><?php echo $this->escapeHtml($user->getLoginName());?></td>
+              <td><?php echo $this->escapeHtml($user->getFirstName());?></td>
+              <td><?php echo $this->escapeHtml($user->getLastName());?></td>
+              <td><?php echo $this->escapeHtml($user->getEmail());?></td>
+              <td><select data-id="<?php echo $this->escapeHtml($user->getId()); ?>">
+                  <?php foreach ($roles as $role) : ?>
+                  <option value="<?php echo $role->getId(); ?>" <?php if($role->getId() == $user->getRole()) echo 'selected';?>><?php echo $this->escapeHtml($role->getName());?></option>
+                  <?php endforeach; ?>
+                  </select>
+              </td>
+         </tr>
+         <?php endforeach; ?>
+        </tbody>
+	</table>
+	
+	<a href="#" class="button synchronize-ldap-button right"><?php echo $this->translate('Synchronize with LDAP') ?></a>
+</div>
+
+<!-- User View Specific JavaScript Components -->
+<?php $this->inlineScript()
+    ->prependFile($this->basePath() . '/js/roombooking/users.js')
+?>

@@ -62,6 +62,21 @@ pre.prettyprint ol {
 }
 
 /*
+ *	User list styles
+ */
+tr.user-record-row.working td {
+	color: rgb(180, 180, 180);
+}
+
+tr.user-record-row.success {
+	background-color: green;
+}
+
+tr.user-record-row.error td {
+	background-color: red;
+}
+
+/*
  *	Full Calendar Styles
  */
 

@@ -11,6 +11,7 @@ class Login extends Form
         $this->setAttribute('action', '/login');
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'form-signin');
+        $this->setAttribute('data-abide', '');  // http://foundation.zurb.com/docs/components/abide.html
         $this->setInputFilter(new LoginFilter());
         
         $this->add(array(
@@ -19,8 +20,8 @@ class Login extends Form
                     'type' => 'text',
                     'id' => 'name',
                     'placeholder' => 'Username',
-                    'required' => 'required',
-                    'autofocus' => true
+                    'autofocus' => true,
+                    'required' => true
             ),
         ));
         
