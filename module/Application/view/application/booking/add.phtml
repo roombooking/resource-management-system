@@ -1,0 +1,20 @@
+<div class="large-10 columns">
+	<h4><?php echo $this->translate('Room Booking Details') ?></h4>
+
+	<!-- Prepare the form -->
+	<?php $form->prepare(); ?>
+	<?php echo $this->form()->openTag($form); ?>
+	
+    <div class="name-field">
+		<label>
+		  Booking Title <small>required</small>
+		  <?php echo $this->formRow($form->get('title')) ?>
+		</label>
+		<small class="error">The title of the booking is required.</small>
+	</div>
+	
+	
+	<!-- Close the form -->
+	<?php echo $this->formHidden($this->form->get('csrf')); ?>
+	<?php echo $this->form()->closeTag();?>
+</div>

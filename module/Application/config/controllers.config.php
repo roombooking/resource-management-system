@@ -25,7 +25,8 @@ return array(
 				},
 				'Application\Controller\Booking' => function($serviceLocator) {
 					return new \Application\Controller\BookingController(
-							$serviceLocator->getServiceLocator()->get('Application\Mapper\Booking')
+							$serviceLocator->getServiceLocator()->get('Application\Mapper\Booking'),
+					        new \Application\Form\Booking()
 					);
 				},
 		),

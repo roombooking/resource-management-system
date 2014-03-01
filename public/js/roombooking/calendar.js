@@ -218,7 +218,7 @@
 						if (displayTooltip) {
 							// TODO
 						} else {
-							window.location.href = "/bookings/add/" + (!allDay ? "normal" : "pre") + "/" + startTime + "/" + endTime;
+							window.location.href = "/bookings/add/" + startTime + "/" + endTime + (allDay ? "/pre" : "");
 						}
 						
 					};

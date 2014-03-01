@@ -113,6 +113,20 @@ return array(
             								),
             						),
             				),
+            				'add' => array(
+            						'type'    => 'Segment',
+            						'options' => array(
+            								'route'    => '/add/:start/:end[/][:type]',
+            								'constraints' => array(
+            										'start' => '[0-9]+',
+            										'end' => '[0-9]+',
+            										'type' => '["pre"]+'
+            								),
+            								'defaults' => array(
+            										'action' => 'add'
+            								),
+            						),
+            				),
             		),
             ),
             'power' => array(

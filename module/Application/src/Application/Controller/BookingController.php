@@ -20,9 +20,12 @@ class BookingController extends AbstractActionController
      */
     private $bookingMapper;
     
-    public function __construct($bookingMapper)
+    private $bookingForm;
+    
+    public function __construct($bookingMapper, $bookingForm)
     {
     	$this->bookingMapper = $bookingMapper;
+    	$this->bookingForm = $bookingForm;
     }
     
     public function indexAction () {
@@ -35,7 +38,7 @@ class BookingController extends AbstractActionController
     }
     
     /**
-     * The default action - return bookings
+     * Return bookings as JSON response for API use
      */
     public function listAction ()
     {
@@ -63,5 +66,15 @@ class BookingController extends AbstractActionController
              */
             return new JsonModel();
         }
+    }
+    
+    public function addAction ()
+    {
+        return new ViewModel(array(
+    	   'start' => $this->getEvent()->getRouteMatch()->getParam('start'),
+           'end' => $this->getEvent()->getRouteMatch()->getParam('end'),
+           'type' => $this->getEvent()->getRouteMatch()->getParam('type'),
+           'form' => $this->bookingForm
+        ));
     }
 }
