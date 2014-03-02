@@ -1,7 +1,13 @@
+<?php
+    $this->headLink()->prependStylesheet($this->basePath() . '/js/fullcalendar/fullcalendar.css');
+    $this->headLink()->prependStylesheet($this->basePath() . '/js/fullcalendar/fullcalendar.print.css', 'print');
+    $this->headLink()->prependStylesheet($this->basePath() . '/js/qtip/jquery.qtip.css');
+?>
+
 <div class="large-10 columns">
-    <div id="calendar">
-        <!-- The calender will be rendered dynamically here. -->
-    </div>
+	<div id="calendar">
+		<!-- The calender will be rendered dynamically here. -->
+	</div>
 </div>
 
 <!-- Calendar View Specific JavaScript Components -->

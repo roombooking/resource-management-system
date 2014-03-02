@@ -20,7 +20,7 @@
 				/*
 				 * Require fullcalendar
 				 */
-				require([ "fullcalendar", "jqueryui", "jqueryredirect" ], function() {
+				require([ "fullcalendar", "jqueryui", "jqueryredirect", "jqueryqtip" ], function() {
 					var calendar = $("#calendar");
 					
 					calendar.fullCalendar({
@@ -93,6 +93,44 @@
 							left : "title",
 							center : "",
 							right : "today month,agendaWeek,agendaDay prev,next"
+						},
+						
+						/*
+						 * Triggered after an event has been placed on the calendar in its final position.
+						 */
+						eventAfterRender : function(event, element, view) {
+							var start = getNiceDate(event.start, event.allDay);
+							
+							var html = $("<div />").append($.parseHTML("<table> <tr><td>" + event.title + "</td><td>" + start + "</td></tr> <tr><td> </td><td> </td></tr> <tr><td> </td><td> </td></tr> <tr><td> </td><td> </td></tr> <tr><td> </td><td> </td></tr> <tr><td> </td><td> </td></tr> </table>"));
+							
+							/*
+							 * Add tooltip
+							 */
+							element.qtip({
+								style : 'qtip-foundation',
+								content : {
+									text : html
+								},
+								position: {
+									my: "top center",
+									at: "bottom center",
+									viewport: calendar,
+									adjust: {
+										mouse: false,
+										scroll: false
+									}
+								}
+							});
+						},
+						
+						/*
+						 * Called before an event's element is removed from the DOM.
+						 */
+						eventDestroy : function(event, element, view) {
+							/*
+							 * Destroy tooltip
+							 */
+							element.qtip('destroy', true);
 						},
 						
 						/*
@@ -230,6 +268,40 @@
 					var editBooking = function (event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {			
 
 						alert("editBooking");
+					};
+					
+					/*
+					 * http://www.webdevelopersnotes.com/tips/html/javascript_date_and_time.php3
+					 */
+					var getNiceDate = function(date, allDay) {
+						var curr_date = date.getDate();
+						
+						var months = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+						
+						var sup = "";
+						if (curr_date == 1 || curr_date == 21 || curr_date == 31) {
+							sup = "st";
+						} else if (curr_date == 2 || curr_date == 22) {
+							sup = "nd";
+						} else if (curr_date == 3 || curr_date == 23) {
+							sup = "rd";
+						} else {
+							sup = "th";
+						}
+						
+						if (allDay) {
+							return (date.getDate() + "<sup>" + sup + "</sup> " + months[date.getMonth()] + " " + date.getFullYear());
+						} else {
+							var minutes;
+							
+							if (date.getMinutes().length == 1) {
+								minutes = "0" + date.getMinutes();
+							} else {
+								minutes = date.getMinutes();
+							}
+							
+							return (date.getDate() + "<sup>" + sup + "</sup> " + months[date.getMonth()] + " " + date.getFullYear() + " " + date.getHours() + ":" + minutes);
+						}
 					};
 				});
 			});

@@ -12,10 +12,11 @@
 		 * here.
 		 */
 		paths : {
+			"foundation" : "/js/foundation.min",
 			"jquery" : "/js/vendor/jquery",
 			"jqueryui" : "/js/vendor/jquery-ui-1.10.4.custom",
 			"jqueryredirect" : "/js/vendor/jquery.redirect",
-			"foundation" : "/js/foundation.min",
+			"jqueryqtip" : "/js/qtip/jquery.qtip",
 			"fullcalendar" : "/js/fullcalendar/fullcalendar",
 			"foldtoascii" : "/js/vendor/fold-to-ascii",
 			"tinycolor" : "/js/vendor/tinycolor"

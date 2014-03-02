@@ -98,3 +98,11 @@ tr.user-record-row.error td {
 .fc-event-inner {
 	padding: .1em;
 }
+
+/*
+ *	Tooltip styles
+ */
+.qtip.qtip-foundation {
+	font-size: 0.875rem;
+	line-height: 1;
+}
