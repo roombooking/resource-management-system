@@ -10,7 +10,7 @@ class PowerFilter extends InputFilter
     {
         //TODO: Filter/Validator
         $this->add(array(
-        	'name' => 'username',
+        	'name' => 'controller',
             'required' => true,
             'filters'  => array(
             		array('name' => 'StripTags'),

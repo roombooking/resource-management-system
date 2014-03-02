@@ -5,28 +5,33 @@ return array(
 		),
 		'factories' => array(
 				'Application\Controller\Auth' => function($serviceLocator) {
+				    $sl = $serviceLocator->getServiceLocator();
 					return new \Application\Controller\AuthController(
-					         $serviceLocator->getServiceLocator()->get('Application\Service\AuthService'),
-					         $serviceLocator->getServiceLocator()->get('Application\Mapper\User'),
+					         $sl->get('Application\Service\AuthService'),
+					         $sl->get('Application\Mapper\User'),
 					         new \Application\Form\Login()
 					);
 				},
 				'Application\Controller\User' => function($serviceLocator) {
+				      $sl = $serviceLocator->getServiceLocator();
                       return new \Application\Controller\UserController(
-                             $serviceLocator->getServiceLocator()->get('Application\Mapper\User'),
-                             $serviceLocator->getServiceLocator()->get('Application\Mapper\Role')
+                             $sl->get('Application\Mapper\User'),
+                             $sl->get('Application\Mapper\Role')
 		              );
 				},
 				'Application\Controller\Power' => function($serviceLocator) {
+				    $sl = $serviceLocator->getServiceLocator();
 					return new \Application\Controller\PowerController(
-							$serviceLocator->getServiceLocator()->get('Application\Mapper\Power'),
-							$serviceLocator->getServiceLocator()->get('Application\Mapper\Role')
+							$sl->get('Application\Mapper\Power'),
+							$sl->get('Application\Mapper\Role'),
+					        new \Application\Form\Power()
 					);
 				},
 				'Application\Controller\Booking' => function($serviceLocator) {
+				    $sl = $serviceLocator->getServiceLocator();
 					return new \Application\Controller\BookingController(
-							$serviceLocator->getServiceLocator()->get('Application\Mapper\Booking'),
-					        new \Application\Form\Booking()
+							$sl->get('Application\Mapper\Booking'),
+							new \Application\Form\Booking()
 					);
 				},
 		),

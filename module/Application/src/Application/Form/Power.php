@@ -8,31 +8,30 @@ class Power extends Form
 {
     public function __construct() {
         parent::__construct('power');
-        $this->setAttribute('action', '/powers/add');
         $this->setAttribute('method', 'post');
-        $this->setAttribute('class', 'form-poweradd');
+        $this->setAttribute('class', 'form');
         $this->setInputFilter(new PowerFilter());
         
+        $this->setHydrator(new\Zend\Stdlib\Hydrator\Reflection());
+        $this->setObject(new \Application\Entity\Power());        
+
         $this->add(array(    
-    		'name' => 'roleid',
-    		'type' => 'Select',
-            'options' => array(
-        				'label' => 'Role',
-                        'empty_option' => 'Please choose the role',
-                        'value_options' => array( 
-                                '1' => 'Label 1',
-                                '2' => 'Label 2',
-    				    ),
-            ),   
+        		'name' => 'roleid',
+        		'type' => 'Select',
+                'options' => array(
+        				//'label' => 'Role',
+                        
+                ),   
         ));
+
         
         $this->add(array(
-        	'name' => 'module',
-            'attributes' => array(
-                    'type' => 'text',
-                    'id' => 'form-powers-module',
-                    'placeholder' => '%',
-            ),
+            	'name' => 'module',
+                'attributes' => array(
+                        'type' => 'text',
+                        'id' => 'form-powers-module',
+                        'placeholder' => '%',
+                ),
         ));
         
         $this->add(array(
@@ -69,7 +68,7 @@ class Power extends Form
         		'name' => 'submit',
                 'type' => 'Submit',
         		'attributes' => array(
-    				    'value' => 'Log in',
+    				    'value' => 'Submit',
         		        'class' => 'button',      
         		),
         ));

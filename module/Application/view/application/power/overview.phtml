@@ -40,7 +40,7 @@
          <td><?php echo $this->escapeHtml($power->getModule());?></td>
          <td><?php echo $this->escapeHtml($power->getController());?></td>
          <td><?php echo $this->escapeHtml($power->getAction());?></td>
-         <td><a href="<?php echo $this->url('power/edit');?>"><?php echo $this->translate('Edit') ?></a> <a href="<?php echo $this->url('power/delete');?>"><?php echo $this->translate('Delete') ?></a></td>
+         <td><a href="<?php echo $this->url('power/edit', array('id' => $power->getPowerId()));?>"><?php echo $this->translate('Edit') ?></a> <a href="<?php echo $this->url('power/delete', array('id' => $power->getPowerId()));?>"><?php echo $this->translate('Delete') ?></a></td>
      </tr>
      <?php endforeach; ?>
     </tbody>

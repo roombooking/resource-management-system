@@ -3,6 +3,7 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
+use Application\Form\Power;
 /**
  * PowerController
  *
@@ -23,11 +24,17 @@ class PowerController extends AbstractActionController
      */
     private $roleMapper;
     
+    /**
+     * @var Application\Form\Power
+     */
+    private $powerForm;
     
-    public function __construct($powerMapper, $roleMapper)
+    
+    public function __construct($powerMapper, $roleMapper, $powerForm)
     {
     	$this->powerMapper = $powerMapper;
-    	$this->roleMapper = $roleMapper;
+    	$this->roleMapper  = $roleMapper;
+    	$this->powerForm   = $powerForm;
     }
     
     /**
@@ -45,26 +52,55 @@ class PowerController extends AbstractActionController
 
     public function addAction()
     {
-    	if($this->getRequest()->isXmlHttpRequest()) {
-    		$data = $this->getRequest()->getPost();
-    		//$updateEntity = new User();
-    		//$updateEntity->setId($data['id']);
-    		//$updateEntity->setRole($data['role']);
-    		//$status = $this->userMapper->updateEntity($updateEntity);
-    		$this->userMapper->update(array('roleid' => $data['role']), array('powerid' => $data['id'] ));
-    		return new JsonModel(array(
-    				'id' => $data['id'],
-    				'role' => $data['role']
+        $this->powerForm->setAttribute('action', '/powers/add');
+        
+        $roles = $this->roleMapper->select();
+        $fieldElements = array();
+        
+        foreach ($roles as $role) { 
+            $fieldElements[$role['roleid']] = $role['rolename'];
+        }
+        $this->powerForm->get('roleid')->setValueOptions($fieldElements);
+        $this->powerForm->get('roleid')->setEmptyOption(array('empty_option' => array(
+                                'label' => 'Please choose the role',
+                                'disabled' => true,
+                                'selected' => true
+                         )));
+        
+    	if($this->getRequest()->isPost()) {
+    	    $this->powerForm->setData($this->getRequest()->getPost());
+        
+        	if($this->powerForm->isValid()) {
+        		$data = $this->powerForm->getData();
+                
+        		
+        	} else {
+        		return new ViewModel(
+        				array(
+        						'form' => $this->powerForm,
+        				        'loginError' => true
+        				)
+        		);
+        	}
+        } else {
+    		return new ViewModel(array(
+    			    'form' => $this->powerForm, 
     		));
-    	} elseif($this->getRequest()->isPost()) {
-    		$data = $this->getRequest()->getPost();
-    	} else {
-    		$this->redirect()->toRoute('power');
     	}
     }
     
     public function editAction()
     {
+        $this->powerForm->setAttribute('action', '/powers/edit');
+        
+        $roles = $this->roleMapper->select();
+        $fieldElements = array();
+        
+        foreach ($roles as $role) {
+        	$fieldElements[$role['roleid']] = $role['rolename'];
+        }
+        $this->powerForm->get('roleid')->setValueOptions($fieldElements);
+        
     	if($this->getRequest()->isXmlHttpRequest()) {
     		$data = $this->getRequest()->getPost();
     		//$updateEntity = new User();
