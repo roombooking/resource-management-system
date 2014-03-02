@@ -20,7 +20,7 @@
 				/*
 				 * Require fullcalendar
 				 */
-				require([ "fullcalendar", "jqueryui" ], function() {
+				require([ "fullcalendar", "jqueryui", "jqueryredirect" ], function() {
 					var calendar = $("#calendar");
 					
 					calendar.fullCalendar({
@@ -218,7 +218,11 @@
 						if (displayTooltip) {
 							// TODO
 						} else {
-							window.location.href = "/bookings/add/" + startTime + "/" + endTime + (allDay ? "/pre" : "");
+							$().redirect("/bookings/add", {
+								"startTime": startTime,
+								"endTime": endTime,
+								"allDay" : allDay
+							});
 						}
 						
 					};

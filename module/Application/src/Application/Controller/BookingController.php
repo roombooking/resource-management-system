@@ -4,6 +4,8 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
+use Zend\Barcode\Object\Error;
+use Zend\Form\Annotation\ErrorMessage;
 
 /**
  * BookingController
@@ -70,11 +72,34 @@ class BookingController extends AbstractActionController
     
     public function addAction ()
     {
-        return new ViewModel(array(
-    	   'start' => $this->getEvent()->getRouteMatch()->getParam('start'),
-           'end' => $this->getEvent()->getRouteMatch()->getParam('end'),
-           'type' => $this->getEvent()->getRouteMatch()->getParam('type'),
-           'form' => $this->bookingForm
-        ));
+        if ($this->getRequest()->isPost()) {
+            $startTime = $this->params()->fromPost('startTime');
+            $endTime = $this->params()->fromPost('endTime');
+            $allDay = $this->params()->fromPost('allDay');
+            
+            if (ctype_digit($startTime) && ctype_digit($endTime) && ($allDay === 'false' || $allDay === 'true')) {
+                /*
+                 * All POST values seem valid.
+                 * Create a ViewModel with the values.
+                 */
+                return new ViewModel(array(
+                		'startTime' => $this->params()->fromPost('startTime'),
+                		'endTime' => $this->params()->fromPost('endTime'),
+                		'allDay' => $this->params()->fromPost('allDay'),
+                		'form' => $this->bookingForm
+                ));
+            }
+        } else {
+            /*
+             * Not a POST request or invalid POST data.
+             * Create a ViewModel without variables
+             */
+            return new ViewModel(array(
+                    'startTime' => null,
+                    'endTime' => null,
+                    'allDay' => null,
+            		'form' => $this->bookingForm
+            ));
+        }
     }
 }
