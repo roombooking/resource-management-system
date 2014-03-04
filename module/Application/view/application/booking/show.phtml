@@ -1,0 +1,161 @@
+<div class="large-10 columns">
+	<div class="row">
+		<div class="large-7 columns">
+			<h4 class="bookingtitle">
+                <?php echo $this->escapeHtml($booking->getb_name()); ?>
+            </h4>
+		</div>
+		<div class="large-5 columns"><?php
+            if ($isPrebooking) {
+                echo('<h4 class="booking_prebooking right"><i class="fa fa-unlock"></i> <span data-tooltip class="has-tip" title="' . $this->translate('This pre-booking indicates that a user plans to book the resource ' . $this->escapeHtml($booking->getr_name()) .' within the time frame indicated. The booking is not binding.') . '">' . $this->translate('Pre-Booking') . '</span></h5>');
+            } else {
+                echo('<h4 class="booking_nonprebooking right"><i class="fa fa-lock"></i> <span data-tooltip class="has-tip" title="' . $this->translate('This is an authoritative booking. The time frame indicated is binding. No other bookings for the resource ' . $this->escapeHtml($booking->getr_name()) .' can be made in the time frame.') . '">' . $this->translate('Authoritative Booking') . '</span></h5>');
+            }
+            ?></div>
+	</div>
+
+	<div class="row">
+		<div class="large-3 columns">
+			<p>
+                <?php echo $this->translate('Resource Booked'); ?>
+            </p>
+		</div>
+
+		<div class="large-9 columns">
+			<p>
+				<i
+					class="<?php
+                if ($isPlaceBooking) {
+                    echo 'fa fa-home';
+                } else {
+                    echo 'fa fa-suitcase';
+                }
+                ?>"></i> 
+                <?php echo ($booking->getr_description() != null ? '<span data-tooltip class="has-tip" title="' . $booking->getr_description() . '">' : ''); ?>
+                <?php echo $this->escapeHtml($booking->getr_name()); ?>
+                <?php echo ($booking->getr_description() != null ? '</span>' : ''); ?>
+            </p>
+		</div>
+	</div>
+
+	<div class="row daterow">
+		<div class="large-3 columns">
+			<p>
+                <?php echo $this->translate('Start'); ?>
+            </p>
+		</div>
+
+		<div class="large-9 columns">
+			<p>
+                <?php
+                if ($isPrebooking) {
+                    echo $this->escapeHtml($start->format('l, jS F Y'));
+                } else {
+                    echo $this->escapeHtml($start->format('l, jS F Y, H:i'));
+                }
+                ?>
+            </p>
+		</div>
+	</div>
+
+	<div class="row daterow">
+		<div class="large-3 columns">
+			<p>
+                <?php echo $this->translate('End'); ?>
+            </p>
+		</div>
+
+		<div class="large-9 columns">
+			<p>
+                <?php
+                if ($isPrebooking) {
+                    echo $this->escapeHtml($end->format('l, jS F Y'));
+                } else {
+                    echo $this->escapeHtml($end->format('l, jS F Y, H:i'));
+                }
+                ?>
+            </p>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="large-3 columns">
+			<p>
+                <?php echo $this->translate('Creator'); ?>
+            </p>
+		</div>
+
+		<div class="large-9 columns">
+			<p>
+				<i class="fa fa-user"></i> 
+                <?php
+                    echo $this->escapeHtml($booking->getu_b_firstname());
+                    echo ' ';
+                    echo $this->escapeHtml($booking->getu_b_lastname());
+                ?>
+                (<a
+					href="mailto:<?php echo $this->escapeHtml($booking->getu_b_emailaddress()); ?>"><?php echo $this->escapeHtml($booking->getu_b_emailaddress()); ?></a>)
+			</p>
+		</div>
+	</div>
+    
+    <?php if ($booking->getu_r_userid() != null) { ?>
+    
+    <div class="row">
+		<div class="large-3 columns">
+			<p>
+                <?php echo $this->translate('Person Responsible'); ?>
+            </p>
+		</div>
+
+		<div class="large-9 columns">
+			<p>
+				<i class="fa fa-user"></i> 
+                <?php
+                    echo $this->escapeHtml($booking->getu_r_firstname());
+                    echo ' ';
+                    echo $this->escapeHtml($booking->getu_r_lastname());
+                ?>
+                (<a
+					href="mailto:<?php echo $this->escapeHtml($booking->getu_r_emailaddress()); ?>"><?php echo $this->escapeHtml($booking->getu_r_emailaddress()); ?></a>)
+			</p>
+		</div>
+	</div>
+    
+    <?php } ?>
+    
+    
+    <?php if ($booking->getb_participant_description() != null) { ?>
+    
+    <div class="row">
+		<div class="large-3 columns">
+			<p>
+                <?php echo $this->translate('Participants'); ?>
+            </p>
+		</div>
+
+		<div class="large-9 columns">
+			<p>
+				<i class="fa fa-users"></i> 
+                <?php
+                    echo $this->escapeHtml($booking->getb_participant_description());
+                ?>
+            </p>
+		</div>
+	</div>
+    
+    <?php } ?>
+    
+    <div class="row">
+		<div class="large-12 columns">
+			<p>
+                <?php echo $this->escapeHtml($booking->getb_description()); ?>
+            </p>
+		</div>
+	</div>
+
+	<ul class="button-group">
+		<li><a href="edit" class="button"><?php echo $this->translate('Edit Booking'); ?></a></li>
+		<li><a href="delete" class="button alert"><?php echo $this->translate('Delete Booking'); ?></a></li>
+	</ul>
+</div>

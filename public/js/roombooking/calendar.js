@@ -44,7 +44,10 @@
 						},
 						show : false,
 						hide : false,
-						style : "qtip-light qtip-shadow"
+						style : {
+							"classes" : "qtip-light qtip-shadow",
+							width: 640
+						}
 					}).qtip("api");
 					
 					calendar.fullCalendar({
@@ -142,14 +145,14 @@
 								return null;
 							})();
 							
-							$.get("bookings/details/" + eventId + "/api",function(data) {
+							$.get("bookings/" + eventId + "/details/api",function(data) {
 								var event = data[0];
 								var tooltipContent = "<h5>" + event.b_name + "</h5>"
 									+ "<p><strong>Start:</strong> " + getNiceDate(new Date(event.b_start), (event.b_isprebooking === "1" ? true : false)) + "<br>"
 									+ "<strong>End:</strong> " + getNiceDate(new Date(event.b_end), (event.b_isprebooking === "1" ? true : false)) + "<br>"
 									+ "<strong>Reserved by:</strong> " + event.u_b_firstname + " " + event.u_b_lastname + "<br>"
-									+ (event.u_r_userid !== null ? ("<strong>Responsible:</strong> " + event.u_r_firstname + " " + event.u_r_lastname + "<br>"): "")
-									+ "<a href=\"/bookings/show/" + event.b_bookingid + "\">Event " + event.b_bookingid + "</a></p>";
+									+ (event.u_r_userid !== null ? ("<strong>Responsible:</strong> " + event.u_r_firstname + " " + event.u_r_lastname + "</p>"): "</p>")
+									+ "<a href=\"/bookings/" + event.b_bookingid + "/show\" class=\"button\">Booking details</a>";
 		
 								tooltip.set({
 									"content.text" : tooltipContent

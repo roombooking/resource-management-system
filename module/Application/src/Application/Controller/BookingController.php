@@ -6,6 +6,7 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Zend\Barcode\Object\Error;
 use Zend\Form\Annotation\ErrorMessage;
+use \DateTime;
 
 /**
  * BookingController
@@ -63,12 +64,42 @@ class BookingController extends AbstractActionController
         	
         	return new JsonModel($bookings);
         } else {
-            /*
-             * Not all request parameters in Query.
-             * Send empty response.
+                /*
+             * Not all request parameters in Query. Send empty response.
              */
             return new JsonModel();
         }
+    }
+
+    public function showAction ()
+    {
+        $first = true;
+        $booking;
+        
+        /*
+         * Retrieve first element from array
+         */
+        foreach ($this->bookingMapper->fetchBookingsById($this->getEvent()->getRouteMatch()->getParam('id')) as $b) {
+            if ($first) {
+                $booking = $b;
+                $first = false;
+            }
+        }
+        
+        $startTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_start());
+        $endTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_end());
+        
+        $isPrebooking = ($booking->getb_isprebooking() == 1 ? true : false);
+        
+        $isPlaceBooking = ($booking->getp_placeid() != null ? true : false);
+        
+        return new ViewModel(array(
+                'booking' => $booking,
+                'start' => $startTime,
+                'end' => $endTime,
+                'isPrebooking' => $isPrebooking,
+                'isPlaceBooking' => $isPlaceBooking
+        ));
     }
     
     public function addAction ()

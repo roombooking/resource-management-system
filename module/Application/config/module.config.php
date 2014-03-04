@@ -134,12 +134,24 @@ return array(
                                 'details' => array(
                                 		'type' => 'Segment',
                                 		'options' => array(
-                                				'route' => '/details/:id/api',
+                                				'route' => '/:id/details/api',
                                 				'constraints' => array(
                                 						'id' => '[0-9]+'
                                 				),
                                 				'defaults' => array(
                                 						'action' => 'details'
+                                				)
+                                		)
+                                ),
+                                'show' => array(
+                                		'type' => 'Segment',
+                                		'options' => array(
+                                				'route' => '/:id/show',
+                                				'constraints' => array(
+                                						'id' => '[0-9]+'
+                                				),
+                                				'defaults' => array(
+                                						'action' => 'show'
                                 				)
                                 		)
                                 )

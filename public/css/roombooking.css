@@ -77,6 +77,22 @@ tr.user-record-row.error td {
 }
 
 /*
+ *	Booking Detail Styles
+ */
+
+h4.bookingtitle {
+	font-weight: bold;
+}
+
+h4.booking_prebooking {
+	color : #6f6f6f;
+}
+
+.daterow p {
+	font-weight: bold;
+}
+
+/*
  *	Full Calendar Styles
  */
 
