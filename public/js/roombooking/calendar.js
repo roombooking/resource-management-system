@@ -142,24 +142,17 @@
 								return null;
 							})();
 							
-							console.log(eventId);
-							
-							
-							
-							
-							
-							
-							
-							
-							
-//							var tooltipContent = "<h5>" + event.title + "</h5>"
-//								+ "<p><strong>Start:</strong> " + getNiceDate(event.start, event.allDay) + "<br />"
-//								+ "<strong>End:</strong> " + getNiceDate(event.end, event.allDay) + "<br />"
-//								+ "<a href=\"/bookings/show/" + 1 + "\">Event Link " + 1 + "</a></p>";
-//	
-//							tooltip.set({
-//								"content.text" : tooltipContent
-//							}).reposition(jsEvent).show(jsEvent);
+							$.get("bookings/details/" + eventId + "/api",function(data) {
+								var event = data[0];
+								var tooltipContent = "<h5>" + event.b_name + "</h5>"
+									+ "<p><strong>Start:</strong> " + getNiceDate(new Date(event.b_start), (event.b_isprebooking === "1" ? true : false)) + "<br />"
+									+ "<strong>End:</strong> " + getNiceDate(new Date(event.b_end), (event.b_isprebooking === "1" ? true : false)) + "<br />"
+									+ "<a href=\"/bookings/show/" + event.b_bookingid + "\">Event " + event.b_bookingid + "</a></p>";
+		
+								tooltip.set({
+									"content.text" : tooltipContent
+								}).reposition(jsEvent).show(jsEvent);
+							});
 						},
 						
 						/*
