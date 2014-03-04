@@ -7,7 +7,7 @@
 			require([ "jqueryui" ], function() {
 				$("table.users select").on("change", function() {
 					var select = $(this);
-					var userId = select.data('id');
+					var userId = select.data("id");
 					var roleId = this.value;
 					
 					var animationDuration = 1500;
@@ -47,7 +47,7 @@
 							/*
 							 * Release the select
 							 */
-							select.prop('disabled', false);
+							select.prop("disabled", false);
 							parentRow.removeClass("working");
 						}
 					});

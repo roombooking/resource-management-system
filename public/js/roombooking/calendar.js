@@ -23,6 +23,30 @@
 				require([ "fullcalendar", "jqueryui", "jqueryredirect", "jqueryqtip" ], function() {
 					var calendar = $("#calendar");
 					
+					var tooltip = $("<div/>").qtip({
+						id : "calendar",
+						prerender : true,
+						content : {
+							text : " ",
+							title : {
+								button : true
+							}
+						},
+						position : {
+							my : "bottom center",
+							at : "top center",
+							target : "mouse",
+							viewport : calendar,
+							adjust : {
+								mouse : false,
+								scroll : false
+							}
+						},
+						show : false,
+						hide : false,
+						style : "qtip-light qtip-shadow"
+					}).qtip("api");
+					
 					calendar.fullCalendar({
 						/*
 						 * Sets the background color for all events on the calendar.
@@ -50,6 +74,8 @@
 						 * view type switches.
 						 */
 						viewRender : function(view, element) {
+							tooltip.hide();
+							
 						    if(view.name === "agendaWeek" || view.name === "agendaDay") {
 						        /*
 						         * Workaround as suggested in
@@ -72,7 +98,7 @@
 						 */
 						timeFormat : {
 							agenda: "H:mm{ - H:mm}",
-							"": "HH:mm"
+							"": "H:mm"
 						},
 						
 						/*
@@ -96,31 +122,72 @@
 						},
 						
 						/*
+						 * Triggered when the user clicks an event.
+						 */
+						eventClick : function(event, jsEvent, view) {
+							/*
+							 * Obtain the event databse ID from the classname of the HTML element 
+							 */
+							var eventId = (function() {
+								var bookingClassRegEx = new RegExp("(booking)(_)(\\d+)", [ "i" ]); 
+								var bookingId;
+								
+								for (var i = 0; i < event.className.length; i++) {
+									var bookingMatch = bookingClassRegEx.exec(event.className[ i ]);
+									
+									if (bookingMatch !== null) {
+										return bookingMatch[3];
+									}
+								}
+								return null;
+							})();
+							
+							console.log(eventId);
+							
+							
+							
+							
+							
+							
+							
+							
+							
+//							var tooltipContent = "<h5>" + event.title + "</h5>"
+//								+ "<p><strong>Start:</strong> " + getNiceDate(event.start, event.allDay) + "<br />"
+//								+ "<strong>End:</strong> " + getNiceDate(event.end, event.allDay) + "<br />"
+//								+ "<a href=\"/bookings/show/" + 1 + "\">Event Link " + 1 + "</a></p>";
+//	
+//							tooltip.set({
+//								"content.text" : tooltipContent
+//							}).reposition(jsEvent).show(jsEvent);
+						},
+						
+						/*
+						 * Triggered when the user clicks on a day.
+						 */
+						dayClick : function(date, allDay, jsEvent, view) {
+							tooltip.hide();
+						},
+						
+						/*
 						 * Triggered after an event has been placed on the calendar in its final position.
 						 */
 						eventAfterRender : function(event, element, view) {
-							var start = getNiceDate(event.start, event.allDay);
-							
-							var html = $("<div />").append($.parseHTML("<table> <tr><td>" + event.title + "</td><td>" + start + "</td></tr> <tr><td> </td><td> </td></tr> <tr><td> </td><td> </td></tr> <tr><td> </td><td> </td></tr> <tr><td> </td><td> </td></tr> <tr><td> </td><td> </td></tr> </table>"));
-							
-							/*
-							 * Add tooltip
-							 */
-							element.qtip({
-								style : 'qtip-foundation',
-								content : {
-									text : html
-								},
-								position: {
-									my: "top center",
-									at: "bottom center",
-									viewport: calendar,
-									adjust: {
-										mouse: false,
-										scroll: false
-									}
-								}
-							});
+							// TODO
+						},
+						
+						/*
+						 * Triggered when event resizing begins.
+						 */
+						eventResizeStart : function(event, jsEvent, ui, view) {
+							tooltip.hide();
+						},
+						
+						/*
+						 * Triggered when event dragging begins.
+						 */
+						eventDragStart : function(event, jsEvent, ui, view) {
+							tooltip.hide();
 						},
 						
 						/*
@@ -139,7 +206,7 @@
 						 */
 						eventSources : [
 							{
-								url : "/bookings/list"
+								url : "/bookings/list/api"
 							}
 						],
 						
@@ -154,22 +221,22 @@
 							 * Properties: http://arshaw.com/fullcalendar/docs/event_data/Event_Object/
 							 */
 							var fcEvent = {
-								className : "booking booking_" + event.bookingid + " resource_" + event.resourceid,
-								title : event.bookingname,
-								start : event.bookingstart,
-								end : event.bookingend,
-								allDay : (event.isprebooking === "1" ? true : false),
+								className : "booking booking_" + event.b_bookingid + " resource_" + event.b_resourceid,
+								title : event.b_name,
+								start : event.b_start,
+								end : event.b_end,
+								allDay : (event.b_isprebooking === "1" ? true : false),
 								url : "",
 								editable : true	// FIXME
 							};
 							
-							if (event.resourcecolor !== null) {
+							if (event.r_color !== null) {
 								/*
 								 * A specific color should be used for this resource.
 								 * Build the colors for the border here.
 								 */
 								try {
-									var basecolor = tinycolor(event.resourcecolor);
+									var basecolor = tinycolor(event.r_color);
 									
 									/*
 									 * Possible text colors
@@ -292,12 +359,10 @@
 						if (allDay) {
 							return (date.getDate() + "<sup>" + sup + "</sup> " + months[date.getMonth()] + " " + date.getFullYear());
 						} else {
-							var minutes;
+							var minutes = new String(date.getMinutes());
 							
-							if (date.getMinutes().length == 1) {
-								minutes = "0" + date.getMinutes();
-							} else {
-								minutes = date.getMinutes();
+							if (minutes.length == 1) {
+								minutes = "0" + minutes;
 							}
 							
 							return (date.getDate() + "<sup>" + sup + "</sup> " + months[date.getMonth()] + " " + date.getFullYear() + " " + date.getHours() + ":" + minutes);

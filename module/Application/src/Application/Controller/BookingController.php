@@ -58,7 +58,8 @@ class BookingController extends AbstractActionController
         	     */
         	    return new JsonModel();
         	}
-        	$bookings = $this->bookingMapper->fetchBookings($start, $end);
+        	
+        	$bookings = $this->bookingMapper->fetchBookingsByStartEnd($start, $end);
         	
         	return new JsonModel($bookings);
         } else {
@@ -101,5 +102,14 @@ class BookingController extends AbstractActionController
             		'form' => $this->bookingForm
             ));
         }
+    }
+    
+    public function detailsAction ()
+    {
+        $id = $this->getEvent()->getRouteMatch()->getParam('id');
+        
+        $booking = $this->bookingMapper->fetchBookingsById($id);
+        
+        return new JsonModel($booking);
     }
 }

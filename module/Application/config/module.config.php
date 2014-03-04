@@ -103,40 +103,47 @@ return array(
             				),
             		),
             		'may_terminate' => true,
-            		'child_routes' => array(
-            				'list' => array(
-            						'type'    => 'Literal',
-            						'options' => array(
-            								'route'    => '/list',
-            								'defaults' => array(
-            										'action' => 'list',
-            								),
-            						),
-            				),
-//             				'add' => array(
-//             						'type'    => 'Segment',
-//             						'options' => array(
-//             								'route'    => '/add/:start/:end[/][:type]',
-//             								'constraints' => array(
-//             										'start' => '[0-9]+',
-//             										'end' => '[0-9]+',
-//             										'type' => '["pre"]+'
-//             								),
-//             								'defaults' => array(
-//             										'action' => 'add'
-//             								),
-//             						),
-//             				),
-            				'add' => array(
-            						'type'    => 'Literal',
-            						'options' => array(
-            								'route'    => '/add',
-            								'defaults' => array(
-            										'action' => 'add'
-            								),
-            						),
-            				),
-            		),
+                        'child_routes' => array(
+                                /*
+                                 * The list/api route returns a JSON representation of
+                                 * bookings from given start/end values, provided as
+                                 * GET parameters.
+                                 */
+                                'list' => array(
+                                        'type' => 'Literal',
+                                        'options' => array(
+                                                'route' => '/list/api',
+                                                'defaults' => array(
+                                                        'action' => 'list'
+                                                )
+                                        )
+                                ),
+                                'add' => array(
+                                        'type' => 'Literal',
+                                        'options' => array(
+                                                'route' => '/add',
+                                                'defaults' => array(
+                                                        'action' => 'add'
+                                                )
+                                        )
+                                ),
+                                /* 
+                                 * The details/:id/api route returns a JSON representation of
+                                 * all details available for a given booking id.
+                                 */
+                                'details' => array(
+                                		'type' => 'Segment',
+                                		'options' => array(
+                                				'route' => '/details/:id/api',
+                                				'constraints' => array(
+                                						'id' => '[0-9]+'
+                                				),
+                                				'defaults' => array(
+                                						'action' => 'details'
+                                				)
+                                		)
+                                )
+                        ),
             ),
             'power' => array(
             		'type' => 'Literal',

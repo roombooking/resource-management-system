@@ -106,3 +106,15 @@ tr.user-record-row.error td {
 	font-size: 0.875rem;
 	line-height: 1;
 }
+
+.qtip.qtip-foundation table {
+	background: rgba(0, 0, 0, 0);
+	margin-bottom: 0;
+	border: none;
+}
+
+.qtip.qtip-foundation table tr.even,
+.qtip.qtip-foundation table tr.alt,
+.qtip.qtip-foundation table tr:nth-of-type(even) {
+	background: rgba(0, 0, 0, 0);
+}
