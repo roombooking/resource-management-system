@@ -48,7 +48,7 @@ img#tulogo {
 h3.error,
 h4.error,
 h5.error {
-	color: rgb(153,0,0);
+	color: rgb(240, 65, 36);
 	font-weight: bold;
 }
 
@@ -134,3 +134,7 @@ h4.booking_prebooking {
 .qtip.qtip-foundation table tr:nth-of-type(even) {
 	background: rgba(0, 0, 0, 0);
 }
+
+/*
+ *	Modal Styles
+ */

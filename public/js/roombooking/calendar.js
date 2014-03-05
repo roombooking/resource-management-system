@@ -20,35 +20,8 @@
 				/*
 				 * Require fullcalendar
 				 */
-				require([ "fullcalendar", "jqueryui", "jqueryredirect", "jqueryqtip" ], function() {
+				require([ "fullcalendar", "jqueryui", "jqueryredirect" ], function() {
 					var calendar = $("#calendar");
-					
-					var tooltip = $("<div/>").qtip({
-						id : "calendar",
-						prerender : true,
-						content : {
-							text : " ",
-							title : {
-								button : true
-							}
-						},
-						position : {
-							my : "bottom center",
-							at : "top center",
-							target : "mouse",
-							viewport : calendar,
-							adjust : {
-								mouse : false,
-								scroll : false
-							}
-						},
-						show : false,
-						hide : false,
-						style : {
-							"classes" : "qtip-light qtip-shadow",
-							width: 640
-						}
-					}).qtip("api");
 					
 					calendar.fullCalendar({
 						/*
@@ -77,8 +50,6 @@
 						 * view type switches.
 						 */
 						viewRender : function(view, element) {
-							tooltip.hide();
-							
 						    if(view.name === "agendaWeek" || view.name === "agendaDay") {
 						        /*
 						         * Workaround as suggested in
@@ -147,16 +118,96 @@
 							
 							$.get("bookings/" + eventId + "/details/api",function(data) {
 								var event = data[0];
-								var tooltipContent = "<h5>" + event.b_name + "</h5>"
-									+ "<p><strong>Start:</strong> " + getNiceDate(new Date(event.b_start), (event.b_isprebooking === "1" ? true : false)) + "<br>"
-									+ "<strong>End:</strong> " + getNiceDate(new Date(event.b_end), (event.b_isprebooking === "1" ? true : false)) + "<br>"
-									+ "<strong>Reserved by:</strong> " + event.u_b_firstname + " " + event.u_b_lastname + "<br>"
-									+ (event.u_r_userid !== null ? ("<strong>Responsible:</strong> " + event.u_r_firstname + " " + event.u_r_lastname + "</p>"): "</p>")
-									+ "<ul class=\"button-group\"> <li><a href=\"bookings/" + event.b_bookingid + "/show\" class=\"button small\">Show Details</a></li> <li><a href=\"#\" class=\"button alert small\">Delete Booking</a></li> </ul>";
-		
-								tooltip.set({
-									"content.text" : tooltipContent
-								}).reposition(jsEvent).show(jsEvent);
+								
+								console.log();
+								
+								var modal = $("<div/>", {
+									"class": "content"
+								})
+									.append($("<row/>")
+										.append($("<div/>", {
+												"class": "large-12 column"
+											})
+											.append($("<h2/>", {
+													"text": " "
+												})
+												.append($("<span/>", {
+													"text": event.b_name
+												}))
+												.prepend($("<i/>", {
+													"class": (event.p_placeid !== null ? "fa fa-home" : "fa fa-suitcase")
+												})))))
+									.append($("<row/>")
+										.append($("<div/>", {
+												"class": "large-12 column"
+											})
+											.append((event.b_description === null ? "" : $("<p/>", {
+												"class": "lead",
+												"text": event.b_description
+											})))))
+									.append($("<row/>")
+										.append($("<div/>", {
+											"class": "large-6 column",
+											"html": "<p>Start:<br><strong>" + getNiceDate(new Date(event.b_start), (event.b_isprebooking === "1" ? true : false)) + "</strong></p>"
+										}))
+										.append($("<div/>", {
+											"class": "large-6 column",
+											"html": "<p>End:<br><strong>" + getNiceDate(new Date(event.b_end), (event.b_isprebooking === "1" ? true : false)) + "</strong></p>"
+										})))
+									.append($("<row/>")
+										.append($("<div/>", {
+											"class": "large-6 column",
+											"id" : "u_b_userid_column_" + event.u_b_userid,
+											"html": "<p>Reserved by:<br><i class=\"fa fa-user\"></i> <strong>" + event.u_b_firstname + " " + event.u_b_lastname + "</strong> (" + event.u_b_emailaddress + ")</p>"
+										}))
+										.append(
+
+											(event.u_r_userid !== null ? $("<div/>", {
+												"class": "large-6 column",
+												"id" : "u_r_userid_column_" + event.u_r_userid,
+												"html": "<p>Responsible:<br><i class=\"fa fa-user\"></i> <strong>" + event.u_r_firstname + " " + event.u_r_lastname + "</strong> (" + event.u_r_emailaddress + ")</p>"
+											}) : "")
+
+										))
+
+								.append(
+
+									(event.b_participant_description !== null ? $("<row/>")
+										.append($("<div/>", {
+											"class": "large-12 column",
+											"html": "<p>Participants:<br><i class=\"fa fa-users\"></i> " + event.b_participant_description + "</p>"
+										})) : "")
+
+
+								)
+
+								.append($("<row/>")
+									.append($("<div/>", {
+											"class": "large-12 column"
+										})
+										.append($("<ul/>", {
+												"class": "button-group"
+											})
+											.append($("<li/>")
+												.append($("<a/>", {
+													"class": "button",
+													"href": "/bookings/" + event.b_bookingid + "/show",
+													"html": "<i class=\"fa fa-pencil\"></i> Edit Booking"
+												})))
+											.append($("<li/>")
+												.append($("<a/>", {
+													"class": "button alert",
+													"href": "/bookings/" + event.b_bookingid + "/delete",
+													"html": "<i class=\"fa fa-eraser\"></i> Delete Booking"
+												}))))))
+									.append($("<a/>", {
+										"class": "close-reveal-modal",
+										"html": "&#215;"
+									}));
+								
+								$("#bookingModal .content").replaceWith(modal);
+								
+								$("#bookingModal").foundation("reveal", "open");
 							});
 						},
 						
@@ -164,7 +215,7 @@
 						 * Triggered when the user clicks on a day.
 						 */
 						dayClick : function(date, allDay, jsEvent, view) {
-							tooltip.hide();
+							
 						},
 						
 						/*
@@ -178,24 +229,21 @@
 						 * Triggered when event resizing begins.
 						 */
 						eventResizeStart : function(event, jsEvent, ui, view) {
-							tooltip.hide();
+							
 						},
 						
 						/*
 						 * Triggered when event dragging begins.
 						 */
 						eventDragStart : function(event, jsEvent, ui, view) {
-							tooltip.hide();
+							
 						},
 						
 						/*
 						 * Called before an event's element is removed from the DOM.
 						 */
 						eventDestroy : function(event, element, view) {
-							/*
-							 * Destroy tooltip
-							 */
-							element.qtip('destroy', true);
+							
 						},
 						
 						/*
