@@ -152,7 +152,7 @@
 									+ "<strong>End:</strong> " + getNiceDate(new Date(event.b_end), (event.b_isprebooking === "1" ? true : false)) + "<br>"
 									+ "<strong>Reserved by:</strong> " + event.u_b_firstname + " " + event.u_b_lastname + "<br>"
 									+ (event.u_r_userid !== null ? ("<strong>Responsible:</strong> " + event.u_r_firstname + " " + event.u_r_lastname + "</p>"): "</p>")
-									+ "<ul class=\"button-group\"> <li><a href=\"bookings/" + event.b_bookingid + "/show\" class=\"button small\">Edit Booking</a></li> <li><a href=\"#\" class=\"button alert small\">Delete Booking</a></li> </ul>";
+									+ "<ul class=\"button-group\"> <li><a href=\"bookings/" + event.b_bookingid + "/show\" class=\"button small\">Show Details</a></li> <li><a href=\"#\" class=\"button alert small\">Delete Booking</a></li> </ul>";
 		
 								tooltip.set({
 									"content.text" : tooltipContent
