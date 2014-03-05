@@ -95,8 +95,14 @@ class BookingController extends AbstractActionController
         
         return new ViewModel(array(
                 'booking' => $booking,
-                'start' => $startTime,
-                'end' => $endTime,
+                'start' => array(
+        	       'long' => $startTime->format('l, jS F Y, H:i'),
+                   'short' => $startTime->format('l, jS F Y')
+                ),
+                'end' => array(
+        	       'long' => $endTime->format('l, jS F Y, H:i'),
+                   'short' => $endTime->format('l, jS F Y')
+                ),
                 'isPrebooking' => $isPrebooking,
                 'isPlaceBooking' => $isPlaceBooking
         ));
