@@ -11,14 +11,53 @@ namespace Application;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
+use Zend\Mvc\Router\RouteMatch;
 
 class Module
 {
     public function onBootstrap(MvcEvent $e)
     {
-        $eventManager        = $e->getApplication()->getEventManager();
-        $moduleRouteListener = new ModuleRouteListener();
-        $moduleRouteListener->attach($eventManager);
+        $app                 = $e->getApplication();
+        $eventManager        = $app->getEventManager();
+        $serviceManager      = $app->getServiceManager();
+        
+                
+        $auth = $serviceManager->get('Application\Service\AuthService');
+        
+        $eventManager->attach(MvcEvent::EVENT_ROUTE, function($e) use ($auth) {
+        	$match = $e->getRouteMatch();
+        
+        	// No route match, this is a 404
+        	if (!$match instanceof RouteMatch) {
+        		return;
+        	}
+        
+        	// Route is whitelisted
+        	$name = $match->getMatchedRouteName();
+        	if ($name == 'login') {
+        		return;
+        	}
+        
+        	// User is authenticated
+        	if ($auth->hasIdentity()) {
+        		return;
+        	}
+        
+        	// Redirect to the user login page, as an example
+        	$router   = $e->getRouter();
+        	$url      = $router->assemble(array(), array(
+        			'name' => 'login'
+        	));
+        
+        	$response = $e->getResponse();
+        	$response->getHeaders()->addHeaderLine('Location', $url);
+        	$response->setStatusCode(302);
+        
+        	return $response;
+        }, -100);
+
+            $moduleRouteListener = new ModuleRouteListener();
+            $moduleRouteListener->attach($eventManager);
     }
 
     public function getConfig()

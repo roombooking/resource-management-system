@@ -23,21 +23,19 @@ class AuthController extends AbstractActionController
     {
         
         if($this->authService->hasIdentity()) {
-            $ldap = $this->authService->getAdapter()->getLdap();
-            $ldap_options = $this->authService->getAdapter()->getOptions();
-            //var_dump($ldap_options);
-            $ldap->setOptions($ldap_options['server1']);
-            $ldap->bind();
-            $hm = $ldap->getEntry($ldap->getCanonicalAccountName($this->authService->getIdentity(), \Zend\Ldap\Ldap::ACCTNAME_FORM_DN));
+//             $ldap = $this->authService->getAdapter()->getLdap();
+//             $ldap_options = $this->authService->getAdapter()->getOptions();
+//             //var_dump($ldap_options);
+//             $ldap->setOptions($ldap_options['server1']);
+//             $ldap->bind();
+//             $hm = $ldap->getEntry($ldap->getCanonicalAccountName($this->authService->getIdentity(), \Zend\Ldap\Ldap::ACCTNAME_FORM_DN));
             
-            var_dump($hm);
-            return new ViewModel(
-            		array(
-            				'loginSuccess' => true,
-            				'userLoggedIn' => $this->authService->getIdentity()
-            		)
-            );
-        } elseif($this->getRequest()->isPost())
+//             var_dump($hm);
+            $this->redirect()->toRoute('home');
+            $this->stopPropagation();
+            
+        } else {
+            if($this->getRequest()->isPost())
         {
         	$this->loginForm->setData($this->getRequest()->getPost());
         
@@ -48,7 +46,6 @@ class AuthController extends AbstractActionController
         		$ldapAdapter->setCredential($data['password']);
         		
         		$authResult = $this->authService->authenticate();
-        		var_dump($this->authService->getAdapter()->getLdap());
         
         		if(!$authResult->isValid())
         		{
@@ -62,12 +59,9 @@ class AuthController extends AbstractActionController
         		    //LDAP check
         		    
         		    
-        			return new ViewModel(
-        					array(
-        							'loginSuccess' => true,
-        							'userLoggedIn' => $authResult->getIdentity()
-        					)
-        			);
+        			
+        		    $this->redirect()->toRoute('home');
+                    $this->stopPropagation();
         		}
         	} else {
         		return new ViewModel(
@@ -83,6 +77,7 @@ class AuthController extends AbstractActionController
             				'form' => $this->loginForm,
             		)
             );
+        }
         }
     }
     
