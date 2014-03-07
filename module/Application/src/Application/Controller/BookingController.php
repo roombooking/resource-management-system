@@ -86,6 +86,10 @@ class BookingController extends AbstractActionController
             }
         }
         
+        /*
+         * FIXME Doesn't work in PHP < 5.3
+         * http://stackoverflow.com/questions/4329872/creating-datetime-from-timestamp-in-php-5-3
+         */
         $startTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_start());
         $endTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_end());
         
@@ -94,17 +98,17 @@ class BookingController extends AbstractActionController
         $isPlaceBooking = ($booking->getp_placeid() != null ? true : false);
         
         return new ViewModel(array(
-                'booking' => $booking,
-                'start' => array(
-        	       'long' => $startTime->format('l, jS F Y, H:i'),
-                   'short' => $startTime->format('l, jS F Y')
-                ),
-                'end' => array(
-        	       'long' => $endTime->format('l, jS F Y, H:i'),
-                   'short' => $endTime->format('l, jS F Y')
-                ),
-                'isPrebooking' => $isPrebooking,
-                'isPlaceBooking' => $isPlaceBooking
+            'booking' => $booking,
+            'start' => array(
+    	       'long' => $startTime->format('l, jS F Y, H:i'),
+               'short' => $startTime->format('l, jS F Y')
+            ),
+            'end' => array(
+    	       'long' => $endTime->format('l, jS F Y, H:i'),
+               'short' => $endTime->format('l, jS F Y')
+            ),
+            'isPrebooking' => $isPrebooking,
+            'isPlaceBooking' => $isPlaceBooking
         ));
     }
     
@@ -120,11 +124,27 @@ class BookingController extends AbstractActionController
                  * All POST values seem valid.
                  * Create a ViewModel with the values.
                  */
+                
+                /*
+                 * FIXME Doesn't work in PHP < 5.3
+                 * http://stackoverflow.com/questions/4329872/creating-datetime-from-timestamp-in-php-5-3
+                 */
+                $start = DateTime::createFromFormat('U', $startTime);
+                $end = DateTime::createFromFormat('U', $endTime);
+                
+                $isPrebooking = ($allDay == 'true' ? true : false);
+                
                 return new ViewModel(array(
-                		'startTime' => $this->params()->fromPost('startTime'),
-                		'endTime' => $this->params()->fromPost('endTime'),
-                		'allDay' => $this->params()->fromPost('allDay'),
-                		'form' => $this->bookingForm
+            		'start' => array(
+            	       'date' => $start->format('Y-m-d'),
+                       'time' => $start->format('H:i')
+                    ),
+                    'end' => array(
+                		'date' => $end->format('Y-m-d'),
+                		'time' => $end->format('H:i')
+                    ),
+            		'isPrebooking' => $isPrebooking,
+            		'form' => $this->bookingForm
                 ));
             }
         } else {
@@ -139,14 +159,5 @@ class BookingController extends AbstractActionController
             		'form' => $this->bookingForm
             ));
         }
-    }
-    
-    public function detailsAction ()
-    {
-        $id = $this->getEvent()->getRouteMatch()->getParam('id');
-        
-        $booking = $this->bookingMapper->fetchBookingsById($id);
-        
-        return new JsonModel($booking);
     }
 }

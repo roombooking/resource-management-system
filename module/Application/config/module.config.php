@@ -157,6 +157,30 @@ return array(
                                 )
                         ),
             ),
+            'resource' => array(
+            		'type' => 'Literal',
+            		'options' => array(
+            				'route'    => '/resources',
+            				'scheme'   => 'https',
+            				'defaults' => array(
+            						'__NAMESPACE__' => 'Application\Controller',
+            						'controller' => 'Resource',
+            						'action'     => 'index',
+            				),
+            		),
+            		'may_terminate' => true,
+            		'child_routes' => array(
+            				'containment' => array(
+            						'type' => 'Literal',
+            						'options' => array(
+            								'route' => '/containment/api',
+            								'defaults' => array(
+            										'action' => 'containment'
+            								)
+            						)
+            				)
+            		)
+            ),
             'power' => array(
             		'type' => 'Literal',
             		'options' => array(

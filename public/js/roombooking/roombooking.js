@@ -1,11 +1,4 @@
 (function() {
-	/*
-	 * Global variable to share settings for the Roombooking GUI
-	 */
-	window.roombooking = {
-		
-	};
-	
 	requirejs.config({
 		/*
 		 * Hold the path for required JavaScript libraries

@@ -370,8 +370,12 @@
 							// TODO
 						} else {
 							$().redirect("/bookings/add", {
-								"startTime": startTime,
-								"endTime": endTime,
+								/*
+								 * Provide timestamps as "UNIX" timestamps (no milliseconds).
+								 * Math.round the results (integer like string expected).
+								 */
+								"startTime": Math.round(startTime / 1000),
+								"endTime": Math.round(endTime / 1000),
 								"allDay" : allDay
 							});
 						}

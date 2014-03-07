@@ -34,6 +34,12 @@ return array(
 							new \Application\Form\Booking()
 					);
 				},
+				'Application\Controller\Resource' => function($serviceLocator) {
+					$sl = $serviceLocator->getServiceLocator();
+					return new \Application\Controller\ResourceController(
+							$sl->get('Application\Mapper\Resource')
+					);
+				}
 		),
 
 );

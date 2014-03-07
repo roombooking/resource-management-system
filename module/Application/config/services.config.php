@@ -47,6 +47,11 @@ return array(
         					$sm->get('Zend\Db\Adapter\Adapter')
         			);
         		},
+        		'Application\Mapper\Resource' => function ($sm) {
+        			return new \Application\Mapper\Resource(
+        					$sm->get('Zend\Db\Adapter\Adapter')
+        			);
+        		},
         		'Application\Mapper\Power' => function ($sm) {
         			return new \Application\Mapper\Power(
         					$sm->get('Zend\Db\Adapter\Adapter')
