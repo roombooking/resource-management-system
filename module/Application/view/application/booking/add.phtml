@@ -1,6 +1,9 @@
+<!-- Add/edit Specific CSS Components -->
+<?php
+    $this->headLink()->prependStylesheet($this->basePath() . '/js/jstree/dist/themes/default/style.css');
+?> 
+
 <div class="large-10 columns">
-
-
 	<!-- Prepare the form -->
 	<?php $form->prepare(); ?>
 	<?php echo $this->form()->openTag($form); ?>

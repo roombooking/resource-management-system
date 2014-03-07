@@ -11,7 +11,8 @@
 			"jqueryredirect" : "/js/vendor/jquery.redirect",
 			"fullcalendar" : "/js/fullcalendar/fullcalendar",
 			"foldtoascii" : "/js/vendor/fold-to-ascii",
-			"tinycolor" : "/js/vendor/tinycolor"
+			"tinycolor" : "/js/vendor/tinycolor",
+			"jstree" : "/js/jstree/dist/jstree"
 		}
 	});
 	
