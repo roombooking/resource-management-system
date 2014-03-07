@@ -35,24 +35,25 @@ This document conatins a list of third party components bundled with this produc
 Back End
 --------
 
- Product              | Version    | License
- -------------------- | ---------- | -------------------------------
- ZEND Framework 2     | 2.2.5      | New BSD License
+ Product              | Version     | License
+ -------------------- | ----------- | -------------------------------
+ ZEND Framework 2     | 2.2.5       | New BSD License
 
 Front End
 --------
 
- Product              | Version    | License
- -------------------- | ---------- | -------------------------------
- ZURB Foundation      | 5.1.0      | MIT License
- jQuery               | 2.1.0      | MIT license
- jQuery UI            | 1.10.4     | MIT license
- Modernizr            | 2.7.1      | BSD license, MIT license
- RequireJS            | 2.1.11     | New BSD License, MIT license
- TinyColor            | 0.9.17     | MIT license
- fold-to-ascii        | 1.0        | Apache license 2.0, MIT license
- google-code-prettify | 4-Mar-2013 | Apache license 2.0
- FullCalendar         | 1.6.4      | MIT license
+ Product              | Version     | License
+ -------------------- | ----------- | -------------------------------
+ ZURB Foundation      | 5.1.0       | MIT License
+ jQuery               | 2.1.0       | MIT license
+ jQuery UI            | 1.10.4      | MIT license
+ Modernizr            | 2.7.1       | BSD license, MIT license
+ RequireJS            | 2.1.11      | New BSD License, MIT license
+ TinyColor            | 0.9.17      | MIT license
+ fold-to-ascii        | 1.0         | Apache license 2.0, MIT license
+ google-code-prettify | 4-Mar-2013  | Apache license 2.0
+ FullCalendar         | 1.6.4       | MIT license
+ jsTree               | 3.0.0-beta9 | MIT license
 
 Third Party Licenses
 ======================
