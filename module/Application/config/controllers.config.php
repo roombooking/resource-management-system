@@ -31,7 +31,7 @@ return array(
 				    $sl = $serviceLocator->getServiceLocator();
 					return new \Application\Controller\BookingController(
 							$sl->get('Application\Mapper\Booking'),
-							new \Application\Form\Booking()
+							new \Application\Form\Booking($sl->get('Application\Mapper\User'))
 					);
 				},
 				'Application\Controller\Resource' => function($serviceLocator) {

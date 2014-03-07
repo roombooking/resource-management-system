@@ -1,7 +1,8 @@
 <!-- Add/edit Specific CSS Components -->
 <?php
-    $this->headLink()->prependStylesheet($this->basePath() . '/js/jstree/dist/themes/default/style.css');
-?> 
+$this->headLink()->prependStylesheet(
+        $this->basePath() . '/js/jstree/dist/themes/default/style.css');
+?>
 
 <div class="large-10 columns">
 	<!-- Prepare the form -->
@@ -9,38 +10,96 @@
 	<?php echo $this->form()->openTag($form); ?>
 	
     <div class="row">
-        <div class="name-field large-12 column">
-    	   <h4><?php echo $this->translate('New Room Booking') ?></h4>
-    	</div>
-    </div>
-    
-    <div class="row">
-    	<div class="name-field large-12 column">
-    		<label>Booking Title <small>required</small>
-    		  <?php echo $this->formRow($form->get('title'))?>
-    		</label>
-    		<small class="error">The title of the booking is required.</small>
-    	</div>
+		<div class="small-7 column">
+			<h4><?php echo $this->translate('New Room Booking') ?></h4>
+		</div>
+		<div class="small-5 column">
+			<a href="#" class="button right"><i class="fa fa-pencil-square-o"></i>
+				Convert to pre-Booking</a>
+		</div>
 	</div>
-	
+
 	<div class="row">
-	   <div class="name-field medium-6 column">
-	       links
-	   </div>
-	   
-	   <div class="name-field medium-6 column">
-	       <div id="resourcetree"></div>
+		<div class="large-12 column">
+			<label>Booking Title <small>required</small>
+    		  <?php echo $this->formRow($form->get('title'))?>
+    		</label> <small class="error">The title of the booking is
+				required.</small>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="large-6 column">
+			<div class="row daterow">
+				<div class="medium-8 columns">
+					<label> Start Date <small>required</small>
+					   <?php echo $this->formRow($form->get('startdate'))?>
+					</label> <small class="error">Please enter the date as YYYY/MM/DD.</small>
+				</div>
+				<div class="small-4 columns">
+					<label>Start Time
+					   <?php echo $this->formRow($form->get('starttime'))?>
+					</label> <small class="error">Please enter the date as HH:MM.</small>
+				</div>
+			</div>
+
+			<div class="row daterow">
+				<div class="medium-8 columns">
+					<label>End Date <small>required</small>
+					   <?php echo $this->formRow($form->get('enddate'))?>
+					</label> <small class="error">Please enter the date as YYYY/MM/DD.</small>
+				</div>
+				<div class="small-4 columns">
+					<label>End Time
+					   <?php echo $this->formRow($form->get('endtime'))?>
+					</label> <small class="error">Please enter the date as HH:MM.</small>
+				</div>
+			</div>
+			<div class="row">
+				<div class="large-12 columns">
+					<label><i class="fa fa-pencil"></i> <span data-tooltip
+						class="has-tip"
+						title="Please describe what activities you plan to carry out with the selected ressource.">Booking
+							Description</span> <small>optional</small> <?php echo $this->formRow($form->get('bookingdescription'))?> </label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="large-12 columns">
+					<label><i class="fa fa-users"></i> <span data-tooltip
+						class="has-tip"
+						title="Please describe who will be participating in the activity planned.">Participant
+							Description</span> <small>optional</small> <?php echo $this->formRow($form->get('participantdescription'))?> </label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="large-12 columns">
+					<label><i class="fa fa-user"></i> <span data-tooltip
+						class="has-tip"
+						title="Should you book this resource on behalf of another person you can add their details here.">Person
+							Responsible</span> <small>optional</small> <?php echo $this->formRow($form->get('responsibility'))?> </label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="large-12 columns">
+					<a href="#" class="button" id="createbooking">Create Booking</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="large-6 column">
+			<div id="resourcetree"></div>
 	       <?php echo $this->formRow($form->get('resourceid'))?>
 	   </div>
 	</div>
 
 
-<!-- Close the form -->
+	<!-- Close the form -->
 <?php echo $this->formHidden($this->form->get('csrf')); ?>
 	<?php echo $this->form()->closeTag();?>
 </div>
 
 <!-- Add/edit Specific JavaScript Components -->
-<?php $this->inlineScript()
-    ->prependFile($this->basePath() . '/js/roombooking/edit.js')
-?>
+<?php
+
+$this->inlineScript()->prependFile(
+        $this->basePath() . '/js/roombooking/edit.js')?>

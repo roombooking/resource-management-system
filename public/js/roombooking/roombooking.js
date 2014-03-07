@@ -33,6 +33,12 @@
 				 */
 				Foundation.libs.abide.settings.patterns.password = /\S/;
 				
+				
+				/*
+				 * Get rid of the seconds for the time validation.
+				 */
+				Foundation.libs.abide.settings.patterns.time = /(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9])/;
+				
 				/*
 				 * Run foundation initialisation code,
 				 * configure foundation
