@@ -30,6 +30,14 @@ class Booking extends Form
         ));
         
         $this->add(array(
+        		'name' => 'resourceid',
+        		'attributes' => array(
+        				'type' => 'hidden',
+        				'id' => 'resource',
+        		),
+        ));
+        
+        $this->add(array(
              'type' => 'Zend\Form\Element\Csrf',
              'name' => 'csrf',
              'options' => array(

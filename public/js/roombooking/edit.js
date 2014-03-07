@@ -46,7 +46,7 @@
 								"class": "hierachy_" + hierachyId
 							});
 							
-							resourceTreeElement.append(treeContainer);
+							resourceTreeElement.prepend(treeContainer);
 							
 							var jsTreeData = [];
 							
@@ -56,7 +56,14 @@
 								var jsTreeNode = {
 									"id" : ("hierachy_" + hierachyId + "_node_" + resource.r_resourceid),
 									"parent" : (resource.c_parent === null ? "#" : ("hierachy_" + hierachyId + "_node_" + resource.c_parent)),
-									"text" : resource.r_name
+									"text" : resource.r_name,
+									"icon" : (resource.e_equipmentid !== null ? "fa fa-suitcase" : "fa fa-home"),
+									"state" : {
+									    disabled  : (resource.r_isbookable === "0" ? true : false)
+									 },
+									 "a_attr" : {
+										 "resourceid" : resource.r_resourceid
+									 }
 								};
 								
 								jsTreeData.push(jsTreeNode);
@@ -65,10 +72,13 @@
 							/*
 							 * Create JStree
 							 */
-							resourceTreeElement.jstree({
-								"core" : {
-									"data" : jsTreeData
-								}
+							resourceTreeElement.on(
+								"select_node.jstree", function(event, data) {
+									$("input[name=resourceid]").val($("#" + data.selected + ">a").attr("resourceid"));
+								}).jstree({
+									"core" : {
+										"data" : jsTreeData
+									}
 							});
 						}
 					});

@@ -28,7 +28,10 @@
 	       links
 	   </div>
 	   
-	   <div class="name-field medium-6 column" id="resourcetree"></div>
+	   <div class="name-field medium-6 column">
+	       <div id="resourcetree"></div>
+	       <?php echo $this->formRow($form->get('resourceid'))?>
+	   </div>
 	</div>
 
 
