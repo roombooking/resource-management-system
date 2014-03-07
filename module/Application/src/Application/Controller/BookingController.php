@@ -160,4 +160,13 @@ class BookingController extends AbstractActionController
             ));
         }
     }
+    
+    public function detailsAction ()
+    {
+    	$id = $this->getEvent()->getRouteMatch()->getParam('id');
+    
+    	$booking = $this->bookingMapper->fetchBookingsById($id);
+    
+    	return new JsonModel($booking);
+    }
 }
