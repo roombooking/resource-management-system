@@ -34,7 +34,7 @@ $this->headLink()->prependStylesheet(
 				<div class="medium-8 columns">
 					<label> Start Date <small>required</small>
 					   <?php echo $this->formRow($form->get('startdate'))?>
-					</label> <small class="error">Please enter the date as YYYY/MM/DD.</small>
+					</label> <small class="error">Please enter the date as YYYY-MM-DD.</small>
 				</div>
 				<div class="small-4 columns">
 					<label>Start Time
@@ -47,7 +47,7 @@ $this->headLink()->prependStylesheet(
 				<div class="medium-8 columns">
 					<label>End Date <small>required</small>
 					   <?php echo $this->formRow($form->get('enddate'))?>
-					</label> <small class="error">Please enter the date as YYYY/MM/DD.</small>
+					</label> <small class="error">Please enter the date as YYYY-MM-DD.</small>
 				</div>
 				<div class="small-4 columns">
 					<label>End Time
@@ -81,7 +81,7 @@ $this->headLink()->prependStylesheet(
 			</div>
 			<div class="row">
 				<div class="large-12 columns">
-					<a href="#" class="button" id="createbooking">Create Booking</a>
+					<?php echo $this->formRow($form->get('submit'))?>
 				</div>
 			</div>
 		</div>

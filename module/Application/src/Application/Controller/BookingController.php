@@ -134,15 +134,23 @@ class BookingController extends AbstractActionController
                 
                 $isPrebooking = ($allDay == 'true' ? true : false);
                 
+                $startFormatted = array(
+        	       'date' => $start->format('Y-m-d'),
+                   'time' => $start->format('H:i')
+                );
+                
+                $endFormatted = array(
+            		'date' => $end->format('Y-m-d'),
+            		'time' => $end->format('H:i')
+                );
+                
+                $this->bookingForm->setstart($startFormatted);
+                $this->bookingForm->setend($endFormatted);
+                $this->bookingForm->initialize();
+                
                 return new ViewModel(array(
-            		'start' => array(
-            	       'date' => $start->format('Y-m-d'),
-                       'time' => $start->format('H:i')
-                    ),
-                    'end' => array(
-                		'date' => $end->format('Y-m-d'),
-                		'time' => $end->format('H:i')
-                    ),
+                     $startFormatted,
+                     $endFormatted,
             		'isPrebooking' => $isPrebooking,
             		'form' => $this->bookingForm
                 ));
@@ -152,9 +160,22 @@ class BookingController extends AbstractActionController
              * Not a POST request or invalid POST data.
              * Create a ViewModel without variables
              */
+            
+            $startFormatted = array(
+            		'date' => null,
+            		'time' => null
+            );
+            
+            $endFormatted = array(
+            		'date' => null,
+            		'time' => null
+            );
+            
+            $this->bookingForm->initialize();
+            
             return new ViewModel(array(
-                    'startTime' => null,
-                    'endTime' => null,
+                    $startFormatted,
+                    $endFormatted,
                     'allDay' => null,
             		'form' => $this->bookingForm
             ));
