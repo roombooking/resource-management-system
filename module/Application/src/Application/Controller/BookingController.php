@@ -45,14 +45,16 @@ class BookingController extends AbstractActionController
      */
     public function listAction ()
     {
+        ini_set('display_errors', '1');
         $allGetValues = $this->params()->fromQuery();
         $allGetParams = array_keys($allGetValues);
-        
+        var_dump($allGetParams);
         if (in_array("start", $allGetParams) && in_array("end", $allGetParams) ) {
         	$start = $this->params()->fromQuery('start');
         	$end = $this->params()->fromQuery('end');
             
         	if (!ctype_digit($start) || !ctype_digit($end)) {
+        	    echo 'test';
         	    /*
         	     * Non-Numeric start/end.
         	     * Send empty reponse.
@@ -64,6 +66,7 @@ class BookingController extends AbstractActionController
         	
         	return new JsonModel($bookings);
         } else {
+            echo 'fail';
                 /*
              * Not all request parameters in Query. Send empty response.
              */
