@@ -61,7 +61,7 @@ class Booking extends Form
         						'type' => 'date',
         						'id' => 'startdate',
         						'placeholder' => 'YYYY-MM-DD',
-        				        'value' => $this->getstart()['date'],
+        				        'value' => $this->start['date'],
         						'required' => true
         				)
         		));
@@ -73,7 +73,7 @@ class Booking extends Form
         						'type' => 'time',
         						'id' => 'starttime',
         						'placeholder' => 'HH:MM',
-        				        'value' => $this->getstart()['time']
+        				        'value' => $this->start['time']
         				)
         		));
         
@@ -84,7 +84,7 @@ class Booking extends Form
         						'type' => 'date',
         						'id' => 'enddate',
         						'placeholder' => 'YYYY-MM-DD',
-        				        'value' => $this->getend()['date'],
+        				        'value' => $this->end['date'],
         						'required' => true
         				)
         		));
@@ -96,7 +96,7 @@ class Booking extends Form
         						'type' => 'time',
         						'id' => 'endtime',
         						'placeholder' => 'HH:MM',
-        				        'value' => $this->getend()['time']
+        				        'value' => $this->end['time']
         				)
         		));
         
