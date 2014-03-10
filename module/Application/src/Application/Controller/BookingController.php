@@ -87,38 +87,29 @@ class BookingController extends AbstractActionController
          * FIXME Doesn't work in PHP < 5.3
          * http://stackoverflow.com/questions/4329872/creating-datetime-from-timestamp-in-php-5-3
          */
-        try {
-        	$startTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_start());
-            $endTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_end());
-            
-            var_dump($startTime);
-            
-            $isPrebooking = ($booking->getb_isprebooking() == 1 ? true : false);
-            
-            $isPlaceBooking = ($booking->getp_placeid() != null ? true : false);
-            
-            return new ViewModel(array(
-            		'booking' => $booking,
-            		'start' => array(
-            				'long' => $startTime->format('l, jS F Y, H:i'),
-            				'short' => $startTime->format('l, jS F Y')
-            		),
-            		'end' => array(
-            				'long' => $endTime->format('l, jS F Y, H:i'),
-            				'short' => $endTime->format('l, jS F Y')
-            		),
-            		'isPrebooking' => $isPrebooking,
-            		'isPlaceBooking' => $isPlaceBooking
-            ));
-        } catch (Exception $e) {
-        	// For demonstration purposes only...
-        	print_r(DateTime::getLastErrors());
         
-        	// The real object oriented way to do this is
-        	// echo $e->getMessage();
-        }
+        $startTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_start());
+        $endTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_end());
+        DateTime::getLastErrors();
+        var_dump($startTime);
         
+        $isPrebooking = ($booking->getb_isprebooking() == 1 ? true : false);
         
+        $isPlaceBooking = ($booking->getp_placeid() != null ? true : false);
+        
+        return new ViewModel(array(
+            'booking' => $booking,
+            'start' => array(
+    	       'long' => $startTime->format('l, jS F Y, H:i'),
+               'short' => $startTime->format('l, jS F Y')
+            ),
+            'end' => array(
+    	       'long' => $endTime->format('l, jS F Y, H:i'),
+               'short' => $endTime->format('l, jS F Y')
+            ),
+            'isPrebooking' => $isPrebooking,
+            'isPlaceBooking' => $isPlaceBooking
+        ));
     }
     
     public function addAction ()
