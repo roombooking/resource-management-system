@@ -74,17 +74,14 @@ class BookingController extends AbstractActionController
     public function showAction ()
     {
         $first = true;
-        $booking;
-        
+        $booking = $this->bookingMapper->fetchBookingsById($this->getEvent()->getRouteMatch()->getParam('id'));
+        $booking = $booking->current();
+        var_dump($booking);
         /*
          * Retrieve first element from array
          */
-        foreach ($this->bookingMapper->fetchBookingsById($this->getEvent()->getRouteMatch()->getParam('id')) as $b) {
-            if ($first) {
-                $booking = $b;
-                $first = false;
-            }
-        }
+        
+        
         
         /*
          * FIXME Doesn't work in PHP < 5.3
