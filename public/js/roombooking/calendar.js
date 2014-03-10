@@ -135,7 +135,7 @@
 													"text": event.b_name
 												}))
 												.prepend($("<i/>", {
-													"class": (event.p_placeid !== null ? "fa fa-home" : "fa fa-suitcase")
+													"class": (event.p_placeid !== null ? "fa fa-home" : "fa fa-archive")
 												})))))
 									.append($("<row/>")
 										.append($("<div/>", {

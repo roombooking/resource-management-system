@@ -2,8 +2,13 @@
 <html class="no-js" lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php echo $this->headTitle('Quality and Usability Lab '. $this->translate('Room Booking System'))->setSeparator(' - ')->setAutoEscape(false) ?>
+
+<script type="text/javascript">
+    // Provide a global window object in order to store configuration for JavaScript components
+    window.roombooking = {};
+</script>
 
 <!-- Stylesheet -->
 <?php echo $this

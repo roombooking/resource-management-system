@@ -32,7 +32,9 @@
              * 
              * The route /resources redirects to this! 
              */
-            return new ViewModel();
+            return new ViewModel(array(
+        	   'hierarchies' => $this->resourceMapper->fetchAllHierarchies()
+            ));
         }
         
         /**
@@ -41,6 +43,22 @@
         public function containmentAction ()
         {            
             return new JsonModel($this->resourceMapper->fetchAllContainments());
+        }
+        
+        public function containmentByIdAction ()
+        {
+            $id = $this->getEvent()->getRouteMatch()->getParam('id');
+            
+        	return new JsonModel($this->resourceMapper->fetchContainmentsById($id));
+        }
+        
+        public function resourcesAction ()
+        {
+            $hierarchyId = $this->getEvent()->getRouteMatch()->getParam('id');
+            
+        	return new ViewModel(array(
+        		'hierarchyId' => $hierarchyId
+        	));
         }
     }
 ?>

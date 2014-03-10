@@ -1,3 +1,26 @@
 <div class="large-10 columns">
-    <h4><?php echo $this->translate('Power Form') ?></h4>
+    <h4><?php echo $this->translate('Hierarchy Overview') ?></h4>
+    
+    <p>
+        <?php echo $this->escapeHtml($this->translate('Hierarchies contain rooms and/or equipment.'));?>
+        <?php echo $this->escapeHtml($this->translate('Hierarchies group these resources logically.'));?>
+        <?php echo $this->escapeHtml($this->translate('They are not bookable on their own.'));?>
+    </p>
+    
+	<table class="resources">
+		<thead>
+			<tr>
+				<th><?php echo $this->translate('Resource ID') ?></th>
+				<th><?php echo $this->translate('Description') ?></th>
+			</tr>
+		</thead>
+		<tbody>
+         <?php foreach ($hierarchies as $hierarchy) : ?>
+         <tr class="user-record-row">
+              <td><a href="/hierarchies/<?php echo $hierarchy->geth_hierarchyid();?>/resources/edit"><?php echo $hierarchy->geth_hierarchyid();?></a></td>
+              <td><a href="/hierarchies/<?php echo $hierarchy->geth_hierarchyid();?>/resources/edit"><?php echo $this->escapeHtml($hierarchy->geth_name());?></a></td>
+         </tr>
+         <?php endforeach; ?>
+        </tbody>
+	</table>
 </div>

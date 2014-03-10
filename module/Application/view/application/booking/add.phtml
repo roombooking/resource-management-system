@@ -99,7 +99,4 @@ $this->headLink()->prependStylesheet(
 </div>
 
 <!-- Add/edit Specific JavaScript Components -->
-<?php
-
-$this->inlineScript()->prependFile(
-        $this->basePath() . '/js/roombooking/edit.js')?>
+<?php $this->inlineScript()->prependFile($this->basePath() . '/js/roombooking/edit.js')?>

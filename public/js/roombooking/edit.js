@@ -28,7 +28,7 @@
 					 * Prepare the ressource Tree
 					 */
 					(function() {
-						$.get("/resources/containment/api", function(data) {
+						$.get("/hierarchies/containment/api", function(data) {
 							var hierachies = {};
 							
 							/*
@@ -63,7 +63,7 @@
 										"id" : ("hierarchy_" + hierarchyId + "_node_" + resource.r_resourceid),
 										"parent" : (resource.c_parent === null ? "#" : ("hierarchy_" + hierarchyId + "_node_" + resource.c_parent)),
 										"text" : resource.r_name,
-										"icon" : (resource.e_equipmentid !== null ? "fa fa-suitcase" : "fa fa-home"),
+										"icon" : (resource.e_equipmentid !== null ? "fa fa-archive" : "fa fa-home"),
 										"state" : {
 										    /*
 										     * Disable selecting non-bookables
@@ -92,7 +92,10 @@
 									}).jstree({
 										"core" : {
 											"data" : jsTreeData
-										}
+										},
+										"plugins": [
+											"wholerow"
+										]
 								});
 							}
 						});

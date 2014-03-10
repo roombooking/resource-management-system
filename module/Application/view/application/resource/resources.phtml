@@ -1,0 +1,31 @@
+<!-- Tree Editor Specific Components -->
+<?php $this->headLink()->prependStylesheet($this->basePath() . '/js/jstree/dist/themes/default/style.css'); ?>
+<?php $this->inlineScript()->prependFile($this->basePath() . '/js/roombooking/edittree.js')?>
+
+<div class="large-10 columns">
+    <h4>
+        <?php echo $this->translate('Resource Editor') ?> <small>for hierarchy <?php echo $hierarchyId ?></small>
+    </h4>
+    
+    <script type="text/javascript">
+        // Provide the hierarchy id to scripts running on this page
+        window.roombooking.hierarchyId = <?php echo $hierarchyId ?>;
+    </script>
+    
+    <a href="#" class="button" id="resourcebutton">Add Resource</a>
+    
+    <div id="resourcetreeditor">
+        <!-- The ressource tree editor will be rendered by JavaScript here. -->
+    </div>
+    
+    <div id="resourceModal" class="reveal-modal" data-reveal>
+        <!-- Foundation 5 requires the modal to be in the DOM when calling $(document).foundation. So we do prepare it here. -->
+        <div class="content">
+            <!-- Booking content will be rendered here. -->
+        </div>
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
+    
+    <a href="#" class="button"><i class="fa fa-floppy-o"></i> <?php echo $this->translate('Save Tree') ?></a>
+    
+</div>

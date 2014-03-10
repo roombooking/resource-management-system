@@ -152,10 +152,10 @@ return array(
                                 )
                         ),
             ),
-            'resource' => array(
+            'hierarchy' => array(
             		'type' => 'Literal',
             		'options' => array(
-            				'route'    => '/resources',
+            				'route'    => '/hierarchies',
             				'scheme'   => 'https',
             				'defaults' => array(
             						'__NAMESPACE__' => 'Application\Controller',
@@ -171,6 +171,30 @@ return array(
             								'route' => '/containment/api',
             								'defaults' => array(
             										'action' => 'containment'
+            								)
+            						)
+            				),
+            				'idcontainment' => array(
+            						'type' => 'Segment',
+            						'options' => array(
+            								'route' => '/:id/containment/api',
+            								'constraints' => array(
+            										'id' => '[0-9]+'
+            								),
+            								'defaults' => array(
+            										'action' => 'containmentById'
+            								)
+            						)
+            				),
+            				'resources' => array(
+            						'type' => 'Segment',
+            						'options' => array(
+            								'route' => '/:id/resources/edit',
+            								'constraints' => array(
+            										'id' => '[0-9]+'
+            								),
+            								'defaults' => array(
+            										'action' => 'resources'
             								)
             						)
             				)
