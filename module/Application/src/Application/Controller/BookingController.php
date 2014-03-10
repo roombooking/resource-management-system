@@ -90,6 +90,26 @@ class BookingController extends AbstractActionController
         try {
         	$startTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_start());
             $endTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_end());
+            
+            var_dump($startTime);
+            
+            $isPrebooking = ($booking->getb_isprebooking() == 1 ? true : false);
+            
+            $isPlaceBooking = ($booking->getp_placeid() != null ? true : false);
+            
+            return new ViewModel(array(
+            		'booking' => $booking,
+            		'start' => array(
+            				'long' => $startTime->format('l, jS F Y, H:i'),
+            				'short' => $startTime->format('l, jS F Y')
+            		),
+            		'end' => array(
+            				'long' => $endTime->format('l, jS F Y, H:i'),
+            				'short' => $endTime->format('l, jS F Y')
+            		),
+            		'isPrebooking' => $isPrebooking,
+            		'isPlaceBooking' => $isPlaceBooking
+            ));
         } catch (Exception $e) {
         	// For demonstration purposes only...
         	print_r(DateTime::getLastErrors());
@@ -98,25 +118,7 @@ class BookingController extends AbstractActionController
         	// echo $e->getMessage();
         }
         
-        var_dump($startTime);
         
-        $isPrebooking = ($booking->getb_isprebooking() == 1 ? true : false);
-        
-        $isPlaceBooking = ($booking->getp_placeid() != null ? true : false);
-        
-        return new ViewModel(array(
-            'booking' => $booking,
-            'start' => array(
-    	       'long' => $startTime->format('l, jS F Y, H:i'),
-               'short' => $startTime->format('l, jS F Y')
-            ),
-            'end' => array(
-    	       'long' => $endTime->format('l, jS F Y, H:i'),
-               'short' => $endTime->format('l, jS F Y')
-            ),
-            'isPrebooking' => $isPrebooking,
-            'isPlaceBooking' => $isPlaceBooking
-        ));
     }
     
     public function addAction ()
