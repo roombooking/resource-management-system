@@ -87,8 +87,17 @@ class BookingController extends AbstractActionController
          * FIXME Doesn't work in PHP < 5.3
          * http://stackoverflow.com/questions/4329872/creating-datetime-from-timestamp-in-php-5-3
          */
-        $startTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_start());
-        $endTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_end());
+        try {
+        	$startTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_start());
+            $endTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_end());
+        } catch (Exception $e) {
+        	// For demonstration purposes only...
+        	print_r(DateTime::getLastErrors());
+        
+        	// The real object oriented way to do this is
+        	// echo $e->getMessage();
+        }
+        
         var_dump($startTime);
         
         $isPrebooking = ($booking->getb_isprebooking() == 1 ? true : false);
