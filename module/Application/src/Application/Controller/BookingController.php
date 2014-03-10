@@ -81,14 +81,14 @@ class BookingController extends AbstractActionController
          * Retrieve first element from array
          */
         
-        
+        date_default_timezone_set('America/Los_Angeles');
         
         /*
          * FIXME Doesn't work in PHP < 5.3
          * http://stackoverflow.com/questions/4329872/creating-datetime-from-timestamp-in-php-5-3
          */
-        $startTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_start(), new DateTimeZone('Europe/Warsaw'));
-        $endTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_end(), new DateTimeZone('Europe/Warsaw'));
+        $startTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_start());
+        $endTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_end());
         var_dump($startTime);
         
         $isPrebooking = ($booking->getb_isprebooking() == 1 ? true : false);
