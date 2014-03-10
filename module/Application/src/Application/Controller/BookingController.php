@@ -88,23 +88,9 @@ class BookingController extends AbstractActionController
          * http://stackoverflow.com/questions/4329872/creating-datetime-from-timestamp-in-php-5-3
          */
         
-        $script_tz = date_default_timezone_get();
-        echo $script_tz;
-        
-        if (strcmp($script_tz, ini_get('date.timezone'))){
-        	echo 'Script timezone differs from ini-set timezone.';
-        } else {
-        	echo 'Script timezone and ini-set timezone match.';
-        }
-        
-        $start = str_replace('T', ' ', $booking->getb_start());
-        $end = str_replace('T', ' ', $booking->getb_end());
-        echo $start;
-        
-        $startTime = \DateTime::createFromFormat('Y-m-d H:i:s+', $start);
+        $startTime = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $booking->getb_start());
         var_dump(DateTime::getLastErrors());
-        echo DateTime::getLastErrors();
-        $endTime = \DateTime::createFromFormat('Y-m-d H:i:s+', $end);
+        $endTime = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $booking->getb_end());
         var_dump($startTime);
         
         $isPrebooking = ($booking->getb_isprebooking() == 1 ? true : false);
