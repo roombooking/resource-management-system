@@ -65,7 +65,7 @@
 						 * When parsing ISO8601 dates, whether UTC offsets should be
 						 * ignored while processing event source data.
 						 */
-						ignoreTimezone : true,
+						ignoreTimezone : false,
 						
 						/*
 						 * Determines the time-text that will be displayed on each event.

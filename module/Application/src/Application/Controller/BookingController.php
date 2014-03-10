@@ -7,6 +7,7 @@ use Zend\View\Model\JsonModel;
 use Zend\Barcode\Object\Error;
 use Zend\Form\Annotation\ErrorMessage;
 use \DateTime;
+use \DateTimeZone;
 
 /**
  * BookingController
@@ -81,7 +82,10 @@ class BookingController extends AbstractActionController
         $booking = $booking->current();
         
         $startTime = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $booking->getb_start());
+        $startTime->setTimezone(new DateTimeZone("Europe/Berlin"));
+        
         $endTime = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $booking->getb_end());
+        $endTime->setTimezone(new DateTimeZone("Europe/Berlin"));
         
         $isPrebooking = ($booking->getb_isprebooking() == 1 ? true : false);
         
@@ -115,7 +119,10 @@ class BookingController extends AbstractActionController
                  * Create a ViewModel with the values.
                  */
                 $start = DateTime::createFromFormat('U', $startTime);
+                $start->setTimezone(new DateTimeZone("Europe/Berlin"));
+                
                 $end = DateTime::createFromFormat('U', $endTime);
+                $end->setTimezone(new DateTimeZone("Europe/Berlin"));
                 
                 $isPrebooking = ($allDay == 'true' ? true : false);
                 
