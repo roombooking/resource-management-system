@@ -89,7 +89,7 @@ class BookingController extends AbstractActionController
          */
         $startTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_start());
         $endTime = DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_end());
-        
+        echo $startTime; echo ' // '.$endTime;
         $isPrebooking = ($booking->getb_isprebooking() == 1 ? true : false);
         
         $isPlaceBooking = ($booking->getp_placeid() != null ? true : false);
