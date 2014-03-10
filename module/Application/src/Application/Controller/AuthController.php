@@ -3,6 +3,7 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Application\Entity\User as UserEntity;
 
 
 class AuthController extends AbstractActionController
@@ -21,108 +22,88 @@ class AuthController extends AbstractActionController
     //TODO: aufsplitten auf checkAction()
     public function loginAction()
     {
-        
+        // User already logged in -> redirect
         if($this->authService->hasIdentity()) {
-//             $ldap = $this->authService->getAdapter()->getLdap();
-//             $ldap_options = $this->authService->getAdapter()->getOptions();
-//             //var_dump($ldap_options);
-//             $ldap->setOptions($ldap_options['server1']);
-//             $ldap->bind();
-//             $hm = $ldap->getEntry($ldap->getCanonicalAccountName($this->authService->getIdentity(), \Zend\Ldap\Ldap::ACCTNAME_FORM_DN));
-            
-//             var_dump($hm);
             $this->redirect()->toRoute('home');
             $this->stopPropagation();
-            
         } else {
+            // check if the form is submitted
             if($this->getRequest()->isPost())
-        {
-        	$this->loginForm->setData($this->getRequest()->getPost());
-        
-        	if($this->loginForm->isValid()) {
-        		$data = $this->loginForm->getData();
-                $ldapAdapter = $this->authService->getAdapter();
-        		$ldapAdapter->setIdentity($data['username']);
-        		$ldapAdapter->setCredential($data['password']);
-        		
-        		$authResult = $this->authService->authenticate();
-        
-        		if(!$authResult->isValid())
-        		{
-        			return new ViewModel(
-        					array(
-        							'form' => $this->loginForm,
-        							'loginError' => true
-        					)
-        			);
-        		} else {
-        		    //LDAP check
-        		    
-        		    
-        			
-        		    $this->redirect()->toRoute('home');
-                    $this->stopPropagation();
-        		}
-        	} else {
-        		return new ViewModel(
-        				array(
-        						'form' => $this->loginForm,
-        				        'loginError' => true
-        				)
-        		);
-        	}
-        } else {
-            return new ViewModel(
-            		array(
-            				'form' => $this->loginForm,
-            		)
-            );
-        }
-        }
-    }
-    
-    //FIXME: unused
-    public function checkAction() {
-        if(!$this->loginForm) {
-        	throw new \BadMethodCallException('Login Form not yet set!');
-        }
-        if(!$this->authService) {
-        	throw new \BadFunctionCallException('Auth Service not yet set!');
-        }
-
-        if($this->getRequest()->isPost())
-        {
-        	$this->loginForm->setData($this->getRequest()->getPost());
-        
-        	if($this->loginForm->isValid()) {
-        		$data = $this->loginForm->getData();
+            {
+            	$this->loginForm->setData($this->getRequest()->getPost());
                 
-        		$this->authService->getAdapter()->setIdentity($data['username']);
-        		$this->authService->getAdapter()->setCredential($data['password']);
-        
-        		$authResult = $this->authService->authenticate();
-        
-        		if(!$authResult->isValid())
-        		{
-        			return new ViewModel(
-        					array(
-        							'form' => $this->loginForm,
-        							'loginError' => true
-        					)
-        			);
-        		} else {
-        			return new ViewModel(
-        					array(
-        							'loginSuccess' => true,
-        							'userLoggedIn' => $authResult->getIdentity()
-        					)
-        			);
-        		}
-        	} else {
-        		$this->redirect()->toRoute('login');
-        	}
-        } else {
-            $this->redirect()->toRoute('login');
+            	//check if the form is valid
+            	if($this->loginForm->isValid()) {
+            		$data = $this->loginForm->getData();
+                    $ldapAdapter = $this->authService->getAdapter();
+            		$ldapAdapter->setIdentity($data['username']);
+            		$ldapAdapter->setCredential($data['password']);
+            		
+            		$authResult = $this->authService->authenticate();
+            		
+            		// wrong credentials
+            		if(!$authResult->isValid())
+            		{
+            			return new ViewModel(
+            					array(
+            							'form' => $this->loginForm,
+            							'loginError' => true
+            					)
+            			);
+            		} else {
+            		    // user authenticated, now update everything
+            		    // LDAP check: get LDAP user information
+            		    $ldap = $ldapAdapter->getLdap();
+            		    $ldapEntry = $ldap->getEntry($ldap->getCanonicalAccountName($this->authService->getIdentity(), \Zend\Ldap\Ldap::ACCTNAME_FORM_DN));
+            		    
+            		    $ldapUser = new UserEntity();
+            		    $ldapUser->setLdapId($ldapEntry['uidnumber'][0]);
+            		    $ldapUser->setLoginName($data['username']);
+            		    //FIXME: role should not be hard coded
+            		    $ldapUser->setRole(3);
+            		    $ldapUser->setEmail($ldapEntry['mail'][0]);
+            		    $ldapUser->setFirstName($ldapEntry['givenname'][0]);
+            		    $ldapUser->setLastName($ldapEntry['sn'][0]);
+            		    
+            		    // check if the user exist
+            		    try {
+            		        //TODO: check if there are changes
+            		    	$user = $this->userMapper->fetchLdapId($ldapUser->getLdapId());
+                            $user->setLoginName($ldapUser->getLoginName());
+                            $user->setEmail($ldapUser->getEmail());
+                            $user->setFirstName($ldapUser->getFirstName());
+                            $user->setLastName($ldapUser->getLastName());
+                            
+                            $this->userMapper->updateEntity($user);
+                            //TODO: Log Userupdate
+            		    	
+            		    } catch (\Exception $e) {
+            		        //if an error is thrown, the user does not exist and should be inserted
+            		        $this->userMapper->insert($user);
+            		        //TODO: Log User Insert
+            		    }
+            		    
+            		    //TODO: Hard kodierte User mit alle rechten ausstatten.
+            		    
+            		    //TODO: Log updaten?!
+            		    $this->redirect()->toRoute('home');
+                        $this->stopPropagation();
+            		}
+            	} else {
+            		return new ViewModel(
+            				array(
+            						'form' => $this->loginForm,
+            				        'loginError' => true
+            				)
+            		);
+            	}
+            } else {
+                return new ViewModel(
+                		array(
+                				'form' => $this->loginForm,
+                		)
+                );
+            }
         }
     }
     

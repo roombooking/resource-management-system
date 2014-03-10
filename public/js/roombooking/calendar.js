@@ -104,7 +104,7 @@
 							 */
 							var eventId = (function() {
 								var bookingClassRegEx = new RegExp("(booking)(_)(\\d+)", [ "i" ]); 
-								var bookingId;
+								var bookingId; //FIXME needed?
 								
 								for (var i = 0; i < event.className.length; i++) {
 									var bookingMatch = bookingClassRegEx.exec(event.className[ i ]);
