@@ -89,7 +89,7 @@ INSERT INTO `roombooking`.`Equipments` (`equipmentid`, `resourceid`) VALUES (NUL
 /*
  * Fake hierachie für Containments
  */
-INSERT INTO `roombooking`.`Hierachies` (`hierarchyid`, `name`) VALUES ('1', 'Technische Universität Berlin');
+INSERT INTO `roombooking`.`Hierarchies` (`hierarchyid`, `name`) VALUES ('1', 'Technische Universität Berlin');
 
 /*
  *	Fake Containments
