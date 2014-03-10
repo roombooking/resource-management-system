@@ -75,23 +75,18 @@ class BookingController extends AbstractActionController
     {
         $first = true;
         $booking = $this->bookingMapper->fetchBookingsById($this->getEvent()->getRouteMatch()->getParam('id'));
-        $booking = $booking->current();
-        var_dump($booking->getb_start());
         /*
          * Retrieve first element from array
          */
-        
-        
-        
+        $booking = $booking->current();
+              
         /*
          * FIXME Doesn't work in PHP < 5.3
          * http://stackoverflow.com/questions/4329872/creating-datetime-from-timestamp-in-php-5-3
          */
         
         $startTime = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $booking->getb_start());
-        var_dump(DateTime::getLastErrors());
         $endTime = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $booking->getb_end());
-        var_dump($startTime);
         
         $isPrebooking = ($booking->getb_isprebooking() == 1 ? true : false);
         
