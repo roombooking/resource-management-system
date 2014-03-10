@@ -35,33 +35,33 @@
 							 * Group ressources according to their hierachies
 							 */
 							for (var i = 0; i < data.length; i++) {
-								var hierachyId = data[i]["h_hirachyid"];
+								var hierarchyId = data[i]["h_hierarchyid"];
 								var resourceId = data[i]["r_resourceid"];
 								
-								if (hierachies[hierachyId] === undefined) {
-									hierachies[hierachyId] = [];
+								if (hierachies[hierarchyId] === undefined) {
+									hierachies[hierarchyId] = [];
 								}
 								
-								hierachies[hierachyId].push(data[i]);
+								hierachies[hierarchyId].push(data[i]);
 							}
 							
-							for (var hierachyId in hierachies) {
-								var hierachy = hierachies[hierachyId];
+							for (var hierarchyId in hierachies) {
+								var hierarchy = hierachies[hierarchyId];
 								
 								var treeContainer = $("<div/>", {
-									"class": "hierachy_" + hierachyId
+									"class": "hierarchy_" + hierarchyId
 								});
 								
 								resourceTreeElement.prepend(treeContainer);
 								
 								var jsTreeData = [];
 								
-								for (var i = 0; i < hierachy.length; i++) {
-									var resource = hierachy[i];
+								for (var i = 0; i < hierarchy.length; i++) {
+									var resource = hierarchy[i];
 									
 									var jsTreeNode = {
-										"id" : ("hierachy_" + hierachyId + "_node_" + resource.r_resourceid),
-										"parent" : (resource.c_parent === null ? "#" : ("hierachy_" + hierachyId + "_node_" + resource.c_parent)),
+										"id" : ("hierarchy_" + hierarchyId + "_node_" + resource.r_resourceid),
+										"parent" : (resource.c_parent === null ? "#" : ("hierarchy_" + hierarchyId + "_node_" + resource.c_parent)),
 										"text" : resource.r_name,
 										"icon" : (resource.e_equipmentid !== null ? "fa fa-suitcase" : "fa fa-home"),
 										"state" : {

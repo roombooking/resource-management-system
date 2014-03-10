@@ -1,6 +1,6 @@
 /*
 Created: 06/12/2013
-Modified: 28/02/2014
+Modified: 10/03/2014
 Model: MySQL 5.1
 Database: MySQL 5.1
 */
@@ -90,7 +90,7 @@ CREATE TABLE Resources
 CREATE TABLE Containments
 (
   containmentid Int UNSIGNED NOT NULL AUTO_INCREMENT,
-  hirachyid Int UNSIGNED NOT NULL,
+  hierarchyid Int UNSIGNED NOT NULL,
   parent Int UNSIGNED,
   child Int UNSIGNED,
   name Varchar(256),
@@ -99,18 +99,19 @@ CREATE TABLE Containments
 )
 ;
 
--- Table Hirachies
+-- Table Hierarchies
 
-CREATE TABLE Hirachies
+CREATE TABLE Hierarchies
 (
-  hirachyid Int UNSIGNED NOT NULL
+  hierarchyid Int UNSIGNED NOT NULL,
+  name Varchar(256)
 )
 ;
 
-ALTER TABLE Hirachies ADD PRIMARY KEY (hirachyid)
+ALTER TABLE Hierarchies ADD PRIMARY KEY (hierarchyid)
 ;
 
-ALTER TABLE Hirachies ADD UNIQUE hirachyid (hirachyid)
+ALTER TABLE Hierarchies ADD UNIQUE hierarchyid (hierarchyid)
 ;
 
 -- Table Equipments
@@ -186,7 +187,7 @@ ALTER TABLE Containments ADD CONSTRAINT is_2 FOREIGN KEY (parent) REFERENCES Res
 ALTER TABLE Containments ADD CONSTRAINT is_1 FOREIGN KEY (child) REFERENCES Resources (resourceid) ON DELETE RESTRICT ON UPDATE NO ACTION
 ;
 
-ALTER TABLE Containments ADD CONSTRAINT contains_2 FOREIGN KEY (hirachyid) REFERENCES Hirachies (hirachyid) ON DELETE RESTRICT ON UPDATE NO ACTION
+ALTER TABLE Containments ADD CONSTRAINT contains_2 FOREIGN KEY (hierarchyid) REFERENCES Hierarchies (hierarchyid) ON DELETE RESTRICT ON UPDATE NO ACTION
 ;
 
 ALTER TABLE Bookings ADD CONSTRAINT books_2 FOREIGN KEY (responsible_userid) REFERENCES Users (userid) ON DELETE RESTRICT ON UPDATE NO ACTION

@@ -2,6 +2,7 @@
     namespace Application\Controller;
     
     use Zend\Mvc\Controller\AbstractActionController;
+    use Zend\View\Model\ViewModel;
     use Zend\View\Model\JsonModel;
     
     /**
@@ -31,7 +32,7 @@
              * 
              * The route /resources redirects to this! 
              */
-            return new JsonModel();
+            return new ViewModel();
         }
         
         /**

@@ -10,18 +10,18 @@ class Containment {
     //          r.color AS r_color,
     //          p.placeid AS p_placeid,
     //          e.equipmentid AS e_equipmentid,
-    //          c.hirachyid AS c_hirachyid,
+    //          c.hierarchyid AS c_hierarchyid,
     //          c.parent AS c_parent,
     //          c.name AS c_name,
     //          c.description AS c_description,
-    //          h.hirachyid AS h_hirachyid
+    //          h.hierarchyid AS h_hierarchyid
     //     FROM
     //          Resources r LEFT OUTER JOIN Places p ON r.resourceid = p.resourceid
     //          LEFT OUTER JOIN Equipments e ON r.resourceid = e.resourceid
     //          LEFT OUTER JOIN Containments c ON r.resourceid = c.child
-    //          LEFT OUTER JOIN Hirachies h ON c.hirachyid = h.hirachyid
+    //          LEFT OUTER JOIN Hierarchies h ON c.hierarchyid = h.hierarchyid
     //     ORDER BY
-    //          h.hirachyid ASC,
+    //          h.hierarchyid ASC,
     //          r.resourceid ASC
     
     protected $r_resourceid;
@@ -31,11 +31,11 @@ class Containment {
     protected $r_color;
     protected $p_placeid;
     protected $e_equipmentid;
-    protected $c_hirachyid;
+    protected $c_hierarchyid;
     protected $c_parent;
     protected $c_name;
     protected $c_description;
-    protected $h_hirachyid;
+    protected $h_hierarchyid;
     
     /**
     * Sets r_resourceid
@@ -185,24 +185,24 @@ class Containment {
     }
     
     /**
-    * Sets c_hirachyid
+    * Sets c_hierarchyid
     *
-    * @param type $c_hirachyid
+    * @param type $c_hierarchyid
     * @return void
     */
-    public function setc_hirachyid($c_hirachyid)
+    public function setc_hierarchyid($c_hierarchyid)
     {
-            $this->c_hirachyid = $c_hirachyid;
+            $this->c_hierarchyid = $c_hierarchyid;
     }
     
     /**
-    * Gets c_hirachyid
+    * Gets c_hierarchyid
     *
     * @return type
     */
-    public function getc_hirachyid()
+    public function getc_hierarchyid()
     {
-            return $this->c_hirachyid;
+            return $this->c_hierarchyid;
     }
     
     /**
@@ -269,24 +269,24 @@ class Containment {
     }
     
     /**
-    * Sets h_hirachyid
+    * Sets h_hierarchyid
     *
-    * @param type $h_hirachyid
+    * @param type $h_hierarchyid
     * @return void
     */
-    public function seth_hirachyid($h_hirachyid)
+    public function seth_hierarchyid($h_hierarchyid)
     {
-            $this->h_hirachyid = $h_hirachyid;
+            $this->h_hierarchyid = $h_hierarchyid;
     }
     
     /**
-    * Gets h_hirachyid
+    * Gets h_hierarchyid
     *
     * @return type
     */
-    public function geth_hirachyid()
+    public function geth_hierarchyid()
     {
-            return $this->h_hirachyid;
+            return $this->h_hierarchyid;
     }
 }
 ?>

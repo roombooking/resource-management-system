@@ -89,7 +89,7 @@ INSERT INTO `roombooking`.`Equipments` (`equipmentid`, `resourceid`) VALUES (NUL
 /*
  * Fake hierachie für Containments
  */
-INSERT INTO `roombooking`.`Hirachies` (`hirachyid`) VALUES ('1');
+INSERT INTO `roombooking`.`Hierachies` (`hierarchyid`, `name`) VALUES ('1', 'Technische Universität Berlin');
 
 /*
  *	Fake Containments
@@ -99,39 +99,39 @@ INSERT INTO `roombooking`.`Hirachies` (`hirachyid`) VALUES ('1');
  *
  *	'Child' ist der betroffene Knoten, parent der Elternknoten
  */
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', NULL, '1', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '1', '2', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '3', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '4', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '5', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '6', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '7', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '8', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '9', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '10', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '11', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '12', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '13', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '14', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '15', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '16', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '17', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '18', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '19', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '20', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '21', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '22', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '23', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '6', '24', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '6', '25', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '6', '26', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '7', '27', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '7', '28', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '7', '29', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '24', '30', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '24', '31', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '24', '32', NULL, NULL);
-INSERT INTO `roombooking`.`Containments` (`containmentid`, `hirachyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '29', '33', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', NULL, '1', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '1', '2', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '3', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '4', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '5', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '6', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '7', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '8', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '9', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '10', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '11', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '12', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '13', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '14', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '15', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '16', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '17', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '18', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '19', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '20', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '21', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '22', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '2', '23', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '6', '24', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '6', '25', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '6', '26', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '7', '27', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '7', '28', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '7', '29', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '24', '30', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '24', '31', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '24', '32', NULL, NULL);
+INSERT INTO `roombooking`.`Containments` (`containmentid`, `hierarchyid`, `parent`, `child`, `name`, `description`) VALUES (NULL, '1', '29', '33', NULL, NULL);
 
 /*
  *	Fake Bookings

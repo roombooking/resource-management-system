@@ -39,7 +39,7 @@ class Booking {
     //              c.parent AS c_parent,
     //              c.name AS c_name,
     //              c.description AS c_description,
-    //              h.hirachyid AS h_hirachyid
+    //              h.hierarchyid AS h_hierarchyid
     //         FROM
     //              Users u_b RIGHT OUTER JOIN Bookings b ON u_b.userid = b.booking_userid
     //              LEFT OUTER JOIN Users u_r ON b.responsible_userid = u_r.userid
@@ -47,7 +47,7 @@ class Booking {
     //              LEFT OUTER JOIN Equipments e ON r.resourceid = e.resourceid
     //              LEFT OUTER JOIN Places p ON r.resourceid = p.resourceid
     //              LEFT OUTER JOIN Containments c ON r.resourceid = c.child
-    //              LEFT OUTER JOIN Hirachies h ON c.hirachyid = h.hirachyid
+    //              LEFT OUTER JOIN Hierarchies h ON c.hierarchyid = h.hierarchyid
     
     protected $b_bookingid;
     protected $b_name;
@@ -85,27 +85,27 @@ class Booking {
     protected $c_parent;
     protected $c_name;
     protected $c_description;
-    protected $h_hirachyid;
+    protected $h_hierarchyid;
     
     /**
-    * Sets h_hirachyid
+    * Sets h_hierarchyid
     *
-    * @param type $h_hirachyid
+    * @param type $h_hierarchyid
     * @return void
     */
-    public function seth_hirachyid($h_hirachyid)
+    public function seth_hierarchyid($h_hierarchyid)
     {
-            $this->h_hirachyid = $h_hirachyid;
+            $this->h_hierarchyid = $h_hierarchyid;
     }
     
     /**
-    * Gets h_hirachyid
+    * Gets h_hierarchyid
     *
     * @return type
     */
-    public function geth_hirachyid()
+    public function geth_hierarchyid()
     {
-            return $this->h_hirachyid;
+            return $this->h_hierarchyid;
     }
     
     /**
