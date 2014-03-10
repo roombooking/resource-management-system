@@ -76,12 +76,12 @@ class BookingController extends AbstractActionController
         $first = true;
         $booking = $this->bookingMapper->fetchBookingsById($this->getEvent()->getRouteMatch()->getParam('id'));
         $booking = $booking->current();
-        var_dump($booking);
+        var_dump($booking->getb_start());
         /*
          * Retrieve first element from array
          */
         
-        date_default_timezone_set('America/Los_Angeles');
+        
         
         /*
          * FIXME Doesn't work in PHP < 5.3
