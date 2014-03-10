@@ -99,8 +99,11 @@ class BookingController extends AbstractActionController
         
         $start = str_replace('T', ' ', $booking->getb_start());
         $end = str_replace('T', ' ', $booking->getb_end());
+        echo $start;
         
         $startTime = \DateTime::createFromFormat('Y-m-d H:i:s+', $start);
+        var_dump(DateTime::getLastErrors());
+        echo DateTime::getLastErrors();
         $endTime = \DateTime::createFromFormat('Y-m-d H:i:s+', $end);
         var_dump($startTime);
         
