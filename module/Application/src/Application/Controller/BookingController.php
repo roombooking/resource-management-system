@@ -88,9 +88,8 @@ class BookingController extends AbstractActionController
          * http://stackoverflow.com/questions/4329872/creating-datetime-from-timestamp-in-php-5-3
          */
         
-        $startTime = \DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_start());
-        $endTime = \DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_end());
-        DateTime::getLastErrors();
+        $startTime = \DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_start(), \DateTimeZone::EUROPE);
+        $endTime = \DateTime::createFromFormat('Y-m-d\TH:i:s+', $booking->getb_end(), \DateTimeZone::EUROPE);
         var_dump($startTime);
         
         $isPrebooking = ($booking->getb_isprebooking() == 1 ? true : false);
