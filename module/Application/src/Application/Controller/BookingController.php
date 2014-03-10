@@ -79,11 +79,6 @@ class BookingController extends AbstractActionController
          * Retrieve first element from array
          */
         $booking = $booking->current();
-              
-        /*
-         * FIXME Doesn't work in PHP < 5.3
-         * http://stackoverflow.com/questions/4329872/creating-datetime-from-timestamp-in-php-5-3
-         */
         
         $startTime = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $booking->getb_start());
         $endTime = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $booking->getb_end());
@@ -118,11 +113,6 @@ class BookingController extends AbstractActionController
                 /*
                  * All POST values seem valid.
                  * Create a ViewModel with the values.
-                 */
-                
-                /*
-                 * FIXME Doesn't work in PHP < 5.3
-                 * http://stackoverflow.com/questions/4329872/creating-datetime-from-timestamp-in-php-5-3
                  */
                 $start = DateTime::createFromFormat('U', $startTime);
                 $end = DateTime::createFromFormat('U', $endTime);
