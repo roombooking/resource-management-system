@@ -14,7 +14,6 @@ return array(
                     'type' => 'Literal',
                     'options' => array(
                             'route'    => '/',
-                            'scheme'   => 'https',
                             'defaults' => array(
                                     '__NAMESPACE__' => 'Application\Controller',    
                                     'controller' => 'Index',
@@ -26,7 +25,6 @@ return array(
             		'type' => 'Literal',
             		'options' => array(
             				'route'    => '/login',
-            				'scheme'   => 'https',
             				'defaults' => array(
             				        '__NAMESPACE__' => 'Application\Controller',
             						'controller' => 'Auth',
@@ -50,7 +48,6 @@ return array(
             		'type' => 'Literal',
             		'options' => array(
             				'route'    => '/logout',
-            				'scheme'   => 'https',
             				'defaults' => array(
             						'__NAMESPACE__' => 'Application\Controller',
             						'controller' => 'Auth',
@@ -62,7 +59,6 @@ return array(
             		'type' => 'Literal',
             		'options' => array(
             				'route'    => '/users',
-            				'scheme'   => 'https',
             				'defaults' => array(
             						'__NAMESPACE__' => 'Application\Controller',
             						'controller' => 'User',
@@ -71,7 +67,7 @@ return array(
             		),
             		'may_terminate' => true,
             		'child_routes' => array(
-            				'refresh' => array(
+            				'userRefresh' => array(
             						'type'    => 'Literal',
             						'options' => array(
             								'route'    => '/refresh',
@@ -80,7 +76,7 @@ return array(
             								),
             						),
             				),
-            				'update' => array(
+            				'userUpdate' => array(
             						'type'    => 'Literal',
             						'options' => array(
             								'route'    => '/update',
@@ -95,7 +91,6 @@ return array(
             		'type' => 'Literal',
             		'options' => array(
             				'route'    => '/bookings',
-            				'scheme'   => 'https',
             				'defaults' => array(
             						'__NAMESPACE__' => 'Application\Controller',
             						'controller' => 'Booking',
@@ -109,7 +104,7 @@ return array(
                                  * bookings from given start/end values, provided as
                                  * GET parameters.
                                  */
-                                'list' => array(
+                                'bookingList' => array(
                                         'type' => 'Literal',
                                         'options' => array(
                                                 'route' => '/list/api',
@@ -118,7 +113,7 @@ return array(
                                                 )
                                         )
                                 ),
-                                'add' => array(
+                                'bookingAdd' => array(
                                         'type' => 'Literal',
                                         'options' => array(
                                                 'route' => '/add',
@@ -131,7 +126,7 @@ return array(
                                  * The details/:id/api route returns a JSON representation of
                                  * all details available for a given booking id.
                                  */
-                                'details' => array(
+                                'bookingDetails' => array(
                                 		'type' => 'Segment',
                                 		'options' => array(
                                 				'route' => '/:id/details/api',
@@ -143,7 +138,7 @@ return array(
                                 				)
                                 		)
                                 ),
-                                'show' => array(
+                                'bookingShow' => array(
                                 		'type' => 'Segment',
                                 		'options' => array(
                                 				'route' => '/:id/show',
@@ -194,7 +189,7 @@ return array(
             		),
             		'may_terminate' => true,
             		'child_routes' => array(
-            				'add' => array(
+            				'powerAdd' => array(
             						'type'    => 'Literal',
             						'options' => array(
             								'route'    => '/add',
@@ -203,7 +198,7 @@ return array(
             								),
             						),
             				),
-            				'edit' => array(
+            				'powerEdit' => array(
             						'type'    => 'Segment',
             						'options' => array(
             								'route'    => '/edit/:id',
@@ -215,7 +210,7 @@ return array(
             								),
             						),
             				),
-            				'delete' => array(
+            				'powerDelete' => array(
             						'type'    => 'Segment',
             						'options' => array(
             								'route'    => '/delete/:id',
