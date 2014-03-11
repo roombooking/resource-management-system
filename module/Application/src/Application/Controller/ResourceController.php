@@ -1,6 +1,7 @@
 <?php
     namespace Application\Controller;
     
+    use Application\Entity\Incident as IncidentEntity;
     use Zend\Mvc\Controller\AbstractActionController;
     use Zend\View\Model\ViewModel;
     use Zend\View\Model\JsonModel;
@@ -15,14 +16,14 @@
      */
     class ResourceController extends AbstractActionController
     {
-        /**
-         * @var Application\Mapper\Booking
-         */
         private $resourceMapper;
         
-        public function __construct($resourceMapper)
+        private $incidentMapper;
+        
+        public function __construct($resourceMapper, $incidentMapper)
         {
         	$this->resourceMapper = $resourceMapper;
+        	$this->incidentMapper = $incidentMapper;
         }
         
         public function indexAction () {
@@ -54,6 +55,15 @@
         
         public function resourcesAction ()
         {
+            /*
+             * Logging here for demonstartion only
+             * TODO remove this later...
+             */
+            $incident = new IncidentEntity();
+            $incident->setdescription('A user opened the Resource Editor');
+            $incident->setclass(0);
+            $this->incidentMapper->insert($incident);
+            
             $hierarchyId = $this->getEvent()->getRouteMatch()->getParam('id');
             
         	return new ViewModel(array(

@@ -57,5 +57,10 @@ return array(
         					$sm->get('Zend\Db\Adapter\Adapter')
         			);
         		},
+        		'Application\Mapper\Incident' => function ($sm) {
+        			return new \Application\Mapper\Incident(
+        					$sm->get('Zend\Db\Adapter\Adapter')
+        			);
+        		},
         ),
 );

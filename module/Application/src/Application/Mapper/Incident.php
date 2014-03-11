@@ -1,27 +1,24 @@
 <?php
 namespace Application\Mapper;
 
-use Application\Entity\Role as RoleEntity;
+use Application\Entity\Incident as IncidentEntity;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\TableGateway\Feature\RowGatewayFeature;
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Insert;
 
-class Role extends TableGateway
+class Incident extends TableGateway
 {
-    protected $tableName = 'Roles';
-    protected $idCol = 'roleid';
+    protected $tableName = 'Incidents';
+    protected $idCol = 'incidentid';
     protected $entityPrototype = null;
     protected $hydrator = null;
     
     public function __construct($adapter)
     {
-        parent::__construct($this->tableName, 
-                $adapter, 
-                new RowGatewayFeature($this->idCol)
-        );
-        $this->entityPrototype = new RoleEntity();
+        parent::__construct($this->tableName, $adapter, new RowGatewayFeature($this->idCol));
+        $this->entityPrototype = new IncidentEntity();
         $this->hydrator = new \Zend\Stdlib\Hydrator\Reflection();
     }
     
@@ -31,7 +28,7 @@ class Role extends TableGateway
         );
     }
     
-    public function getRole($id) {
+    public function getIncident($id) {
         return $this->hydrate(
                 $this->select(array(
                         $this->idCol => $id,
@@ -50,11 +47,4 @@ class Role extends TableGateway
 		);
 		return $users->initialize($results->toArray());
     }
-    
-	public function updateEntity($entity) {
-		return parent::update( 
-		        $this->hydrator->extract($entity), 
-		        $this->idCol . "=" . $entity->getId()
-		);
-	}
 }
