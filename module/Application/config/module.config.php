@@ -186,7 +186,7 @@ return array(
             								)
             						)
             				),
-            				'resources' => array(
+            				'resourcesEdit' => array(
             						'type' => 'Segment',
             						'options' => array(
             								'route' => '/:id/resources/edit',
@@ -195,6 +195,18 @@ return array(
             								),
             								'defaults' => array(
             										'action' => 'resources'
+            								)
+            						)
+            				),
+            				'resourcesAdd' => array(
+            						'type' => 'Segment',
+            						'options' => array(
+            								'route' => '/:id/resources/add/api',
+            								'constraints' => array(
+            										'id' => '[0-9]+'
+            								),
+            								'defaults' => array(
+            										'action' => 'addResources'
             								)
             						)
             				)
