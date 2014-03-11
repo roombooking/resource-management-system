@@ -73,6 +73,7 @@
         
         public function addResourcesAction() {
             if ($this->getRequest()->isPost()) {
+                $hierarchyid = $this->getEvent()->getRouteMatch()->getParam('id');
                 $resourceName = $this->params()->fromPost('resourceName');
                 $resourceDescription = $this->params()->fromPost('resourceDescription');
                 $resourceType = $this->params()->fromPost('resourceType');
