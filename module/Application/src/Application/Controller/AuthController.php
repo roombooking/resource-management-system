@@ -79,7 +79,7 @@ class AuthController extends AbstractActionController
             		    	
             		    } catch (\Exception $e) {
             		        //if an error is thrown, the user does not exist and should be inserted
-            		        $this->userMapper->insert($user);
+            		        $this->userMapper->insert($ldapUser);
             		        //TODO: Log User Insert
             		    }
             		    
