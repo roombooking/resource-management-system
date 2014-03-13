@@ -182,4 +182,24 @@ class BookingController extends AbstractActionController
     
     	return new JsonModel($booking);
     }
+    
+    public function createAction ()
+    {
+        $test = array();
+        
+        if ($this->getRequest()->isPost()) {
+            $this->bookingForm->initialize();
+            $this->bookingForm->setData($this->getRequest()->getPost());
+            
+            if ($this->bookingForm->isValid()) {
+                $data = $this->bookingForm->getData();
+                
+                $test = array(
+                		"title" => $data['title']
+                );
+            }
+        }
+        
+    	return new JsonModel($test);
+    }
 }

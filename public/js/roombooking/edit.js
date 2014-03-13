@@ -59,10 +59,12 @@
 								for (var i = 0; i < hierarchy.length; i++) {
 									var resource = hierarchy[i];
 									
+									var resourceNameMaxLenght = 20;
+									
 									var jsTreeNode = {
 										"id" : ("hierarchy_" + hierarchyId + "_node_" + resource.r_resourceid),
 										"parent" : (resource.c_parent === null ? "#" : ("hierarchy_" + hierarchyId + "_node_" + resource.c_parent)),
-										"text" : resource.r_name,
+										"text" : (resource.r_name.length > 20 ? (resource.r_name.substring(0, 20) + "...") : resource.r_name),
 										"icon" : (resource.e_equipmentid !== null ? "fa fa-archive" : "fa fa-home"),
 										"state" : {
 										    /*

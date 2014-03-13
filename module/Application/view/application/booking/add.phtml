@@ -21,10 +21,9 @@ $this->headLink()->prependStylesheet(
 
 	<div class="row">
 		<div class="large-12 column">
-			<label>Booking Title <small>required</small>
+			<label><?php echo $this->translate('Booking Title') ?> <small><?php echo $this->translate('required') ?></small>
     		  <?php echo $this->formRow($form->get('title'))?>
-    		</label> <small class="error">The title of the booking is
-				required.</small>
+    		</label> <small class="error"><?php echo $this->translate('The title has to be between 4 and 256 characters long.') ?></small>
 		</div>
 	</div>
 
@@ -32,51 +31,53 @@ $this->headLink()->prependStylesheet(
 		<div class="large-6 column">
 			<div class="row daterow">
 				<div class="medium-8 columns">
-					<label> Start Date <small>required</small>
+					<label><?php echo $this->translate('Start Date') ?> <small><?php echo $this->translate('required') ?></small>
 					   <?php echo $this->formRow($form->get('startdate'))?>
-					</label> <small class="error">Please enter the date as YYYY-MM-DD.</small>
+					</label> <small class="error"><?php echo $this->translate('Please enter the date as YYYY-MM-DD.') ?></small>
 				</div>
 				<div class="small-4 columns">
-					<label>Start Time
+					<label><?php echo $this->translate('Start Time')?>
 					   <?php echo $this->formRow($form->get('starttime'))?>
-					</label> <small class="error">Please enter the date as HH:MM.</small>
+					</label> <small class="error"><?php echo $this->translate('Please enter the date as HH:MM.') ?></small>
 				</div>
 			</div>
 
 			<div class="row daterow">
 				<div class="medium-8 columns">
-					<label>End Date <small>required</small>
+					<label><?php echo $this->translate('End Date') ?> <small><?php echo $this->translate('required') ?></small>
 					   <?php echo $this->formRow($form->get('enddate'))?>
-					</label> <small class="error">Please enter the date as YYYY-MM-DD.</small>
+					</label> <small class="error"><?php echo $this->translate('Please enter the date as YYYY-MM-DD.') ?></small>
 				</div>
 				<div class="small-4 columns">
-					<label>End Time
+					<label><?php echo $this->translate('End Time')?>
 					   <?php echo $this->formRow($form->get('endtime'))?>
-					</label> <small class="error">Please enter the date as HH:MM.</small>
+					</label> <small class="error"><?php echo $this->translate('Please enter the date as HH:MM.') ?></small>
 				</div>
 			</div>
 			<div class="row">
 				<div class="large-12 columns">
 					<label><i class="fa fa-pencil"></i> <span data-tooltip
 						class="has-tip"
-						title="Please describe what activities you plan to carry out with the selected ressource.">Booking
-							Description</span> <small>optional</small> <?php echo $this->formRow($form->get('bookingdescription'))?> </label>
+						title="Please describe what activities you plan to carry out with the selected ressource."><?php echo $this->translate('Booking Description') ?></span>
+						<small><?php echo $this->translate('optional') ?></small> <?php echo $this->formRow($form->get('bookingdescription'))?> </label>
+					<small class="error"><?php echo $this->translate('Please keep the description under 2.048 characters.') ?></small>
 				</div>
 			</div>
 			<div class="row">
 				<div class="large-12 columns">
 					<label><i class="fa fa-users"></i> <span data-tooltip
 						class="has-tip"
-						title="Please describe who will be participating in the activity planned.">Participant
-							Description</span> <small>optional</small> <?php echo $this->formRow($form->get('participantdescription'))?> </label>
+						title="<?php echo $this->translate('Please describe who will be participating in the activity planned.') ?>"><?php echo $this->translate('Participant Description') ?></span>
+						<small><?php echo $this->translate('optional') ?></small> <?php echo $this->formRow($form->get('participantdescription'))?> </label>
+					<small class="error"><?php echo $this->translate('Please keep the description under 2.048 characters.') ?></small>
 				</div>
 			</div>
 			<div class="row">
 				<div class="large-12 columns">
 					<label><i class="fa fa-user"></i> <span data-tooltip
 						class="has-tip"
-						title="Should you book this resource on behalf of another person you can add their details here.">Person
-							Responsible</span> <small>optional</small> <?php echo $this->formRow($form->get('responsibility'))?> </label>
+						title="<?php echo $this->translate('Should you book this resource on behalf of another person you can add their details here.') ?>"><?php echo $this->translate('Person Responsible') ?></span>
+						<small><?php echo $this->translate('optional') ?></small> <?php echo $this->formRow($form->get('responsibility'))?> </label>
 				</div>
 			</div>
 			<div class="row">

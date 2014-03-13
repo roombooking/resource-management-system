@@ -24,14 +24,12 @@ class Booking extends Form
     }
     
     public function initialize () {
-        $this->setAttribute('action', 'create');
+        $this->setAttribute('action', '/bookings/create');
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'form-add');
         $this->setAttribute('data-abide', ''); // http://foundation.zurb.com/docs/components/abide.html
         
-        /*
-         * TODO $this->setInputFilter
-         */
+        $this->setInputFilter(new BookingFilter());
         
         $this->add(
         		array(
@@ -41,7 +39,8 @@ class Booking extends Form
         						'id' => 'name',
         						'placeholder' => 'Title',
         						'autofocus' => true,
-        						'required' => true
+        						'required' => true,
+        				        'pattern' => 'shortfieldrequired'
         				)
         		));
         

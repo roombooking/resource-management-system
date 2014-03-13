@@ -122,6 +122,15 @@ return array(
                                                 )
                                         )
                                 ),
+                                'bookingCreate' => array(
+                                		'type' => 'Literal',
+                                		'options' => array(
+                                				'route' => '/create',
+                                				'defaults' => array(
+                                						'action' => 'create'
+                                				)
+                                		)
+                                ),
                                 /* 
                                  * The details/:id/api route returns a JSON representation of
                                  * all details available for a given booking id.

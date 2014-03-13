@@ -40,6 +40,15 @@
 				Foundation.libs.abide.settings.patterns.time = /(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9])/;
 				
 				/*
+				 * Custom fields for form validation
+				 */
+				Foundation.libs.abide.settings.patterns.shortfield = /^.{0,256}$/;
+				Foundation.libs.abide.settings.patterns.shortfieldrequired = /^.{4,256}$/;
+				
+				Foundation.libs.abide.settings.patterns.longfield = /^.{0,2048}$/;
+				Foundation.libs.abide.settings.patterns.longfieldrequired = /^.{4,2048}$/;
+				
+				/*
 				 * Run foundation initialisation code,
 				 * configure foundation
 				 */
