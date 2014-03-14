@@ -220,7 +220,8 @@ class BookingController extends AbstractActionController
                 return new JsonModel(array(
                 		"validRequest" => false,
                 		"validResource" => null,
-                		"collision" => null
+                		"collision" => null,
+                        "collidingBooking" => null
                 ));
             } else {
                 /*
@@ -244,12 +245,16 @@ class BookingController extends AbstractActionController
                 if ($hasResource && $validResource->getr_isdeleted() == "0" && $validResource->getr_isbookable() == "1") {
                     $bookings = $this->bookingMapper->fetchCollidingBookings($hierarchyid, $resourceid, $start, $end);
                     
+                    $collidingBookingName = null;
+                    $collidingBookingId = null;
                     $isColliding = false;
                     foreach ( $bookings as $booking )
                     {
                     	if ( !$isColliding )
                     	{
                     		$collidingBooking = $booking;
+                    		$collidingBookingName = $collidingBooking->getb_name();
+                    		$collidingBookingId = $collidingBooking->getb_bookingid();
                     		$isColliding = true;
                     	}
                     }
@@ -257,13 +262,18 @@ class BookingController extends AbstractActionController
                     return new JsonModel(array(
                     		"validRequest" => true,
                     		"validResource" => true,
-                    		"collision" => $isColliding
+                    		"collision" => $isColliding,
+                            "collidingBooking" => array(
+                                "collidingBookingName" => $collidingBookingName,
+                                "collidingBookingId" => $collidingBookingId
+                            )
                     ));
                 } else {
                     return new JsonModel(array(
                     		"validRequest" => true,
                     		"validResource" => false,
-                    		"collision" => null
+                    		"collision" => null,
+                            "collidingBooking" => null
                     ));
                 }
                 
@@ -274,7 +284,8 @@ class BookingController extends AbstractActionController
         return new JsonModel(array(
                 "validRequest" => false,
                 "validResource" => null,
-                "collision" => null
+                "collision" => null,
+                "collidingBooking" => null
         ));
     }
 }
