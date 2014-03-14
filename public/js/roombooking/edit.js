@@ -130,11 +130,11 @@
 					var ressourceTreeElementHandling = function(selectedElements) {
 						if (selectedElements.length !== 1) {
 							formlock.invalidResourceSelection = true;
-							lockUnlockForm();
 						} else {
 							formlock.invalidResourceSelection = false;
-							overlapHandling(selectedElements[0]);
 						}
+						
+						lockUnlockForm();
 					};
 					
 					var overlapHandling = function(selectedElement) {
@@ -151,11 +151,11 @@
 							var hierarchy = elementIdMatch[3];
 							var node = elementIdMatch[7];
 							var start = Number($("input[name=starttimestamp]").val());
-							var end = Number($("input[name=starttimestamp]").val());
+							var end = Number($("input[name=endtimestamp]").val());
 					          
 							$.get("/bookings/checkcollision/api", {
-								"start" : 0,
-								"end" : 0,
+								"start" : start,
+								"end" : end,
 								"hierarchyid" : hierarchy,
 								"resourceid" : node
 							}).done(function(data) {
@@ -170,6 +170,7 @@
 					};
 					
 					var lockUnlockForm = function() {
+						console.log("TODO");
 						console.log(formlock);
 						
 						if (formlock.endBeforeStart === false &&
@@ -258,6 +259,11 @@
 										 * Validate the tree selection
 										 */
 										ressourceTreeElementHandling(data.selected);
+										
+										/*
+										 * Check if the ressource is overlapping.
+										 */
+										overlapHandling(data.selected[0]);
 									}).jstree({
 										"core" : {
 											"data" : jsTreeData
@@ -280,6 +286,14 @@
 						
 						if (dateTime !== null) {
 							startBeforeEndHandling(createTimestampfromInput(dateTime));
+							
+							/*
+							 * Iterate over selected nodes
+							 * TODO make this more robust
+							 */
+							resourceTreeElement.find(".hierarchy").find(".jstree-wholerow-clicked").each(function(i) {
+								overlapHandling($(this).parent().attr("id"));
+							});
 						} else {
 							formlock.invalidDateInput = true;
 							lockUnlockForm();

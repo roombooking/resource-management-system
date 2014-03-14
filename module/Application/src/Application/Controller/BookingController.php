@@ -216,7 +216,7 @@ class BookingController extends AbstractActionController
             $hierarchyid = $this->params()->fromQuery('hierarchyid');
             $resourceid = $this->params()->fromQuery('resourceid');
             
-            if (!ctype_digit($start) || !ctype_digit($end) || !ctype_digit($hierarchyid) || !ctype_digit($resourceid)) {
+            if (!ctype_digit($start) || !ctype_digit($end) || !ctype_digit($hierarchyid) || !ctype_digit($resourceid) || ($start > $end)) {
                 return new JsonModel(array(
                 		"validRequest" => false,
                 		"validResource" => null,
@@ -242,11 +242,22 @@ class BookingController extends AbstractActionController
                 }
                 
                 if ($hasResource && $validResource->getr_isdeleted() == "0" && $validResource->getr_isbookable() == "1") {
-                    $collidingBookings = $this->bookingMapper->fetchCollidingBookings($hierarchyid, $resourceid, $start, $end);
+                    $bookings = $this->bookingMapper->fetchCollidingBookings($hierarchyid, $resourceid, $start, $end);
+                    
+                    $isColliding = false;
+                    foreach ( $bookings as $booking )
+                    {
+                    	if ( !$isColliding )
+                    	{
+                    		$collidingBooking = $booking;
+                    		$isColliding = true;
+                    	}
+                    }
+                    
                     return new JsonModel(array(
                     		"validRequest" => true,
                     		"validResource" => true,
-                    		"collision" => null
+                    		"collision" => $isColliding
                     ));
                 } else {
                     return new JsonModel(array(
