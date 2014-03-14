@@ -105,7 +105,7 @@
 		 * TODO Validate?
 		 */
                 $hierarchyid = $this->getEvent()->getRouteMatch()->getParam('hierarchyid');
-                $id =  = $this->getEvent()->getRouteMatch()->getParam('id');
+                $id = $this->getEvent()->getRouteMatch()->getParam('id');
 
 		// TODO
 
@@ -124,7 +124,7 @@
 		 */
 		if ($this->getRequest()->isPost()) {
 		        $hierarchyid = $this->getEvent()->getRouteMatch()->getParam('hierarchyid');
-		        $id =  = $this->getEvent()->getRouteMatch()->getParam('id');
+		        $id = $this->getEvent()->getRouteMatch()->getParam('id');
 		        $parentId = $this->getEvent()->getRouteMatch()->getParam('parentId');
 		}
 
