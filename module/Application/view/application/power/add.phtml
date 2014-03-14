@@ -12,12 +12,12 @@
         if($this->loginError) {
             ?>
                 <div data-alert class="alert-box warning">
-                    <?php echo $this->translate('The credencials provided are invalid') ?>.<br>
-                    <?php echo $this->translate('Please try again with the credencials used for other services at the Quality and Usability Lab') ?>. <a href="#" class="close">&times;</a>
+                    <?php echo $this->translate('The credentials provided are invalid') ?>.<br>
+                    <?php echo $this->translate('Please try again with the credentials used for other services at the Quality and Usability Lab') ?>. <a href="#" class="close">&times;</a>
                 </div>
             <?php 
         } else {
-            echo '<p>' . $this->translate('Authentication is necessary to use the room booking system.') . " " . $this->translate('Please log in with the credencials used for other services at the Quality and Usability Lab.') . '</p>';
+            echo '<p>' . $this->translate('Authentication is necessary to use the room booking system.') . " " . $this->translate('Please log in with the credentials used for other services at the Quality and Usability Lab.') . '</p>';
         }
         
         $this->form->prepare();
