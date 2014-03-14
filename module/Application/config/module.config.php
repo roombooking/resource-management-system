@@ -161,6 +161,15 @@ return array(
                                 						'action' => 'show'
                                 				)
                                 		)
+                                ),
+                                'bookingCheckCollision' => array(
+                                		'type' => 'Literal',
+                                		'options' => array(
+                                				'route' => '/checkcollision/api',
+                                				'defaults' => array(
+                                						'action' => 'checkcollision'
+                                				)
+                                		)
                                 )
                         ),
             ),

@@ -24,21 +24,19 @@ class BookingController extends AbstractActionController
      */
     private $bookingMapper;
     
+    private $resourceMapper;
+    
     private $bookingForm;
     
-    public function __construct($bookingMapper, $bookingForm)
+    public function __construct($bookingMapper, $bookingForm, $resourceMapper)
     {
     	$this->bookingMapper = $bookingMapper;
-    	$this->bookingForm = $bookingForm;
+    	$this->resourceMapper = $resourceMapper;
+    	$this->bookingForm = $bookingForm;    	
     }
     
     public function indexAction () {
-        /*
-         * TODO Define an index action should it become
-         * necessary.
-         * 
-         * The route /bookings redirects to this! 
-         */
+        // TODO
     }
     
     /**
@@ -201,5 +199,71 @@ class BookingController extends AbstractActionController
         }
         
     	return new JsonModel($test);
+    }
+    
+    public function checkcollisionAction ()
+    {
+        $allGetValues = $this->params()->fromQuery();
+        $allGetParams = array_keys($allGetValues);
+        
+        if (in_array("start", $allGetParams)
+            && in_array("end", $allGetParams)
+            && in_array("hierarchyid", $allGetParams)
+            && in_array("resourceid", $allGetParams) ) {
+            
+            $start = $this->params()->fromQuery('start');
+            $end = $this->params()->fromQuery('end');
+            $hierarchyid = $this->params()->fromQuery('hierarchyid');
+            $resourceid = $this->params()->fromQuery('resourceid');
+            
+            if (!ctype_digit($start) || !ctype_digit($end) || !ctype_digit($hierarchyid) || !ctype_digit($resourceid)) {
+                return new JsonModel(array(
+                		"validRequest" => false,
+                		"validResource" => null,
+                		"collision" => null
+                ));
+            } else {
+                /*
+                 * The request parameters appear to be valid.
+                 * Check the input
+                 */
+                
+                $resources = $this->resourceMapper->fetchResourceByIds($hierarchyid, $resourceid);
+                $validResource = null;
+                
+                $hasResource = false;
+                foreach ( $resources as $resource )
+                {
+                	if ( !$hasResource )
+                	{
+                		$validResource = $resource;
+                		$hasResource = true;
+                	}
+                }
+                
+                if ($hasResource && $validResource->getr_isdeleted() == "0" && $validResource->getr_isbookable() == "1") {
+                    $collidingBookings = $this->bookingMapper->fetchCollidingBookings($hierarchyid, $resourceid, $start, $end);
+                    return new JsonModel(array(
+                    		"validRequest" => true,
+                    		"validResource" => true,
+                    		"collision" => null
+                    ));
+                } else {
+                    return new JsonModel(array(
+                    		"validRequest" => true,
+                    		"validResource" => false,
+                    		"collision" => null
+                    ));
+                }
+                
+            }
+
+        }
+        
+        return new JsonModel(array(
+                "validRequest" => false,
+                "validResource" => null,
+                "collision" => null
+        ));
     }
 }

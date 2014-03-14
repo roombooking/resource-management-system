@@ -21,8 +21,170 @@
 				 * Require jstree
 				 */
 				require([ "jstree" ], function() {
+					/*
+					 * The base tree element
+					 */
 					var resourceTreeElement = $("#resourcetree");
 					
+					/*
+					 * An array of tree elements (one per hierarchy)
+					 */
+					var trees = [];
+					
+					/*
+					 * Reasosn for why the form should be locked.
+					 */
+					var formlock = {
+						"endBeforeStart" : false,
+						"invalidDateInput" : false,
+						"invalidResourceSelection" : false,
+						"overLappingResourceBooking" : false
+					};
+					
+					var validateDateTime = function() {							
+						var matchDate = function(dateString) {
+							var dateRegEx = new RegExp("(\\d+)(.)(\\d+)(.)(\\d+)", ["i"]);
+							var dateMatch = dateRegEx.exec(dateString);
+							
+							if (dateMatch !== null) {
+								return {
+									"day" : dateMatch[5],
+									"month" : (dateMatch[3] - 1),	// Integer value representing the month, beginning with 0 for January to 11 for December
+																	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+									"year" : dateMatch[1]
+								};
+							} else {
+								return null;
+							}
+						};
+						
+						var matchTime = function(timeString) {
+						      var timeRegEx = new RegExp("(\\d+)(.)(\\d+)", ["i"]);
+						      var timeMatch = timeRegEx.exec(timeString);
+						      
+						      if (timeMatch !== null) {
+						          return {
+						        	"hours" : timeMatch[1],
+						        	"minutes" : timeMatch[3]
+						          };
+						      } else {
+						    	  return null;
+						      }
+						};
+						
+						var startDate = matchDate($("input#startdate").val());
+						var startTime = matchTime($("input#starttime").val());
+						
+						var endDate = matchDate($("input#enddate").val());
+						var endTime = matchTime($("input#endtime").val());
+						
+						var start;
+						var end;
+						
+						if (startDate !== null && startTime !== null && endDate !== null && endTime !== null) {
+							try {
+								start = new Date(startDate.year, startDate.month, startDate.day, startTime.hours, startTime.minutes, 0, 0);
+								end = new Date(endDate.year, endDate.month, endDate.day, endTime.hours, endTime.minutes, 0, 0);
+								
+								return {
+									"start" : start,
+									"end" : end
+								};
+							} catch (ignore) {
+								/*
+								 * Can't parse Date/Time
+								 */
+								return null;
+							}
+						} else {
+							/*
+							 * Invalid syntax for Date/Time
+							 */
+							return null;
+						}
+					};
+					
+					
+					var createTimestampfromInput = function(dateTime) {
+						var startTimestampField = $("input[name=starttimestamp]");
+						var endTimestampField = $("input[name=endtimestamp]");
+						
+						var start = dateTime.start.getTime() / 1000;
+						var end = dateTime.end.getTime() / 1000;
+						
+						startTimestampField.val(start);
+						endTimestampField.val(end);
+						
+						return {
+							"start" : start,
+							"end" : end
+						};
+					};
+					
+					var startBeforeEndHandling = function(times) {
+						formlock.endBeforeStart = (times.start < times.end ? false : true);
+						lockUnlockForm();
+						return (times.start < times.end ? true : false);
+					};
+					
+					var ressourceTreeElementHandling = function(selectedElements) {
+						if (selectedElements.length !== 1) {
+							formlock.invalidResourceSelection = true;
+							lockUnlockForm();
+						} else {
+							formlock.invalidResourceSelection = false;
+							overlapHandling(selectedElements[0]);
+						}
+					};
+					
+					var overlapHandling = function(selectedElement) {
+						/*
+						 * Lock the form until response is positive
+						 */
+						formlock.overLappingResourceBooking = true;
+						lockUnlockForm();
+						
+						var elementIdRegEx = new RegExp("(hierarchy)(_)(\\d+)(_)(node)(_)(\\d+)", ["i"]); 
+						var elementIdMatch = elementIdRegEx.exec(selectedElement);
+
+						if (elementIdMatch != null) {
+							var hierarchy = elementIdMatch[3];
+							var node = elementIdMatch[7];
+							var start = Number($("input[name=starttimestamp]").val());
+							var end = Number($("input[name=starttimestamp]").val());
+					          
+							$.get("/bookings/checkcollision/api", {
+								"start" : 0,
+								"end" : 0,
+								"hierarchyid" : hierarchy,
+								"resourceid" : node
+							}).done(function(data) {
+								console.log(data);
+								
+								if(data.validRequest && data.validResource && !data.collision) {
+									formlock.overLappingResourceBooking = false;
+									lockUnlockForm();
+								}
+							});
+						}
+					};
+					
+					var lockUnlockForm = function() {
+						console.log(formlock);
+						
+						if (formlock.endBeforeStart === false &&
+								formlock.invalidDateInput === false &&
+								formlock.invalidResourceSelection === false &&
+								formlock.overLappingResourceBooking === false) {
+							/*
+							 * No lock. Unlock form.
+							 */
+						} else {
+							/*
+							 * Some lock. Lock form
+							 */
+						}
+					};
 					
 					/**
 					 * Prepare the ressource Tree
@@ -49,7 +211,7 @@
 								var hierarchy = hierachies[hierarchyId];
 								
 								var treeContainer = $("<div/>", {
-									"class": "hierarchy_" + hierarchyId
+									"class": "hierarchy hierarchy_" + hierarchyId
 								});
 								
 								resourceTreeElement.prepend(treeContainer);
@@ -88,9 +250,14 @@
 								/*
 								 * Create JStree
 								 */
-								resourceTreeElement.on(
+								treeContainer.on(
 									"select_node.jstree", function(event, data) {
 										$("input[name=resourceid]").val($("#" + data.selected + ">a").attr("resourceid"));
+										
+										/*
+										 * Validate the tree selection
+										 */
+										ressourceTreeElementHandling(data.selected);
 									}).jstree({
 										"core" : {
 											"data" : jsTreeData
@@ -99,100 +266,25 @@
 											"wholerow"
 										]
 								});
+								
+								trees.push(treeContainer);
 							}
 						});
 					})();
 					
-					/*
-					 * Form Validation
-					 */
-					(function() {
-						var isPrebooking = false; // FIXME
+					$(".daterow :input").on("change", function() {
+						/*
+						 * Populate the timestamp fields
+						 */
+						var dateTime = validateDateTime();
 						
-						var validateDateTime = function() {
-							/*
-							 * TODO Lock Input
-							 */
-							
-							var matchDate = function(dateString) {
-								var dateRegEx = new RegExp("(\\d+)" + "(\\/)" + "(\\d+)" + "(\\/)" + "(\\d+)", ["i"]);
-								var dateMatch = dateRegEx.exec(dateString);
-
-								if (dateMatch !== null) {
-									return {
-										"day" : dateMatch[1],
-										"month" : dateMatch[3],
-										"year" : dateMatch[5]
-									};
-								} else {
-									return null;
-								}
-							};
-							
-							var matchTime = function(timeString) {
-							      var timeRegEx = new RegExp("(\\d+)" + "(:)" + "(\\d+)", ["i"]);
-							      var timeMatch = timeRegEx.exec(timeString);
-							      
-							      if (timeMatch !== null) {
-							          return {
-							        	"hours" : timeMatch[1],
-							        	"minutes" : timeMatch[3]
-							          };
-							      } else {
-							    	  return null;
-							      }
-							};
-							
-							var startDate = matchDate($("input#startdate").val());
-							var startTime = matchTime($("input#starttime").val());
-							
-							var endDate = matchDate($("input#enddate").val());
-							var endTime = matchTime($("input#endtime").val());
-							
-							var start;
-							var end;
-							
-							if (startDate !== null && startTime !== null && endDate !== null && endTime !== null) {
-								try {
-									
-								} catch (ignore) {
-									/*
-									 * Can't parse Date/Time
-									 */
-									return false;
-								}
-							} else {
-								/*
-								 * Invalid syntax for Date/Time
-								 */
-								return false;
-							}
-						};
-						
-						var createTimestampfromInput = function() {
-							
-						};
-						
-						$(".daterow :input").on("change", function() {
-							/*
-							 * Populate the timestamp fields
-							 */
-							
-							/*
-							 * Only validate the timerange if it is
-							 * not a pre-booking.
-							 */
-							if (!isPrebooking) {
-								validateDateTime();
-							}
-						});
-						
-						resourceTreeElement.on("select_node.jstree", function(event, data) {
-							if (!isPrebooking) {
-								validateDateTime();
-							}
-						});
-					})();
+						if (dateTime !== null) {
+							startBeforeEndHandling(createTimestampfromInput(dateTime));
+						} else {
+							formlock.invalidDateInput = true;
+							lockUnlockForm();
+						}
+					});
 				});
 			});
 		});

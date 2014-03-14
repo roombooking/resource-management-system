@@ -148,7 +148,8 @@ class Booking extends Form
          * fetching values throug a JSON API is probably much much smarter...
          */
         
-        $users = $this->userMapper->fetchAll();
+        $users = $this->userMapper->fetchAll(true);
+        
         $usersArr = array(
         		'-1' => ""
         );
