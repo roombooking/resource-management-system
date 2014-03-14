@@ -1,7 +1,7 @@
 <div class="large-10 columns">
 	<h4><?php echo $this->translate('User Overview') ?></h4>
 	
-	<a href="<?php echo $this->url('user/refresh');?>" class="button synchronize-ldap-button right"><?php echo $this->translate('Synchronize with LDAP') ?></a>
+	<a href="<?php echo $this->url('user/userRefresh');?>" class="button synchronize-ldap-button right"><?php echo $this->translate('Synchronize with LDAP') ?></a>
 	
 	<?php if($users->count() === 0) : ?>
 	<div data-alert class="alert-box">
@@ -42,7 +42,7 @@
         </tbody>
 	</table>
 	
-	<a href="<?php echo $this->url('user/refresh');?>" class="button synchronize-ldap-button right"><?php echo $this->translate('Synchronize with LDAP') ?></a>
+	<a href="<?php echo $this->url('user/userRefresh');?>" class="button synchronize-ldap-button right"><?php echo $this->translate('Synchronize with LDAP') ?></a>
 </div>
 
 <!-- User View Specific JavaScript Components -->
