@@ -143,27 +143,41 @@
 							      }
 							};
 							
-							/*
-							 * TODO grab ID of selected resource
-							 */
-							
 							var startDate = matchDate($("input#startdate").val());
 							var startTime = matchTime($("input#starttime").val());
 							
 							var endDate = matchDate($("input#enddate").val());
 							var endTime = matchTime($("input#endtime").val());
 							
+							var start;
+							var end;
+							
 							if (startDate !== null && startTime !== null && endDate !== null && endTime !== null) {
+								try {
+									
+								} catch (ignore) {
+									/*
+									 * Can't parse Date/Time
+									 */
+									return false;
+								}
+							} else {
 								/*
-								 * Pontentially valid input.
-								 * Make the call to find out if it is not conflicting.
+								 * Invalid syntax for Date/Time
 								 */
-								
-								alert("TODO Potentially valid input. Check for overlapping appointments with API");
+								return false;
 							}
 						};
 						
+						var createTimestampfromInput = function() {
+							
+						};
+						
 						$(".daterow :input").on("change", function() {
+							/*
+							 * Populate the timestamp fields
+							 */
+							
 							/*
 							 * Only validate the timerange if it is
 							 * not a pre-booking.

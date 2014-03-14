@@ -9,12 +9,17 @@ $this->headLink()->prependStylesheet(
 	<?php $form->prepare(); ?>
 	<?php echo $this->form()->openTag($form); ?>
 	
+	<!-- Hidden form elements -->
+	<?php echo $this->formRow($form->get('resourceid')); ?>
+	<?php echo $this->formRow($form->get('starttimestamp')); ?>
+	<?php echo $this->formRow($form->get('endtimestamp')); ?>
+	
     <div class="row">
 		<div class="small-7 column">
 			<h4><?php echo $this->translate('New Room Booking') ?></h4>
 		</div>
 		<div class="small-5 column">
-			<a href="#" class="button right"><i class="fa fa-pencil-square-o"></i>
+			<a href="#" class="button right"><i class="fa fa-undo"></i>
 				Convert to pre-Booking</a>
 		</div>
 	</div>
@@ -58,7 +63,7 @@ $this->headLink()->prependStylesheet(
 				<div class="large-12 columns">
 					<label><i class="fa fa-pencil"></i> <span data-tooltip
 						class="has-tip"
-						title="Please describe what activities you plan to carry out with the selected ressource."><?php echo $this->translate('Booking Description') ?></span>
+						title="<?php echo $this->translate('Please describe what activities you plan to carry out with the selected ressource.') ?>"><?php echo $this->translate('Booking Description') ?></span>
 						<small><?php echo $this->translate('optional') ?></small> <?php echo $this->formRow($form->get('bookingdescription'))?> </label>
 					<small class="error"><?php echo $this->translate('Please keep the description under 2.048 characters.') ?></small>
 				</div>
@@ -89,7 +94,6 @@ $this->headLink()->prependStylesheet(
 
 		<div class="large-6 column">
 			<div id="resourcetree"></div>
-	       <?php echo $this->formRow($form->get('resourceid'))?>
 	   </div>
 	</div>
 

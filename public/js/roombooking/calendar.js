@@ -360,25 +360,15 @@
 						var startTime = $.fullCalendar.parseDate(startDate).getTime();
 						var endTime = $.fullCalendar.parseDate(endDate).getTime();
 						
-						/*
-						 * TODO Decide whether the screen is wide enough for the tooltip.
-						 * TODO Display tooltip if it is wide enough.
-						 */
-						var displayTooltip = false;	// FIXME
-						
-						if (displayTooltip) {
-							// TODO
-						} else {
-							$().redirect("/bookings/add", {
-								/*
-								 * Provide timestamps as "UNIX" timestamps (no milliseconds).
-								 * Math.round the results (integer like string expected).
-								 */
-								"startTime": Math.round(startTime / 1000),
-								"endTime": Math.round(endTime / 1000),
-								"allDay" : allDay
-							});
-						}
+						$().redirect("/bookings/edit", {
+							/*
+							 * Provide timestamps as "UNIX" timestamps (no milliseconds).
+							 * Math.round the results (integer like string expected).
+							 */
+							"startTime": Math.round(startTime / 1000),
+							"endTime": Math.round(endTime / 1000),
+							"allDay" : allDay
+						});
 						
 					};
 					

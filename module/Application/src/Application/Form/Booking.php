@@ -46,15 +46,6 @@ class Booking extends Form
         
         $this->add(
         		array(
-        				'name' => 'resourceid',
-        				'attributes' => array(
-        						'type' => 'hidden',
-        						'id' => 'resource'
-        				)
-        		));
-        
-        $this->add(
-        		array(
         				'name' => 'startdate',
         				'attributes' => array(
         						'type' => 'date',
@@ -120,12 +111,42 @@ class Booking extends Form
         		));
         
         /*
+         * Hidden elements for JavaScript population purposes
+         */
+        $this->add(
+        		array(
+        				'name' => 'resourceid',
+        				'attributes' => array(
+        						'type' => 'hidden',
+        						'id' => 'resource'
+        				)
+        		));
+        
+        $this->add(
+        		array(
+        				'name' => 'starttimestamp',
+        				'attributes' => array(
+        						'type' => 'hidden',
+        						'id' => 'starttimestamp'
+        				)
+        		));
+        
+        $this->add(
+        		array(
+        				'name' => 'endtimestamp',
+        				'attributes' => array(
+        						'type' => 'hidden',
+        						'id' => 'endtimestamp'
+        				)
+        		));
+        
+        /*
          * Build an Array with all possible Users from scratch
-        *
-        * FIXME This has the potential to be a very bad idea, should the
-        * number of users grow. A text field with auto-complete function,
-        * fetching values throug a JSON API is probably much much smarter...
-        */
+         *
+         * FIXME This has the potential to be a very bad idea, should the
+         * number of users grow. A text field with auto-complete function,
+         * fetching values throug a JSON API is probably much much smarter...
+         */
         
         $users = $this->userMapper->fetchAll();
         $usersArr = array(

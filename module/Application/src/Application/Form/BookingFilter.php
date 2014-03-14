@@ -55,6 +55,34 @@ class BookingFilter extends InputFilter
                 ));
         
         $this->add(
+        		array(
+        				'name' => 'starttimestamp',
+        				'required' => true,
+        				'validators' => array(
+        						array(
+        								'name' => 'digits'
+        						),
+        						array(
+        								'name' => 'not_empty'
+        						)
+        				)
+        		));
+        
+        $this->add(
+        		array(
+        				'name' => 'endtimestamp',
+        				'required' => true,
+        				'validators' => array(
+        						array(
+        								'name' => 'digits'
+        						),
+        						array(
+        								'name' => 'not_empty'
+        						)
+        				)
+        		));
+        
+        $this->add(
                 array(
                         'name' => 'startdate',
                         'required' => true,

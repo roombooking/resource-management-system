@@ -113,12 +113,15 @@ return array(
                                                 )
                                         )
                                 ),
-                                'bookingAdd' => array(
-                                        'type' => 'Literal',
+                                'bookingEdit' => array(
+                                        'type' => 'Segment',
                                         'options' => array(
-                                                'route' => '/add',
+                                                'route' => '/edit[/:id]',
+                                                'constraints' => array(
+                                                		'id' => '[0-9]+'
+                                                ),
                                                 'defaults' => array(
-                                                        'action' => 'add'
+                                                        'action' => 'edit'
                                                 )
                                         )
                                 ),

@@ -106,7 +106,7 @@ class BookingController extends AbstractActionController
         ));
     }
     
-    public function addAction ()
+    public function editAction ()
     {
         if ($this->getRequest()->isPost()) {
             $startTime = $this->params()->fromPost('startTime');
