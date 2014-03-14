@@ -15,12 +15,18 @@
 			</tr>
 		</thead>
 		<tbody>
+		 <?php if($hierarchies === null) :?>
+		 <tr class="user-record-row">
+              <td><?php echo $this->translate('No Resources available.') ?></td>
+         </tr>
+		 <?php else : ?>
          <?php foreach ($hierarchies as $hierarchy) : ?>
          <tr class="user-record-row">
-              <td><a href="/hierarchies/<?php echo $hierarchy->geth_hierarchyid();?>/resources/edit"><?php echo $hierarchy->geth_hierarchyid();?></a></td>
-              <td><a href="/hierarchies/<?php echo $hierarchy->geth_hierarchyid();?>/resources/edit"><?php echo $this->escapeHtml($hierarchy->geth_name());?></a></td>
+              <td><a href="<?php echo $this->url('hierarchy/resourcesEdit', array('id' => $hierarchy->geth_hierarchyid()));?>"><?php echo $hierarchy->geth_hierarchyid();?></a></td>
+              <td><a href="<?php echo $this->url('hierarchy/resourcesEdit', array('id' => $hierarchy->geth_hierarchyid()));?>"><?php echo $this->escapeHtml($hierarchy->geth_name());?></a></td>
          </tr>
          <?php endforeach; ?>
+         <?php endif; ?>
         </tbody>
 	</table>
 </div>
