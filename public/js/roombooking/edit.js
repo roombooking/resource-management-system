@@ -151,11 +151,11 @@
 					});
 					
 					var lockForm = function() {
-						
+						$("input[name=submit]").addClass("disabled");
 					};
 					
 					var unLockForm = function() {
-						
+						$("input[name=submit]").removeClass("disabled");
 					};
 					
 					var createWarnings = function (errors) {
@@ -177,19 +177,27 @@
 							$(errorElements[errorId]).hide();
 						}
 						
+						var hasError = false;
+						
 						/*
 						 * Selectively display errros
 						 */
 						for (var errorId in errorElements) {
 							if (errors[errorId]) {
+								hasError = true;
 								
-								console.log("show " + errorElements[errorId]);
 								$(errorElements[errorId]).show();
 								
 								if (errorId === "overLappingResourceBooking") {
 									$(".overlappingresourcebooking_wanrning .overlappingresourcebooking_name").text(errors.collidingBooking.collidingBookingName);
 								}
 							}
+						}
+						
+						if (hasError) {
+							lockForm();
+						} else {
+							unLockForm();
 						}
 					};
 					
@@ -244,6 +252,12 @@
 						 * it is nor a pre-booking (pre-bookings do not block)
 						 */
 						if(!errors.endBeforeStart && !errors.invalidDateInput && !errors.invalidResourceSelection && !window.roombooking.isPrebooking) {
+							/*
+							 * Lock form to prevent submits during AJAX request.
+							 * (Form will be unlocked by createWarnings method)
+							 */
+							lockForm();
+							
 							$.get("/bookings/checkcollision/api", {
 								"start" : (startDate.getTime() / 1000),
 								"end" : (endDate.getTime() / 1000),
@@ -349,6 +363,11 @@
 						
 						return resources;
 					};
+					
+					/*
+					 * Lock form when running first
+					 */
+					lockForm();
 				});
 			});
 		});
