@@ -1,6 +1,6 @@
 /*
 Created: 06/12/2013
-Modified: 10/03/2014
+Modified: 15/03/2014
 Model: MySQL 5.1
 Database: MySQL 5.1
 */
@@ -13,6 +13,7 @@ CREATE TABLE Users
 (
   userid Int UNSIGNED NOT NULL AUTO_INCREMENT,
   roleid Int UNSIGNED NOT NULL,
+  isDelete Bool NOT NULL DEFAULT 0,
   ldapid Int UNSIGNED NOT NULL,
   loginname Varchar(256) NOT NULL,
   firstname Varchar(256),
