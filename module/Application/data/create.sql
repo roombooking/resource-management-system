@@ -13,7 +13,7 @@ CREATE TABLE Users
 (
   userid Int UNSIGNED NOT NULL AUTO_INCREMENT,
   roleid Int UNSIGNED NOT NULL,
-  isDelete Bool NOT NULL DEFAULT 0,
+  isdeleted Bool NOT NULL DEFAULT 0,
   ldapid Int UNSIGNED NOT NULL,
   loginname Varchar(256) NOT NULL,
   firstname Varchar(256),
