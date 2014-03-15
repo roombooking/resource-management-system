@@ -245,6 +245,7 @@ class BookingController extends AbstractActionController
                  * Redirect to home page
                  */
                 $this->redirect()->toRoute('home');
+                $this->stopPropagation();
             } else {
                 throw new \Exception("Form data received is invalid.");
             }
