@@ -200,6 +200,10 @@ class BookingController extends AbstractActionController
              * Check for colission again (this has only been done by javascript so far)
              */
             
+            if (!$this->userAuthentication()->hasIdentity()) {
+                throw new \Exception("user is not authenticated.");
+            }
+            
             if ($this->bookingForm->isValid()) {
                 $data = $this->bookingForm->getData();
                 
@@ -213,12 +217,6 @@ class BookingController extends AbstractActionController
                 $responsibility = $data['responsibility'];
                 
                 /*
-                 * FIXME Hard-coded for debugging purposes.
-                 * Get the ID of the user logged in from somewhere.
-                 */
-                $userId = 1;
-                
-                /*
                  * Create booking entity and insert it
                  */
                 $booking = new BookingEntity();
@@ -230,14 +228,14 @@ class BookingController extends AbstractActionController
                 $booking->setb_description($bookingdescription);
                 $booking->setb_participant_description($participantdescription);
                 $booking->setu_r_userid($responsibility);
-                $booking->setu_b_userid($userId);
+                $booking->setu_b_userid($this->userAuthentication()->getIdentity());
                 $this->bookingMapper->insert($booking);
                 
                 /*
                  * Log this incident
                  */
                 $incident = new IncidentEntity();
-                $incident->setuserid($userId);
+                $incident->setuserid($this->userAuthentication()->getIdentity());
                 $incident->setdescription('A new booking titled "' . $title . '" has been created.');
                 $incident->setresourceid($resourceid);
                 $incident->setclass(0);

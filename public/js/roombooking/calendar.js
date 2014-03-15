@@ -192,6 +192,12 @@
 												.append($("<a/>", {
 													"class": "button",
 													"href": "/bookings/" + event.b_bookingid + "/show",
+													"html": "View Booking"
+												})))
+											.append($("<li/>")
+												.append($("<a/>", {
+													"class": "button",
+													"href": "/bookings/" + event.b_bookingid + "/show",
 													"html": "<i class=\"fa fa-pencil\"></i> Edit Booking"
 												})))
 											.append($("<li/>")
