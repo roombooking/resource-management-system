@@ -81,6 +81,9 @@
 										
 										/*
 										 * Open all non-bookables
+										 * 
+										 * TODO Decide whether it is an update or a new booking.
+										 * The updated resource should always be visible.
 										 */
 									    "opened" : (resource.r_isbookable === "0" ? true : false)
 									 },
