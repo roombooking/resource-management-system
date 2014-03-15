@@ -8,10 +8,17 @@
 		<!-- The calender will be rendered dynamically here. -->
 	</div>
 	
+	<!-- Foundation 5 requires the modals to be in the DOM when calling $(document).foundation. So we prepare them here. -->
     <div id="bookingModal" class="reveal-modal" data-reveal>
-        <!-- Foundation 5 requires the modal to be in the DOM when calling $(document).foundation. So we do prepare it here. -->
         <div class="content">
             <!-- Booking content will be rendered here. -->
+        </div>
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
+    
+    <div id="deleteModal" class="reveal-modal" data-reveal>
+        <div class="content">
+            <!-- Delete confirmation will be rendered here. -->
         </div>
         <a class="close-reveal-modal">&#215;</a>
     </div>

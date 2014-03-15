@@ -203,14 +203,15 @@ class BookingController extends AbstractActionController
             		'time' => substr($booking->getb_end(), 11, 5)
             );
             
-            //var_dump($booking);
-            
             $this->bookingForm->setstart($startFormatted);
             $this->bookingForm->setend($endFormatted);
             $this->bookingForm->setbookingid($booking->getb_bookingid());
             $this->bookingForm->sethierarchyid($booking->geth_hierarchyid());
             $this->bookingForm->setresourceid($booking->getr_resourceid());
             $this->bookingForm->setisprebooking(($booking->getb_isprebooking() == "1" ? true : false));
+            $this->bookingForm->settitle($booking->getb_name());
+            $this->bookingForm->setbookingdescription($booking->getb_description());
+            $this->bookingForm->setparticipantdescription($booking->getb_participant_description());
             $this->bookingForm->initialize();
             
             return new ViewModel(array(
@@ -221,6 +222,18 @@ class BookingController extends AbstractActionController
                     
             ));
         }
+    }
+    
+    public function deleteAction ()
+    {
+        $id = $this->getEvent()->getRouteMatch()->getParam('id');
+        
+        $this->bookingMapper->delete($id);
+    	/*
+         * Redirect to home page
+         */
+        $this->redirect()->toRoute('home');
+        $this->stopPropagation();
     }
     
     public function detailsAction ()
@@ -251,6 +264,7 @@ class BookingController extends AbstractActionController
                 $data = $this->bookingForm->getData();
                 
                 $resourceid = $data['resourceid'];
+                $bookingid = $data['bookingid'];
                 $starttimestamp = $data['starttimestamp'];
                 $endtimestamp = $data['endtimestamp'];
                 $isprebooking = ($data['isprebooking'] == "true" ? "1" : "0");
@@ -272,7 +286,20 @@ class BookingController extends AbstractActionController
                 $booking->setb_participant_description($participantdescription);
                 $booking->setu_r_userid($responsibility);
                 $booking->setu_b_userid($this->userAuthentication()->getIdentity());
-                $this->bookingMapper->insert($booking);
+                
+                
+                if ($bookingid == "") {
+                    /*
+                     * new Booking: insert
+                     */
+                    $this->bookingMapper->insert($booking);
+                } else {
+                    /*
+                     * existing booking: update
+                     */
+                    $booking->setb_bookingid($bookingid);
+                    $this->bookingMapper->update($booking);
+                }
                 
                 /*
                  * Log this incident

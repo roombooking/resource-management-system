@@ -162,6 +162,18 @@ return array(
                                 				)
                                 		)
                                 ),
+                                'bookingDelete' => array(
+                                		'type' => 'Segment',
+                                		'options' => array(
+                                				'route' => '/:id/delete',
+                                				'constraints' => array(
+                                						'id' => '[0-9]+'
+                                				),
+                                				'defaults' => array(
+                                						'action' => 'delete'
+                                				)
+                                		)
+                                ),
                                 'bookingCheckCollision' => array(
                                 		'type' => 'Segment',
                                 		'options' => array(

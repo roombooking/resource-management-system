@@ -207,6 +207,14 @@
 													"class": "button alert",
 													"href": "/bookings/" + event.b_bookingid + "/delete",
 													"html": "<i class=\"fa fa-eraser\"></i> Delete Booking"
+												}).on( "click", function() {
+													var r = confirm("Are you sure?");
+													
+													if (r == true) {
+														return true;
+													} else {
+														return false;
+													}
 												}))))))
 									.append($("<a/>", {
 										"class": "close-reveal-modal",

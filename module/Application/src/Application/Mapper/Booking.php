@@ -82,8 +82,32 @@ class Booking
     
     public function insert($entity) {
         $statement = $this->adapter->createStatement();
-        $statement->prepare("INSERT INTO roombooking.Bookings (booking_userid, responsible_userid, resourceid, name, description, participant_description, start, end, isprebooking, isdeleted) VALUES(" . $entity->getu_b_userid() . ", " . ($entity->getu_r_userid() == "" ? "null" : $entity->getu_r_userid()) . ", " . $entity->getr_resourceid() . ", '" . mysql_real_escape_string($entity->getb_name()) . "', '" . mysql_real_escape_string($entity->getb_description()) . "', '" . mysql_real_escape_string($entity->getb_participant_description()) . "', FROM_UNIXTIME(" . $entity->getb_start() . "), FROM_UNIXTIME(" . $entity->getb_end() . "), " . $entity->getb_isprebooking() . ", 00);");
+        
+        /*
+         * FIXME Danger! This is not SQL injection safe.
+         */
+        $statement->prepare("INSERT INTO roombooking.Bookings (booking_userid, responsible_userid, resourceid, name, description, participant_description, start, end, isprebooking, isdeleted) VALUES(" . $entity->getu_b_userid() . ", " . ($entity->getu_r_userid() == "" ? "null" : $entity->getu_r_userid()) . ", " . $entity->getr_resourceid() . ", '" . $entity->getb_name() . "', '" . $entity->getb_description() . "', '" . $entity->getb_participant_description() . "', FROM_UNIXTIME(" . $entity->getb_start() . "), FROM_UNIXTIME(" . $entity->getb_end() . "), " . $entity->getb_isprebooking() . ", 00);");
         return $statement->execute();
+    }
+    
+    public function update($entity) {
+    	$statement = $this->adapter->createStatement();
+    
+    	/*
+    	 * FIXME Danger! This is not SQL injection safe.
+    	 */
+    	$statement->prepare("UPDATE roombooking.Bookings SET responsible_userid=" . ($entity->getu_r_userid() == "" ? "null" : $entity->getu_r_userid()) . ", resourceid=" . $entity->getr_resourceid() . ", name='" . $entity->getb_name() . "', description='" . $entity->getb_description() . "', participant_description='" . $entity->getb_participant_description() . "', start=FROM_UNIXTIME(" . $entity->getb_start() . "), end=FROM_UNIXTIME(" . $entity->getb_end() . "), isprebooking=" . $entity->getb_isprebooking() . " WHERE bookingid=" . $entity->getb_bookingid() . ";");
+    	return $statement->execute();
+    }
+    
+    public function delete($id) {
+    	$statement = $this->adapter->createStatement();
+    
+    	/*
+    	 * FIXME Danger! This is not SQL injection safe.
+    	 */
+    	$statement->prepare("UPDATE roombooking.Bookings SET isdeleted = 1 WHERE bookingid=" . $id . ";");
+    	return $statement->execute();
     }
 }
 ?>

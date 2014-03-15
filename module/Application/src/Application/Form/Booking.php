@@ -19,6 +19,9 @@ class Booking extends Form
     private $bookingid;
     private $resourceid;
     private $hierarchyid;
+    private $title;
+    private $bookingdescription;
+    private $participantdescription;
     
     public function __construct ($userMapper)
     {
@@ -44,7 +47,8 @@ class Booking extends Form
         						'placeholder' => 'Title',
         						'autofocus' => true,
         						'required' => true,
-        				        'pattern' => 'shortfieldrequired'
+        				        'pattern' => 'shortfieldrequired',
+        				        'value' => $this->title
         				)
         		));
         
@@ -100,7 +104,8 @@ class Booking extends Form
         				'attributes' => array(
         						'type' => 'textarea',
         						'id' => 'bookingdescription',
-        						'placeholder' => 'Booking Description'
+        						'placeholder' => 'Booking Description',
+        				        'value' => $this->bookingdescription
         				)
         		));
         
@@ -110,7 +115,8 @@ class Booking extends Form
         				'attributes' => array(
         						'type' => 'textarea',
         						'id' => 'participantdescription',
-        						'placeholder' => 'Participant Description'
+        						'placeholder' => 'Participant Description',
+        				        'value' => $this->participantdescription
         				)
         		));
         
@@ -185,12 +191,8 @@ class Booking extends Form
         
         $users = $this->userMapper->fetchAll(true);
         
-        $usersArr = array(
-        		"" => ""
-        );
-        
         foreach ($users as $user) :
-        $usersArr[$user->getId()] = $user->getLastName() . ', ' . $user->getFirstName();
+            $usersArr[$user->getId()] = $user->getLastName() . ', ' . $user->getFirstName();
         endforeach;
         
         $this->add(
@@ -198,6 +200,7 @@ class Booking extends Form
         				'type' => 'Zend\Form\Element\Select',
         				'name' => 'responsibility',
         				'options' => array(
+        				        'empty_option' => '',
         						'value_options' => $usersArr
         				)
         		));
@@ -243,6 +246,69 @@ class Booking extends Form
     public function getuserMapper()
     {
             return $this->userMapper;
+    }
+    
+    /**
+    * Sets title
+    *
+    * @param type $title
+    * @return void
+    */
+    public function settitle($title)
+    {
+            $this->title = $title;
+    }
+    
+    /**
+    * Gets title
+    *
+    * @return type
+    */
+    public function gettitle()
+    {
+            return $this->title;
+    }
+    
+    /**
+    * Sets participantdescription
+    *
+    * @param type $participantdescription
+    * @return void
+    */
+    public function setparticipantdescription($participantdescription)
+    {
+            $this->participantdescription = $participantdescription;
+    }
+    
+    /**
+    * Gets participantdescription
+    *
+    * @return type
+    */
+    public function getparticipantdescription()
+    {
+            return $this->participantdescription;
+    }
+    
+    /**
+    * Sets bookingdescription
+    *
+    * @param type $bookingdescription
+    * @return void
+    */
+    public function setbookingdescription($bookingdescription)
+    {
+            $this->bookingdescription = $bookingdescription;
+    }
+    
+    /**
+    * Gets bookingdescription
+    *
+    * @return type
+    */
+    public function getbookingdescription()
+    {
+            return $this->bookingdescription;
     }
     
     /**
