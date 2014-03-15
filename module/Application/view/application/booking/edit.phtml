@@ -4,6 +4,15 @@ $this->headLink()->prependStylesheet(
         $this->basePath() . '/js/jstree/dist/themes/default/style.css');
 ?>
 
+<script type="text/javascript">
+    window.roombooking.isPrebooking = <?php
+        if ($this->isPrebooking){
+            echo "true";
+        } else {
+            echo "false";
+        }; ?>;
+</script>
+
 <div class="large-10 columns">
 	<!-- Prepare the form -->
 	<?php $form->prepare(); ?>
@@ -13,14 +22,21 @@ $this->headLink()->prependStylesheet(
 	<?php echo $this->formRow($form->get('resourceid')); ?>
 	<?php echo $this->formRow($form->get('starttimestamp')); ?>
 	<?php echo $this->formRow($form->get('endtimestamp')); ?>
+	<?php echo $this->formRow($form->get('isprebooking')); ?>
 	
     <div class="row">
 		<div class="small-7 column">
 			<h4><?php echo $this->translate('New Room Booking') ?></h4>
 		</div>
 		<div class="small-5 column">
-			<a href="#" class="button right"><i class="fa fa-undo"></i>
-				Convert to pre-Booking</a>
+			<a href="#" id="convertbookingtype" class="button right"><i class="fa fa-undo"></i>
+				Convert to <?php
+                    if ($this->isPrebooking){
+                        echo $this->translate("authoritative booking");
+                    } else {
+                        echo $this->translate("pre-booking");
+                    }; ?>
+            </a>
 		</div>
 	</div>
 
@@ -34,6 +50,15 @@ $this->headLink()->prependStylesheet(
 
 	<div class="row">
 		<div class="large-6 column">
+		    <div data-alert class="alert-box warning endbeforestart_warning invaliddateinput_warning" style="display:none;">
+                <?php echo $this->translate('Please specify a start date and an end date.') . $this->translate('The start date has to be before the end date.'); ?>
+            </div>
+            
+            <div data-alert class="alert-box warning overlappingresourcebooking_wanrning" style="display:none;">
+                <?php echo $this->translate('There is already a booking for this resource in this time frame titled'); ?>
+                <span class="overlappingresourcebooking_name"></span>
+            </div>
+            
 			<div class="row daterow">
 				<div class="medium-8 columns">
 					<label><?php echo $this->translate('Start Date') ?> <small><?php echo $this->translate('required') ?></small>
@@ -41,9 +66,14 @@ $this->headLink()->prependStylesheet(
 					</label> <small class="error"><?php echo $this->translate('Please enter the date as YYYY-MM-DD.') ?></small>
 				</div>
 				<div class="small-4 columns">
-					<label><?php echo $this->translate('Start Time')?>
-					   <?php echo $this->formRow($form->get('starttime'))?>
-					</label> <small class="error"><?php echo $this->translate('Please enter the date as HH:MM.') ?></small>
+				    <div class="bookingtime"<?php
+                        if ($this->isPrebooking){
+                            echo ' style="display:none;"';
+                        }; ?>>
+    					<label><?php echo $this->translate('Start Time')?>
+    					   <?php echo $this->formRow($form->get('starttime'))?>
+    					</label> <small class="error"><?php echo $this->translate('Please enter the date as HH:MM.') ?></small>
+    			     </div>
 				</div>
 			</div>
 
@@ -54,9 +84,14 @@ $this->headLink()->prependStylesheet(
 					</label> <small class="error"><?php echo $this->translate('Please enter the date as YYYY-MM-DD.') ?></small>
 				</div>
 				<div class="small-4 columns">
-					<label><?php echo $this->translate('End Time')?>
-					   <?php echo $this->formRow($form->get('endtime'))?>
-					</label> <small class="error"><?php echo $this->translate('Please enter the date as HH:MM.') ?></small>
+				    <div class="bookingtime"<?php
+                        if ($this->isPrebooking){
+                            echo ' style="display:none;"';
+                        }; ?>>
+    					<label><?php echo $this->translate('End Time')?>
+    					   <?php echo $this->formRow($form->get('endtime'))?>
+    					</label> <small class="error"><?php echo $this->translate('Please enter the date as HH:MM.') ?></small>
+					</div>
 				</div>
 			</div>
 			<div class="row">
@@ -93,6 +128,9 @@ $this->headLink()->prependStylesheet(
 		</div>
 
 		<div class="large-6 column">
+            <div data-alert class="alert-box warning invalideresourceselection_warning" style="display:none;">
+                <?php echo $this->translate('Please select a resource for booking.'); ?>
+            </div>
 			<div id="resourcetree"></div>
 	   </div>
 	</div>

@@ -136,6 +136,7 @@ class BookingController extends AbstractActionController
                 
                 $this->bookingForm->setstart($startFormatted);
                 $this->bookingForm->setend($endFormatted);
+                $this->bookingForm->setisprebooking($isPrebooking);
                 $this->bookingForm->initialize();
                 
                 return new ViewModel(array(
@@ -161,12 +162,14 @@ class BookingController extends AbstractActionController
             		'time' => null
             );
             
+            $this->bookingForm->setisprebooking(false);
+            
             $this->bookingForm->initialize();
             
             return new ViewModel(array(
                     $startFormatted,
                     $endFormatted,
-                    'allDay' => null,
+                    'isPrebooking' => false,    // Assume it is not a pre-booking if it is not created through the calendar ui
             		'form' => $this->bookingForm
             ));
         }

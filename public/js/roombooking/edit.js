@@ -22,26 +22,254 @@
 				 */
 				require([ "jstree" ], function() {
 					/*
-					 * The base tree element
+					 * The base tree element conatining all
+					 * resources
 					 */
-					var resourceTreeElement = $("#resourcetree");
+					var resourceTreesContainer = $("#resourcetree");
 					
 					/*
-					 * An array of tree elements (one per hierarchy)
+					 * The maximum length of the name of a resource
+					 * before it is truncated.
 					 */
-					var trees = [];
+					var resourceNameMaxLenght = 20;
+					
+					$.get("/hierarchies/containment/api", function(data) {
+						var hierachies = {};
+						
+						/*
+						 * Prepare the hierarchies object tree in order to
+						 * allow creation of multiple trees for different hierarchies
+						 * later. 
+						 */
+						for (var i = 0; i < data.length; i++) {
+							var hierarchyId = data[i]["h_hierarchyid"];
+							
+							if (hierachies[hierarchyId] === undefined) {
+								hierachies[hierarchyId] = [];
+							}
+							
+							hierachies[hierarchyId].push(data[i]);
+						}
+						
+						for (var hierarchyId in hierachies) {
+							var hierarchy = hierachies[hierarchyId];
+							
+							/*
+							 * The data to build the current jsTree of.
+							 */
+							var jsTreeData = [];
+							
+							var treeContainer = $("<div/>", {
+								"class": "hierarchy hierarchy_" + hierarchyId
+							});
+							
+							resourceTreesContainer.prepend(treeContainer);
+							
+							for (var i = 0; i < hierarchy.length; i++) {
+								var resource = hierarchy[i];
+								
+								var jsTreeNode = {
+									"id" : ("hierarchy_" + hierarchyId + "_node_" + resource.r_resourceid),
+									"parent" : (resource.c_parent === null ? "#" : ("hierarchy_" + hierarchyId + "_node_" + resource.c_parent)),
+									"text" : (resource.r_name.length > 20 ? (resource.r_name.substring(0, resourceNameMaxLenght) + "...") : resource.r_name),
+									"icon" : (resource.e_equipmentid !== null ? "fa fa-archive" : "fa fa-home"),
+									"state" : {
+									    /*
+									     * Disable selecting non-bookables
+									     */
+										"disabled" : (resource.r_isbookable === "0" ? true : false),
+										
+										/*
+										 * Open all non-bookables
+										 */
+									    "opened" : (resource.r_isbookable === "0" ? true : false)
+									 },
+									 "a_attr" : {
+										 "resourceid" : resource.r_resourceid
+									 }
+								};
+								
+								jsTreeData.push(jsTreeNode);
+							}
+							
+							/*
+							 * Create JStree
+							 */
+							treeContainer.on(
+								"select_node.jstree", function(event, data) {
+									$("input[name=resourceid]").val($("#" + data.selected + ">a").attr("resourceid"));
+									
+									/*
+									 * Triggert the validation process
+									 */
+									triggerValidation();
+								}).jstree({
+									"core" : {
+										"data" : jsTreeData
+									},
+									"plugins": [
+										"wholerow"
+									]
+							});
+						}
+					});
+					
+					$(".daterow :input").on("change", function() {
+						triggerValidation();
+					});
 					
 					/*
-					 * Reasosn for why the form should be locked.
+					 * Handle the "convert to booking" click
 					 */
-					var formlock = {
-						"endBeforeStart" : false,
-						"invalidDateInput" : false,
-						"invalidResourceSelection" : false,
-						"overLappingResourceBooking" : false
+					$("#convertbookingtype").on("click", function() {
+						if (window.roombooking.isPrebooking) {
+							/*
+							 * This booking is a pre-booking
+							 * Convert to normal booking
+							 */
+							window.roombooking.isPrebooking = false;
+							$("input[name=isprebooking]").val(window.roombooking.isPrebooking);
+							$("div.bookingtime").show();
+							$(this).html("<i class=\"fa fa-undo\"></i> Convert to pre-booking");
+						} else {
+							/*
+							 * This booking is a normal booking
+							 * Convert to pre-booking
+							 */
+							window.roombooking.isPrebooking = true;
+							$("input[name=isprebooking]").val(window.roombooking.isPrebooking);
+							
+							$("div.bookingtime").hide();
+							
+							$("input[name=endtime]").val("00:00");
+							$("input[name=starttime]").val("00:00");
+							
+							$(this).html("<i class=\"fa fa-undo\"></i> Convert to authoritative booking");
+						}
+						
+						triggerValidation();
+					});
+					
+					var lockForm = function() {
+						
 					};
 					
-					var validateDateTime = function() {							
+					var unLockForm = function() {
+						
+					};
+					
+					var createWarnings = function (errors) {
+						console.log("errors");
+						console.log(errors);
+
+						var errorElements = {
+							"endBeforeStart" : ".endbeforestart_warning",
+							"invalidDateInput" : ".invaliddateinput_warning",
+							"invalidResourceSelection" : ".invalideresourceselection_warning",
+							"overLappingResourceBooking" : ".overlappingresourcebooking_wanrning"
+						};
+						
+						/*
+						 * Hide all errors
+						 */
+						for (var errorId in errorElements) {
+							console.log("hide " + errorElements[errorId]);
+							$(errorElements[errorId]).hide();
+						}
+						
+						/*
+						 * Selectively display errros
+						 */
+						for (var errorId in errorElements) {
+							if (errors[errorId]) {
+								
+								console.log("show " + errorElements[errorId]);
+								$(errorElements[errorId]).show();
+								
+								if (errorId === "overLappingResourceBooking") {
+									$(".overlappingresourcebooking_wanrning .overlappingresourcebooking_name").text(errors.collidingBooking.collidingBookingName);
+								}
+							}
+						}
+					};
+					
+					var triggerValidation = function() {
+						var errors = {
+							"endBeforeStart" : false,
+							"invalidDateInput" : false,
+							"invalidResourceSelection" : false,
+							"overLappingResourceBooking" : false
+						};
+						
+						var isPrebooking = window.roombooking.isPrebooking;
+						
+						/*
+						 * The following variables will be filled during validation
+						 */
+						var startDate = getValidDate($("input#startdate").val(), $("input#starttime").val());
+						var endDate = getValidDate($("input#enddate").val(), $("input#endtime").val());
+						var hierachyId = null;
+						var resourceId = null;
+						
+						/*
+						 * 1 - Check invalid date input
+						 */
+						if (startDate === null || endDate === null) {
+							errors.invalidDateInput = true;
+						} else {
+							/*
+							 * 2 - Check end before start
+							 */
+							if (endBeforeStart(startDate, endDate)) {
+								errors.endBeforeStart = true;
+							}
+						}
+						
+						/*
+						 * 3 - Check if exactly 1 resource is selected
+						 */
+						
+						var selectedResources = getSelectedResources();
+						
+						if (selectedResources.length == 1) {
+							hierachyId = selectedResources[0].hierachyId;
+							resourceId = selectedResources[0].resourceId;
+						} else {
+							errors.invalidResourceSelection = true;
+						}
+						
+						/*
+						 * 4 - Check if bookings are overlapping
+						 * Only check the overlap if there is no other error and
+						 * it is nor a pre-booking (pre-bookings do not block)
+						 */
+						if(!errors.endBeforeStart && !errors.invalidDateInput && !errors.invalidResourceSelection && !window.roombooking.isPrebooking) {
+							$.get("/bookings/checkcollision/api", {
+								"start" : (startDate.getTime() / 1000),
+								"end" : (endDate.getTime() / 1000),
+								"hierarchyid" : hierachyId,
+								"resourceid" : resourceId
+							}).done(function(data) {
+								if (!data.validRequest || !data.validResource || data.collision) {
+									errors.overLappingResourceBooking = true;
+									errors.collidingBooking = data.collidingBooking;
+									createWarnings(errors);
+								} else {
+									createWarnings(errors);
+								}
+							}).error(function(){
+								errors.overLappingResourceBooking = true;
+								createWarnings(errors);
+							});
+						} else {
+							createWarnings(errors);
+						}
+					};
+					
+					/**
+					 * Validation functions
+					 */
+					var getValidDate = function(date, time) {				
 						var matchDate = function(dateString) {
 							var dateRegEx = new RegExp("(\\d+)(.)(\\d+)(.)(\\d+)", ["i"]);
 							var dateMatch = dateRegEx.exec(dateString);
@@ -72,24 +300,13 @@
 						      }
 						};
 						
-						var startDate = matchDate($("input#startdate").val());
-						var startTime = matchTime($("input#starttime").val());
+						var matchedDate = matchDate(date);
+						var matchedTime = matchTime(time);
 						
-						var endDate = matchDate($("input#enddate").val());
-						var endTime = matchTime($("input#endtime").val());
-						
-						var start;
-						var end;
-						
-						if (startDate !== null && startTime !== null && endDate !== null && endTime !== null) {
+						if (matchedDate !== null && matchedTime !== null) {
 							try {
-								start = new Date(startDate.year, startDate.month, startDate.day, startTime.hours, startTime.minutes, 0, 0);
-								end = new Date(endDate.year, endDate.month, endDate.day, endTime.hours, endTime.minutes, 0, 0);
-								
-								return {
-									"start" : start,
-									"end" : end
-								};
+								var d = new Date(matchedDate.year, matchedDate.month, matchedDate.day, matchedTime.hours, matchedTime.minutes, 0, 0);
+								return d;
 							} catch (ignore) {
 								/*
 								 * Can't parse Date/Time
@@ -104,201 +321,34 @@
 						}
 					};
 					
-					
-					var createTimestampfromInput = function(dateTime) {
-						var startTimestampField = $("input[name=starttimestamp]");
-						var endTimestampField = $("input[name=endtimestamp]");
-						
-						var start = dateTime.start.getTime() / 1000;
-						var end = dateTime.end.getTime() / 1000;
-						
-						startTimestampField.val(start);
-						endTimestampField.val(end);
-						
-						return {
-							"start" : start,
-							"end" : end
-						};
+					var endBeforeStart = function (start, end) {
+						return (start.getTime() > end.getTime() ? true : false);
 					};
 					
-					var startBeforeEndHandling = function(times) {
-						formlock.endBeforeStart = (times.start < times.end ? false : true);
-						lockUnlockForm();
-						return (times.start < times.end ? true : false);
-					};
-					
-					var ressourceTreeElementHandling = function(selectedElements) {
-						if (selectedElements.length !== 1) {
-							formlock.invalidResourceSelection = true;
-						} else {
-							formlock.invalidResourceSelection = false;
-						}
-						
-						lockUnlockForm();
-					};
-					
-					var overlapHandling = function(selectedElement) {
-						/*
-						 * Lock the form until response is positive
-						 */
-						formlock.overLappingResourceBooking = true;
-						lockUnlockForm();
+					var getSelectedResources = function() {
+						var resources = [];
 						
 						var elementIdRegEx = new RegExp("(hierarchy)(_)(\\d+)(_)(node)(_)(\\d+)", ["i"]); 
-						var elementIdMatch = elementIdRegEx.exec(selectedElement);
-
-						if (elementIdMatch != null) {
-							var hierarchy = elementIdMatch[3];
-							var node = elementIdMatch[7];
-							var start = Number($("input[name=starttimestamp]").val());
-							var end = Number($("input[name=endtimestamp]").val());
-					          
-							$.get("/bookings/checkcollision/api", {
-								"start" : start,
-								"end" : end,
-								"hierarchyid" : hierarchy,
-								"resourceid" : node
-							}).done(function(data) {
-								console.log(data);
-								
-								if(data.validRequest && data.validResource && !data.collision) {
-									formlock.overLappingResourceBooking = false;
-									lockUnlockForm();
-								}
-							});
-						}
-					};
-					
-					var lockUnlockForm = function() {
-						console.log("TODO");
-						console.log(formlock);
 						
-						if (formlock.endBeforeStart === false &&
-								formlock.invalidDateInput === false &&
-								formlock.invalidResourceSelection === false &&
-								formlock.overLappingResourceBooking === false) {
-							/*
-							 * No lock. Unlock form.
-							 */
-						} else {
-							/*
-							 * Some lock. Lock form
-							 */
-						}
-					};
-					
-					/**
-					 * Prepare the ressource Tree
-					 */
-					(function() {
-						$.get("/hierarchies/containment/api", function(data) {
-							var hierachies = {};
+						resourceTreesContainer.find(".jstree").each(function(i) {
+							var selected = $(this).jstree("get_selected");
 							
-							/*
-							 * Group ressources according to their hierachies
-							 */
-							for (var i = 0; i < data.length; i++) {
-								var hierarchyId = data[i]["h_hierarchyid"];
-								var resourceId = data[i]["r_resourceid"];
+							for (var i = 0; i < selected.length; i++) {
+								var elementIdMatch = elementIdRegEx.exec(selected[i]);
 								
-								if (hierachies[hierarchyId] === undefined) {
-									hierachies[hierarchyId] = [];
-								}
-								
-								hierachies[hierarchyId].push(data[i]);
-							}
-							
-							for (var hierarchyId in hierachies) {
-								var hierarchy = hierachies[hierarchyId];
-								
-								var treeContainer = $("<div/>", {
-									"class": "hierarchy hierarchy_" + hierarchyId
-								});
-								
-								resourceTreeElement.prepend(treeContainer);
-								
-								var jsTreeData = [];
-								
-								for (var i = 0; i < hierarchy.length; i++) {
-									var resource = hierarchy[i];
-									
-									var resourceNameMaxLenght = 20;
-									
-									var jsTreeNode = {
-										"id" : ("hierarchy_" + hierarchyId + "_node_" + resource.r_resourceid),
-										"parent" : (resource.c_parent === null ? "#" : ("hierarchy_" + hierarchyId + "_node_" + resource.c_parent)),
-										"text" : (resource.r_name.length > 20 ? (resource.r_name.substring(0, 20) + "...") : resource.r_name),
-										"icon" : (resource.e_equipmentid !== null ? "fa fa-archive" : "fa fa-home"),
-										"state" : {
-										    /*
-										     * Disable selecting non-bookables
-										     */
-											"disabled" : (resource.r_isbookable === "0" ? true : false),
-											
-											/*
-											 * Open all non-bookables
-											 */
-										    "opened" : (resource.r_isbookable === "0" ? true : false)
-										 },
-										 "a_attr" : {
-											 "resourceid" : resource.r_resourceid
-										 }
+								if (elementIdMatch !== null) {
+									var resource = {
+										"hierachyId" : elementIdMatch[3],
+										"resourceId" : elementIdMatch[7]
 									};
 									
-									jsTreeData.push(jsTreeNode);
+									resources.push(resource);
 								}
-								
-								/*
-								 * Create JStree
-								 */
-								treeContainer.on(
-									"select_node.jstree", function(event, data) {
-										$("input[name=resourceid]").val($("#" + data.selected + ">a").attr("resourceid"));
-										
-										/*
-										 * Validate the tree selection
-										 */
-										ressourceTreeElementHandling(data.selected);
-										
-										/*
-										 * Check if the ressource is overlapping.
-										 */
-										overlapHandling(data.selected[0]);
-									}).jstree({
-										"core" : {
-											"data" : jsTreeData
-										},
-										"plugins": [
-											"wholerow"
-										]
-								});
-								
-								trees.push(treeContainer);
 							}
 						});
-					})();
-					
-					$(".daterow :input").on("change", function() {
-						/*
-						 * Populate the timestamp fields
-						 */
-						var dateTime = validateDateTime();
 						
-						if (dateTime !== null) {
-							startBeforeEndHandling(createTimestampfromInput(dateTime));
-							
-							/*
-							 * Iterate over selected nodes
-							 * TODO make this more robust
-							 */
-							resourceTreeElement.find(".hierarchy").find(".jstree-wholerow-clicked").each(function(i) {
-								overlapHandling($(this).parent().attr("id"));
-							});
-						} else {
-							formlock.invalidDateInput = true;
-							lockUnlockForm();
-						}
-					});
+						return resources;
+					};
 				});
 			});
 		});

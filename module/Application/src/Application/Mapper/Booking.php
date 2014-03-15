@@ -57,7 +57,7 @@ class Booking
     	$entity = new MinimalBookingEntity();
     
     	$statement = $this->adapter->createStatement();
-    	$statement->prepare("SELECT b.name AS b_name, DATE_FORMAT ( b.start , '%Y-%m-%dT%TZ' ) AS b_start, DATE_FORMAT ( b.end , '%Y-%m-%dT%TZ' ) AS b_end, b.isprebooking AS b_isprebooking, b.bookingid AS b_bookingid, b.resourceid AS b_resourceid, r.color AS r_color FROM Resources r RIGHT OUTER JOIN Bookings b ON r.resourceid = b.resourceid LEFT OUTER JOIN Containments c ON r.resourceid = c.child WHERE ((UNIX_TIMESTAMP(b.start) >= " . $start . " AND UNIX_TIMESTAMP(b.start) <= " . $end . ") OR (UNIX_TIMESTAMP(b.end) >= " . $start . " AND UNIX_TIMESTAMP(b.end) <= " . $end . ")) AND r.resourceid = " . $resourceid . " AND c.hierarchyid = " . $hierarchyid . " AND b.isdeleted = false;");
+    	$statement->prepare("SELECT b.name AS b_name, DATE_FORMAT ( b.start , '%Y-%m-%dT%TZ' ) AS b_start, DATE_FORMAT ( b.end , '%Y-%m-%dT%TZ' ) AS b_end, b.isprebooking AS b_isprebooking, b.bookingid AS b_bookingid, b.resourceid AS b_resourceid, r.color AS r_color FROM Resources r RIGHT OUTER JOIN Bookings b ON r.resourceid = b.resourceid LEFT OUTER JOIN Containments c ON r.resourceid = c.child WHERE ((UNIX_TIMESTAMP(b.start) >= " . $start . " AND UNIX_TIMESTAMP(b.start) <= " . $end . ") OR (UNIX_TIMESTAMP(b.end) >= " . $start . " AND UNIX_TIMESTAMP(b.end) <= " . $end . ")) AND r.resourceid = " . $resourceid . " AND c.hierarchyid = " . $hierarchyid . " AND b.isdeleted = false AND b.isprebooking = false;");
     
     	$result = $statement->execute();
     

@@ -15,6 +15,7 @@ class Booking extends Form
      */
     private $start;
     private $end;
+    private $isprebooking;
     
     public function __construct ($userMapper)
     {
@@ -133,6 +134,16 @@ class Booking extends Form
         
         $this->add(
         		array(
+        				'name' => 'isprebooking',
+        				'attributes' => array(
+        						'type' => 'hidden',
+        						'id' => 'isprebooking',
+        				        'value' => ($this->isprebooking ? "true" : "false")
+        				)
+        		));
+        
+        $this->add(
+        		array(
         				'name' => 'endtimestamp',
         				'attributes' => array(
         						'type' => 'hidden',
@@ -208,6 +219,27 @@ class Booking extends Form
     public function getuserMapper()
     {
             return $this->userMapper;
+    }
+    
+    /**
+    * Sets isprebooking
+    *
+    * @param type $isprebooking
+    * @return void
+    */
+    public function setisprebooking($isprebooking)
+    {
+            $this->isprebooking = $isprebooking;
+    }
+    
+    /**
+    * Gets isprebooking
+    *
+    * @return type
+    */
+    public function getisprebooking()
+    {
+            return $this->isprebooking;
     }
     
     /**
