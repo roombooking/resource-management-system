@@ -111,6 +111,14 @@
 										"wholerow"
 									]
 							});
+							
+							if ($("input[name=hierarchyid]").val() !== "" && $("input[name=resourceid]").val() !== "") {
+								/*
+								 * Select the appropriate node based on the data provided in
+								 * the hidden form fields
+								 */
+								treeContainer.jstree("select_node", "#hierarchy_" + $("input[name=hierarchyid]").val() + "_node_" + $("input[name=resourceid]").val());
+							}
 						}
 					});
 					
@@ -161,9 +169,6 @@
 					};
 					
 					var createWarnings = function (errors) {
-						console.log("errors");
-						console.log(errors);
-
 						var errorElements = {
 							"endBeforeStart" : ".endbeforestart_warning",
 							"invalidDateInput" : ".invaliddateinput_warning",
@@ -175,7 +180,6 @@
 						 * Hide all errors
 						 */
 						for (var errorId in errorElements) {
-							console.log("hide " + errorElements[errorId]);
 							$(errorElements[errorId]).hide();
 						}
 						
@@ -260,7 +264,16 @@
 							 */
 							lockForm();
 							
-							$.get("/bookings/checkcollision/api", {
+							/*
+							 * Check the colission with a given booking ID if
+							 * this is the edit of a booking.
+							 * 
+							 * This prevents that a booking is blocked in edit mode
+							 * when it overlaps the date/time it had before.
+							 */
+							var bookingId = ($("input[name=bookingid]").val() !== "" ? ("/" + $("input[name=bookingid]").val()) : "");
+							
+							$.get(("/bookings/checkcollision/api" + bookingId), {
 								"start" : (startDate.getTime() / 1000),
 								"end" : (endDate.getTime() / 1000),
 								"hierarchyid" : hierachyId,

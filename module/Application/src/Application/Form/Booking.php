@@ -16,6 +16,9 @@ class Booking extends Form
     private $start;
     private $end;
     private $isprebooking;
+    private $bookingid;
+    private $resourceid;
+    private $hierarchyid;
     
     public function __construct ($userMapper)
     {
@@ -116,10 +119,21 @@ class Booking extends Form
          */
         $this->add(
         		array(
+        				'name' => 'hierarchyid',
+        				'attributes' => array(
+        						'type' => 'hidden',
+        						'id' => 'hierarchy',
+        						'value' => $this->hierarchyid
+        				)
+        		));
+        
+        $this->add(
+        		array(
         				'name' => 'resourceid',
         				'attributes' => array(
         						'type' => 'hidden',
-        						'id' => 'resource'
+        						'id' => 'resource',
+        				        'value' => $this->resourceid
         				)
         		));
         
@@ -129,6 +143,16 @@ class Booking extends Form
         				'attributes' => array(
         						'type' => 'hidden',
         						'id' => 'starttimestamp'
+        				)
+        		));
+        
+        $this->add(
+        		array(
+        				'name' => 'bookingid',
+        				'attributes' => array(
+        						'type' => 'hidden',
+        						'id' => 'bookingid',
+        				        'value' => $this->bookingid
         				)
         		));
         
@@ -219,6 +243,69 @@ class Booking extends Form
     public function getuserMapper()
     {
             return $this->userMapper;
+    }
+    
+    /**
+    * Sets hierarchyid
+    *
+    * @param type $hierarchyid
+    * @return void
+    */
+    public function sethierarchyid($hierarchyid)
+    {
+            $this->hierarchyid = $hierarchyid;
+    }
+    
+    /**
+    * Gets hierarchyid
+    *
+    * @return type
+    */
+    public function gethierarchyid()
+    {
+            return $this->hierarchyid;
+    }
+    
+    /**
+    * Sets resourceid
+    *
+    * @param type $resourceid
+    * @return void
+    */
+    public function setresourceid($resourceid)
+    {
+            $this->resourceid = $resourceid;
+    }
+    
+    /**
+    * Gets resourceid
+    *
+    * @return type
+    */
+    public function getresourceid()
+    {
+            return $this->resourceid;
+    }
+    
+    /**
+    * Sets bookingid
+    *
+    * @param type $bookingid
+    * @return void
+    */
+    public function setbookingid($bookingid)
+    {
+            $this->bookingid = $bookingid;
+    }
+    
+    /**
+    * Gets bookingid
+    *
+    * @return type
+    */
+    public function getbookingid()
+    {
+            return $this->bookingid;
     }
     
     /**

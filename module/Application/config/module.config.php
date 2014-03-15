@@ -163,9 +163,12 @@ return array(
                                 		)
                                 ),
                                 'bookingCheckCollision' => array(
-                                		'type' => 'Literal',
+                                		'type' => 'Segment',
                                 		'options' => array(
-                                				'route' => '/checkcollision/api',
+                                				'route' => '/checkcollision/api[/:id]',
+                                				'constraints' => array(
+                                						'id' => '[0-9]+'
+                                				),
                                 				'defaults' => array(
                                 						'action' => 'checkcollision'
                                 				)

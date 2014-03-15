@@ -123,8 +123,6 @@
 							$.get("bookings/" + eventId + "/details/api",function(data) {
 								var event = data[0];
 								
-								console.log();
-								
 								var modal = $("<div/>", {
 									"class": "content"
 								})
@@ -201,7 +199,7 @@
 											.append($("<li/>")
 												.append($("<a/>", {
 													"class": "button",
-													"href": "/bookings/" + event.b_bookingid + "/show",
+													"href": "/bookings/edit/" + event.b_bookingid,
 													"html": "<i class=\"fa fa-pencil\"></i> Edit Booking"
 												})))
 											.append($("<li/>")

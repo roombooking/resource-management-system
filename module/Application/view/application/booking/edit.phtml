@@ -20,6 +20,8 @@ $this->headLink()->prependStylesheet(
 	
 	<!-- Hidden form elements -->
 	<?php echo $this->formRow($form->get('resourceid')); ?>
+	<?php echo $this->formRow($form->get('bookingid')); ?>
+	<?php echo $this->formRow($form->get('hierarchyid')); ?>
 	<?php echo $this->formRow($form->get('starttimestamp')); ?>
 	<?php echo $this->formRow($form->get('endtimestamp')); ?>
 	<?php echo $this->formRow($form->get('isprebooking')); ?>

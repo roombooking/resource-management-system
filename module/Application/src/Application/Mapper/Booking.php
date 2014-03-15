@@ -66,6 +66,20 @@ class Booking
     	return $resultSet->initialize($result);
     }
     
+    public function fetchCollidingBookingsForExistingBooking ($hierarchyid, $resourceid, $bookingid, $start, $end)
+    {
+    	$entity = new MinimalBookingEntity();
+    
+    	$statement = $this->adapter->createStatement();
+    	$statement->prepare("SELECT b.name AS b_name, DATE_FORMAT ( b.start , '%Y-%m-%dT%TZ' ) AS b_start, DATE_FORMAT ( b.end , '%Y-%m-%dT%TZ' ) AS b_end, b.isprebooking AS b_isprebooking, b.bookingid AS b_bookingid, b.resourceid AS b_resourceid, r.color AS r_color FROM Resources r RIGHT OUTER JOIN Bookings b ON r.resourceid = b.resourceid LEFT OUTER JOIN Containments c ON r.resourceid = c.child WHERE ((UNIX_TIMESTAMP(b.start) >= " . $start . " AND UNIX_TIMESTAMP(b.start) <= " . $end . ") OR (UNIX_TIMESTAMP(b.end) >= " . $start . " AND UNIX_TIMESTAMP(b.end) <= " . $end . ")) AND r.resourceid = " . $resourceid . " AND c.hierarchyid = " . $hierarchyid . " AND b.isdeleted = false AND b.isprebooking = false AND b.bookingid != " . $bookingid . ";");
+    
+    	$result = $statement->execute();
+    
+    	$resultSet = new HydratingResultSet($this->hydrator, $entity);
+    
+    	return $resultSet->initialize($result);
+    }
+    
     public function insert($entity) {
         $statement = $this->adapter->createStatement();
         $statement->prepare("INSERT INTO roombooking.Bookings (booking_userid, responsible_userid, resourceid, name, description, participant_description, start, end, isprebooking, isdeleted) VALUES(" . $entity->getu_b_userid() . ", " . ($entity->getu_r_userid() == "" ? "null" : $entity->getu_r_userid()) . ", " . $entity->getr_resourceid() . ", '" . mysql_real_escape_string($entity->getb_name()) . "', '" . mysql_real_escape_string($entity->getb_description()) . "', '" . mysql_real_escape_string($entity->getb_participant_description()) . "', FROM_UNIXTIME(" . $entity->getb_start() . "), FROM_UNIXTIME(" . $entity->getb_end() . "), " . $entity->getb_isprebooking() . ", 00);");

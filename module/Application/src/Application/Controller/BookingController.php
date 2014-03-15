@@ -111,71 +111,114 @@ class BookingController extends AbstractActionController
     
     public function editAction ()
     {
-        if ($this->getRequest()->isPost()) {
-            $startTime = $this->params()->fromPost('startTime');
-            $endTime = $this->params()->fromPost('endTime');
-            $allDay = $this->params()->fromPost('allDay');
+        $isNew = ($this->getEvent()->getRouteMatch()->getParam('id') == null ? true : false);
+        
+        if ($isNew) {
+            if ($this->getRequest()->isPost()) {
+            	$startTime = $this->params()->fromPost('startTime');
+            	$endTime = $this->params()->fromPost('endTime');
+            	$allDay = $this->params()->fromPost('allDay');
             
-            if (ctype_digit($startTime) && ctype_digit($endTime) && ($allDay === 'false' || $allDay === 'true')) {
-                /*
-                 * All POST values seem valid.
-                 * Create a ViewModel with the values.
-                 */
-                $start = DateTime::createFromFormat('U', $startTime);
-                $start->setTimezone(new DateTimeZone("Europe/Berlin"));
-                
-                $end = DateTime::createFromFormat('U', $endTime);
-                $end->setTimezone(new DateTimeZone("Europe/Berlin"));
-                
-                $isPrebooking = ($allDay == 'true' ? true : false);
-                
-                $startFormatted = array(
-        	       'date' => $start->format('Y-m-d'),
-                   'time' => $start->format('H:i')
-                );
-                
-                $endFormatted = array(
-            		'date' => $end->format('Y-m-d'),
-            		'time' => $end->format('H:i')
-                );
-                
-                $this->bookingForm->setstart($startFormatted);
-                $this->bookingForm->setend($endFormatted);
-                $this->bookingForm->setisprebooking($isPrebooking);
-                $this->bookingForm->initialize();
-                
-                return new ViewModel(array(
-                     $startFormatted,
-                     $endFormatted,
-            		'isPrebooking' => $isPrebooking,
-            		'form' => $this->bookingForm
-                ));
+            	if (ctype_digit($startTime) && ctype_digit($endTime) && ($allDay === 'false' || $allDay === 'true')) {
+            		/*
+            		 * All POST values seem valid.
+            		* Create a ViewModel with the values.
+            		*/
+            		$start = DateTime::createFromFormat('U', $startTime);
+            		$start->setTimezone(new DateTimeZone("Europe/Berlin"));
+            
+            		$end = DateTime::createFromFormat('U', $endTime);
+            		$end->setTimezone(new DateTimeZone("Europe/Berlin"));
+            
+            		$isPrebooking = ($allDay == 'true' ? true : false);
+            
+            		$startFormatted = array(
+            				'date' => $start->format('Y-m-d'),
+            				'time' => $start->format('H:i')
+            		);
+            
+            		$endFormatted = array(
+            				'date' => $end->format('Y-m-d'),
+            				'time' => $end->format('H:i')
+            		);
+            
+            		$this->bookingForm->setstart($startFormatted);
+            		$this->bookingForm->setend($endFormatted);
+            		$this->bookingForm->setisprebooking($isPrebooking);
+            		$this->bookingForm->initialize();
+            
+            		return new ViewModel(array(
+            				$startFormatted,
+            				$endFormatted,
+            				'isPrebooking' => $isPrebooking,
+            				'form' => $this->bookingForm
+            		));
+            	}
+            } else {
+            	/*
+            	 * Not a POST request or invalid POST data.
+            	* Create a ViewModel without variables
+            	*/
+            
+            	$startFormatted = array(
+            			'date' => null,
+            			'time' => null
+            	);
+            
+            	$endFormatted = array(
+            			'date' => null,
+            			'time' => null
+            	);
+            
+            	$this->bookingForm->setisprebooking(false);
+            
+            	$this->bookingForm->initialize();
+            
+            	return new ViewModel(array(
+            			$startFormatted,
+            			$endFormatted,
+            			'isPrebooking' => false,    // Assume it is not a pre-booking if it is not created through the calendar ui
+            			'form' => $this->bookingForm
+            	));
             }
         } else {
-            /*
-             * Not a POST request or invalid POST data.
-             * Create a ViewModel without variables
-             */
+            $bookingId = $this->getEvent()->getRouteMatch()->getParam('id');
+            $bookings = $this->bookingMapper->fetchBookingsById($bookingId);
+            $booking;
+            
+            $first = true;
+            foreach ($bookings as $validbooking) {
+            	if ($first) {
+            		$booking = $validbooking;
+            	}
+            }
             
             $startFormatted = array(
-            		'date' => null,
-            		'time' => null
+            		'date' => substr($booking->getb_start(), 0, 10),
+            		'time' => substr($booking->getb_start(), 11, 5)
             );
             
             $endFormatted = array(
-            		'date' => null,
-            		'time' => null
+            		'date' => substr($booking->getb_end(), 0, 10),
+            		'time' => substr($booking->getb_end(), 11, 5)
             );
             
-            $this->bookingForm->setisprebooking(false);
+            //var_dump($booking);
             
+            $this->bookingForm->setstart($startFormatted);
+            $this->bookingForm->setend($endFormatted);
+            $this->bookingForm->setbookingid($booking->getb_bookingid());
+            $this->bookingForm->sethierarchyid($booking->geth_hierarchyid());
+            $this->bookingForm->setresourceid($booking->getr_resourceid());
+            $this->bookingForm->setisprebooking(($booking->getb_isprebooking() == "1" ? true : false));
             $this->bookingForm->initialize();
             
             return new ViewModel(array(
                     $startFormatted,
-                    $endFormatted,
-                    'isPrebooking' => false,    // Assume it is not a pre-booking if it is not created through the calendar ui
-            		'form' => $this->bookingForm
+            		$endFormatted,
+            		'isPrebooking' => ($booking->getb_isprebooking() == "1" ? true : false),
+            		'form' => $this->bookingForm,
+                    
             ));
         }
     }
@@ -296,7 +339,22 @@ class BookingController extends AbstractActionController
                 }
                 
                 if ($hasResource && $validResource->getr_isdeleted() == "0" && $validResource->getr_isbookable() == "1") {
-                    $bookings = $this->bookingMapper->fetchCollidingBookings($hierarchyid, $resourceid, $start, $end);
+                    $bookingId = $this->getEvent()->getRouteMatch()->getParam('id');
+
+                    if ($bookingId == null) {
+                        /*
+                         * This collission call is for
+                         * a new booking.
+                         */
+                        $bookings = $this->bookingMapper->fetchCollidingBookings($hierarchyid, $resourceid, $start, $end);
+                    } else {
+                        /*
+                         * This collission call is for
+                         * an exisitng booking.
+                         */
+                        $bookings = $this->bookingMapper->fetchCollidingBookingsForExistingBooking($hierarchyid, $resourceid, $bookingId, $start, $end);
+                    }
+                    
                     
                     $collidingBookingName = null;
                     $collidingBookingId = null;
