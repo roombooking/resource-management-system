@@ -25,6 +25,11 @@
 					
 					calendar.fullCalendar({
 						/*
+						 * TODO Enable changing appointments by dragging. 
+						 */
+						editable : false,
+						
+						/*
 						 * Sets the background color for all events on the calendar.
 						 */
 						eventBackgroundColor : "rgb(81, 217, 154)",
@@ -104,7 +109,6 @@
 							 */
 							var eventId = (function() {
 								var bookingClassRegEx = new RegExp("(booking)(_)(\\d+)", [ "i" ]); 
-								var bookingId; //FIXME needed?
 								
 								for (var i = 0; i < event.className.length; i++) {
 									var bookingMatch = bookingClassRegEx.exec(event.className[ i ]);
@@ -279,7 +283,7 @@
 								end : event.b_end,
 								allDay : (event.b_isprebooking === "1" ? true : false),
 								url : "",
-								editable : true	// FIXME
+								// editable : true	// TODO set editing permissions for the calendar
 							};
 							
 							if (event.r_color !== null) {
