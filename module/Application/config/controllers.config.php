@@ -7,7 +7,6 @@ return array(
 				'Application\Controller\Auth' => function($serviceLocator) {
 				    $sl = $serviceLocator->getServiceLocator();
 					return new \Application\Controller\AuthController(
-					         $sl->get('Application\Service\AuthService'),
 					         $sl->get('Application\Mapper\User'),
 					         new \Application\Form\Login()
 					);

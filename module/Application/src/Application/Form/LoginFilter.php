@@ -16,6 +16,25 @@ class LoginFilter extends InputFilter
             		array('name' => 'StripTags'),
             		array('name' => 'StringTrim'),
             ),
+            'validators' => array(
+                    array(
+                    		'name' => 'NotEmpty',
+                    ),
+                    array(
+                    		'name' => 'Regex',
+                    		'options' => array(
+                    				'pattern' => '/^[a-zA-Z]{3,}[\.][a-zA-Z]{3,}$/i',
+                    		),
+                    ),
+                    array (
+                    		'name' => 'StringLength',
+                    		'options' => array(
+                    				'encoding' => 'ASCII',
+                    				'min' => '7',
+                    				'max' => '256',
+                    		),
+                    ),
+            ),
         ));
         
         //TODO: Filter/Validator
@@ -25,6 +44,19 @@ class LoginFilter extends InputFilter
                 'filters'  => array(
                 		array('name' => 'StringTrim'),
                 ),
+                'validators' => array(
+                		array(
+                				'name' => 'NotEmpty',
+                		),
+                		array (
+                				'name' => 'StringLength',
+                				'options' => array(
+                						'encoding' => 'UTF-8',
+                						'min' => '3',
+                						'max' => '256',
+                				),
+                		),
+                )
         ));
     }
 }

@@ -9,12 +9,10 @@ use Application\Entity\User as UserEntity;
 class AuthController extends AbstractActionController
 {
     private $loginForm;
-    private $authService;
     private $userMapper;
 
-    public function __construct($authService, $userMapper, $loginForm)
+    public function __construct($userMapper, $loginForm)
     {
-        $this->authService = $authService;
     	$this->userMapper  = $userMapper;
     	$this->loginForm   = $loginForm;
     }
@@ -23,9 +21,9 @@ class AuthController extends AbstractActionController
     public function loginAction()
     {
         // User already logged in -> redirect
-        if($this->authService->hasIdentity()) {
-            $this->redirect()->toRoute('home');
-            $this->stopPropagation();
+        if($this->userAuthentication()->hasIdentity()) {
+            return $this->redirect()->toRoute('home');
+            // $this->stopPropagation();
         } else {
             // check if the form is submitted
             if($this->getRequest()->isPost())
@@ -35,11 +33,11 @@ class AuthController extends AbstractActionController
             	//check if the form is valid
             	if($this->loginForm->isValid()) {
             		$data = $this->loginForm->getData();
-                    $ldapAdapter = $this->authService->getAdapter();
+                    $ldapAdapter = $this->userAuthentication()->getAuthService()->getAdapter();
             		$ldapAdapter->setIdentity($data['username']);
             		$ldapAdapter->setCredential($data['password']);
             		
-            		$authResult = $this->authService->authenticate();
+            		$authResult = $this->userAuthentication()->getAuthService()->authenticate();
             		
             		// wrong credentials
             		if(!$authResult->isValid())
@@ -54,7 +52,7 @@ class AuthController extends AbstractActionController
             		    // user authenticated, now update everything
             		    // LDAP check: get LDAP user information
             		    $ldap = $ldapAdapter->getLdap();
-            		    $ldapEntry = $ldap->getEntry($ldap->getCanonicalAccountName($this->authService->getIdentity(), \Zend\Ldap\Ldap::ACCTNAME_FORM_DN));
+            		    $ldapEntry = $ldap->getEntry($ldap->getCanonicalAccountName($this->userAuthentication()->getIdentity(), \Zend\Ldap\Ldap::ACCTNAME_FORM_DN));
             		    
             		    $ldapUser = new UserEntity();
             		    $ldapUser->setLdapId($ldapEntry['uidnumber'][0]);
@@ -75,19 +73,21 @@ class AuthController extends AbstractActionController
                             $user->setLastName($ldapUser->getLastName());
                             
                             $this->userMapper->updateEntity($user);
+                            $this->userAuthentication()->getAuthService()->getStorage()->write((int) $user->getId());
                             //TODO: Log Userupdate
             		    	
             		    } catch (\Exception $e) {
             		        //if an error is thrown, the user does not exist and should be inserted
             		        $this->userMapper->insert($ldapUser);
+            		        $this->userAuthentication()->getAuthService()->getStorage()->write((int) $this->userMapper->getLastInsertValue());
             		        //TODO: Log User Insert
             		    }
             		    
             		    //TODO: Hard kodierte User mit alle rechten ausstatten.
             		    
             		    //TODO: Log updaten?!
-            		    $this->redirect()->toRoute('home');
-                        $this->stopPropagation();
+            		    return $this->redirect()->toRoute('home');
+                        //$this->stopPropagation();
             		}
             	} else {
             		return new ViewModel(
@@ -108,10 +108,10 @@ class AuthController extends AbstractActionController
     }
     
     public function logoutAction() {
-        if($this->authService->hasIdentity()) {
-            $this->authService->clearIdentity();
+        if($this->userAuthentication()->hasIdentity()) {
+            $this->userAuthentication()->getAuthService()->clearIdentity();
         }
         
-        $this->redirect()->toRoute('login');
+        return $this->redirect()->toRoute('login');
     }
 }
