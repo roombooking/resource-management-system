@@ -9,11 +9,18 @@
 
 namespace Application;
 
+use Zend\ModuleManager\ModuleManager;
+use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
+use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 
-class Module
+class Module implements 
+    AutoloaderProviderInterface,
+    ConfigProviderInterface,
+    ServiceProviderInterface
 {
     public function onBootstrap(MvcEvent $e)
     {
@@ -73,6 +80,16 @@ class Module
     public function getControllerConfig()
     {
     	return include __DIR__ . '/config/controllers.config.php';
+    }
+    
+    public function getControllerPluginConfig()
+    {
+        return include __DIR__ . '/config/controller.plugin.config.php';
+    }
+    
+    public function getViewHelperConfig()
+    {
+    	return include __DIR__ . '/config/view.helper.config.php';    
     }
 
     public function getAutoloaderConfig()
