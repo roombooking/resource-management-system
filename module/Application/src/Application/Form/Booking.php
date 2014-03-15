@@ -162,7 +162,7 @@ class Booking extends Form
         $users = $this->userMapper->fetchAll(true);
         
         $usersArr = array(
-        		'-1' => ""
+        		"" => ""
         );
         
         foreach ($users as $user) :

@@ -115,6 +115,7 @@
 					});
 					
 					$(".daterow :input").on("change", function() {
+						copyDatesToTimestamps();
 						triggerValidation();
 					});
 					
@@ -141,8 +142,9 @@
 							
 							$("div.bookingtime").hide();
 							
-							$("input[name=endtime]").val("00:00");
-							$("input[name=starttime]").val("00:00");
+							$("input[name=endtime], input[name=starttime]").val("00:00");
+							
+							copyDatesToTimestamps();
 							
 							$(this).html("<i class=\"fa fa-undo\"></i> Convert to authoritative booking");
 						}
@@ -151,11 +153,11 @@
 					});
 					
 					var lockForm = function() {
-						$("input[name=submit]").addClass("disabled");
+						$("input[name=submit]").addClass("disabled").attr("disabled", "");
 					};
 					
 					var unLockForm = function() {
-						$("input[name=submit]").removeClass("disabled");
+						$("input[name=submit]").removeClass("disabled").removeAttr("disabled");
 					};
 					
 					var createWarnings = function (errors) {
@@ -283,7 +285,7 @@
 					/**
 					 * Validation functions
 					 */
-					var getValidDate = function(date, time) {				
+					var getValidDate = function(date, time) {
 						var matchDate = function(dateString) {
 							var dateRegEx = new RegExp("(\\d+)(.)(\\d+)(.)(\\d+)", ["i"]);
 							var dateMatch = dateRegEx.exec(dateString);
@@ -363,6 +365,24 @@
 						
 						return resources;
 					};
+					
+					var copyDatesToTimestamps = function () {
+						var start = getValidDate($("input#startdate").val(), $("input#starttime").val());
+						var end = getValidDate($("input#enddate").val(), $("input#endtime").val());
+						
+						var startTimeStampField = $("input#starttimestamp");
+						var endTimeStampField = $("input#endtimestamp");
+						
+						if (start !== null && end !== null) {
+							startTimeStampField.val(start.getTime() / 1000);
+							endTimeStampField.val(end.getTime() / 1000);
+						} else {
+							startTimeStampField.val("-1");
+							endTimeStampField.val("-1");
+						}
+					};
+					
+					copyDatesToTimestamps();
 					
 					/*
 					 * Lock form when running first

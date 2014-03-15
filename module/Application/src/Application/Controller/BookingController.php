@@ -6,6 +6,8 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Zend\Barcode\Object\Error;
 use Zend\Form\Annotation\ErrorMessage;
+use Application\Entity\Incident as IncidentEntity;
+use Application\Entity\Booking as BookingEntity;
 use \DateTime;
 use \DateTimeZone;
 
@@ -26,13 +28,16 @@ class BookingController extends AbstractActionController
     
     private $resourceMapper;
     
+    private $incidentMapper;
+    
     private $bookingForm;
     
-    public function __construct($bookingMapper, $bookingForm, $resourceMapper)
+    public function __construct($bookingMapper, $bookingForm, $resourceMapper, $incidentMapper)
     {
     	$this->bookingMapper = $bookingMapper;
     	$this->resourceMapper = $resourceMapper;
-    	$this->bookingForm = $bookingForm;    	
+    	$this->bookingForm = $bookingForm;
+    	$this->incidentMapper = $incidentMapper;
     }
     
     public function indexAction () {
@@ -64,8 +69,8 @@ class BookingController extends AbstractActionController
         	return new JsonModel($bookings);
         } else {
                 /*
-             * Not all request parameters in Query. Send empty response.
-             */
+                 * Not all request parameters in Query. Send empty response.
+                 */
             return new JsonModel();
         }
     }
@@ -186,22 +191,68 @@ class BookingController extends AbstractActionController
     
     public function createAction ()
     {
-        $test = array();
-        
         if ($this->getRequest()->isPost()) {
             $this->bookingForm->initialize();
             $this->bookingForm->setData($this->getRequest()->getPost());
             
+            /*
+             * TODO
+             * Check for colission again (this has only been done by javascript so far)
+             */
+            
             if ($this->bookingForm->isValid()) {
                 $data = $this->bookingForm->getData();
                 
-                $test = array(
-                		"title" => $data['title']
-                );
+                $resourceid = $data['resourceid'];
+                $starttimestamp = $data['starttimestamp'];
+                $endtimestamp = $data['endtimestamp'];
+                $isprebooking = ($data['isprebooking'] == "true" ? "1" : "0");
+                $title = $data['title'];
+                $bookingdescription = $data['bookingdescription'];
+                $participantdescription = $data['participantdescription'];
+                $responsibility = $data['responsibility'];
+                
+                /*
+                 * FIXME Hard-coded for debugging purposes.
+                 * Get the ID of the user logged in from somewhere.
+                 */
+                $userId = 1;
+                
+                /*
+                 * Create booking entity and insert it
+                 */
+                $booking = new BookingEntity();
+                $booking->setr_resourceid($resourceid);
+                $booking->setb_start($starttimestamp);
+                $booking->setb_end($endtimestamp);
+                $booking->setb_isprebooking($isprebooking);
+                $booking->setb_name($title);
+                $booking->setb_description($bookingdescription);
+                $booking->setb_participant_description($participantdescription);
+                $booking->setu_r_userid($responsibility);
+                $booking->setu_b_userid($userId);
+                $this->bookingMapper->insert($booking);
+                
+                /*
+                 * Log this incident
+                 */
+                $incident = new IncidentEntity();
+                $incident->setuserid($userId);
+                $incident->setdescription('A new booking titled "' . $title . '" has been created.');
+                $incident->setresourceid($resourceid);
+                $incident->setclass(0);
+                $this->incidentMapper->insert($incident);
+                
+                /*
+                 * Redirect to home page
+                 */
+                $this->redirect()->toRoute('home');
+            } else {
+                throw new \Exception("Form data received is invalid.");
             }
+        } else {
+            throw new \Exception("No POST form data received.");
         }
-        
-    	return new JsonModel($test);
     }
     
     public function checkcollisionAction ()

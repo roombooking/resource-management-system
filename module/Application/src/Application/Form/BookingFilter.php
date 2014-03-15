@@ -64,7 +64,16 @@ class BookingFilter extends InputFilter
         						),
         						array(
         								'name' => 'not_empty'
-        						)
+        						),
+//         				        TODO
+//         				        Compare this value to the endtimestamp, to make sure start is before end
+//         				        array(
+//         				        		'name' => 'less_than',
+//         				                'options' => array(
+//                                                 'max' => ???,
+//                                                 'inclusive' => true
+//                                             )
+//         				        )
         				)
         		));
         
@@ -78,6 +87,20 @@ class BookingFilter extends InputFilter
         						),
         						array(
         								'name' => 'not_empty'
+        						)
+        				)
+        		));
+        
+        $this->add(
+        		array(
+        				'name' => 'isprebooking',
+        				'required' => true,
+        				'validators' => array(
+        						array(
+        								'name' => 'in_array',
+        						        'options' => array(
+        						                'setHaystack' => array('true', 'false')
+        				                )
         						)
         				)
         		));
@@ -187,9 +210,19 @@ class BookingFilter extends InputFilter
                         'name' => 'responsibility',
                         'required' => false,
                         'validators' => array(
-                        		array(
-                        				'name' => 'digits'
-                        		)
+                                array(
+                                		'name' => 'digits'
+                                )
+//                              TODO
+//                              This has to be checked with the database.
+//
+//                         		array(
+//                         				'name' => 'record_exists',
+//                         		        'options' => array(
+//                                             'table' => 'Users',
+//                                             'field' => 'userid'
+//                                         )
+//                         		)
                         )
                 ));
     }
