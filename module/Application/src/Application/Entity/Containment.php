@@ -1,6 +1,22 @@
 <?php
 namespace Application\Entity;
 
+/**
+ * Containment Entity
+ *
+ * This entity represents resources and their containments within each other
+ * as well as the hierarchies they belong to.
+ *
+ * The naming follows the database structure. The attributes are named
+ * in the following fashion: {firstLetterOfTable}_{attributeName} to
+ * prevent ambiguous names on joined tables.
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
+
 class Containment {
     //     SELECT
     //          r.resourceid AS r_resourceid,

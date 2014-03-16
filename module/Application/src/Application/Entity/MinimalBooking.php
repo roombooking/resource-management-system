@@ -1,6 +1,27 @@
 <?php
 namespace Application\Entity;
 
+/**
+ * Minimal Booking Entity
+ *
+ * This entity represents a booking without additional details.
+ * 
+ * The minimal booking entity is used in cases where additional details
+ * (such as user ids or containments are not needed.
+ * It can be retrieved much quicker from database than the original booking
+ * entity which makes excessive use of joins in order to gather all
+ * attributes needed from other tables.
+ *
+ * The naming follows the database structure. The attributes are named
+ * in the following fashion: {firstLetterOfTable}_{attributeName} to
+ * prevent ambiguous names on joined tables.
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
+
 class MinimalBooking {
     //             SELECT
     //                  b.bookingid AS b_bookingid,

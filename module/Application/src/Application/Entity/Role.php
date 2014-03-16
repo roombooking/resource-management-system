@@ -1,6 +1,18 @@
 <?php
 namespace Application\Entity;
 
+/**
+ * Role Entity
+ *
+ * This entity represents a role.
+ *
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
+
 class Role
 {
     protected $roleid = 0;

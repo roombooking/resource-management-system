@@ -1,6 +1,19 @@
 <?php
 namespace Application\Entity;
 
+/**
+ * Incident Entity
+ *
+ * This entity represents an incident.
+ *
+ * The naming follows the name of the attributes in the database.
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
+
 class Incident {
     //     SELECT
     //          Incidents.incidentid AS incidentid,

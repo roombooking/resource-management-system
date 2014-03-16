@@ -1,6 +1,21 @@
 <?php
 namespace Application\Entity;
 
+/**
+ * Booking Entity
+ *
+ * This entity represents a booking with additional details.
+ * 
+ * The naming follows the database structure. The attributes are named
+ * in the following fashion: {firstLetterOfTable}_{attributeName} to
+ * prevent ambiguous names on joined tables.
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
+
 class Booking {
     //         SELECT
     //              b.bookingid AS b_bookingid,

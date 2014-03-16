@@ -1,6 +1,17 @@
 <?php
 namespace Application\Entity;
 
+/**
+ * User Entity
+ *
+ * This entity represents a user.
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
+
 class User
 {
     //FIXME: Hydrator?

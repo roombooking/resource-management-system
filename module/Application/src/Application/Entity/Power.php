@@ -1,6 +1,17 @@
 <?php
 namespace Application\Entity;
 
+/**
+ * Power Entity
+ *
+ * This entity represents the powers assigned to a specific role.
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
+
 class Power
 {
     //FIXME: Hydrator?

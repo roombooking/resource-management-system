@@ -1,6 +1,21 @@
 <?php
 namespace Application\Entity;
 
+/**
+ * Resource Entity
+ *
+ * This entity represents a resource.
+ *
+ * The naming follows the database structure. The attributes are named
+ * in the following fashion: {firstLetterOfTable}_{attributeName} to
+ * prevent ambiguous names on joined tables.
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
+
 class Resource {
 //         SELECT
 //              r.resourceid AS r_resourceid,
