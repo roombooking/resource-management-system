@@ -1,5 +1,5 @@
 /*
- * JavaScript for the calendar view.
+ * JavaScript for the detail page in edit mode.
  */
 (function() {
 	/*

@@ -155,7 +155,10 @@
 	</div>
 
 	<ul class="button-group">
-		<li><a href="edit" class="button"><i class="fa fa-pencil"></i> <?php echo $this->translate('Edit Booking'); ?></a></li>
-		<li><a href="delete" class="button alert"><i class="fa fa-eraser"></i> <?php echo $this->translate('Delete Booking'); ?></a></li>
+		<li><a href="/bookings/edit/<?php echo $this->escapeHtml($booking->getb_bookingid()); ?>" class="button"><i class="fa fa-pencil"></i> <?php echo $this->translate('Edit Booking'); ?></a></li>
+		<li><a href="delete" class="button alert deletebooking"><i class="fa fa-eraser"></i> <?php echo $this->translate('Delete Booking'); ?></a></li>
 	</ul>
 </div>
+
+<!-- Add/edit Specific JavaScript Components -->
+<?php $this->inlineScript()->prependFile($this->basePath() . '/js/roombooking/view.js')?>
