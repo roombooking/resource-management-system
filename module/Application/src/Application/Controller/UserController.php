@@ -6,10 +6,13 @@ use Zend\View\Model\JsonModel;
 
 /**
  * UserController
+ * 
+ * The user controller contains logic to read and modify users and
+ * to read roles.
  *
- * @author
+ * @author Roombooking Study Project (see AUTHORS.md)
  *
- * @version
+ * @version 0.1
  *
  */
 class UserController extends AbstractActionController
@@ -20,11 +23,15 @@ class UserController extends AbstractActionController
     private $userMapper;
     
     /**
-     * @var Application\Mapper\User
+     * @var Application\Mapper\Role
      */
     private $roleMapper;
     
- 
+    /**
+     * 
+     * @param Application\Mapper\User $userMapper
+     * @param Application\Mapper\Role $roleMapper
+     */
     public function __construct($userMapper, $roleMapper)
     {
         $this->userMapper = $userMapper;
@@ -32,10 +39,17 @@ class UserController extends AbstractActionController
     } 
     
     /**
-     * The default action - show the home page
+     * This action provides an overview over all exisiting users
+     * in the database and their roles.
+     * 
+     * (non-PHPdoc)
+     * @see \Zend\Mvc\Controller\AbstractActionController::indexAction()
      */
     public function indexAction ()
     {
+        /*
+         * TODO prepare pagination
+         */
         $users = $this->userMapper->fetchAll();
         $roles = $this->roleMapper->fetchAll();
         return new ViewModel(array(
@@ -44,6 +58,16 @@ class UserController extends AbstractActionController
         ));
     }
     
+    /**
+     * The edit action provides a JsonModel, allowing any view
+     * to assign new roles to users with an AJAX request.
+     * 
+     * It returns the id of the updated user along with her/his
+     * role in case it is called by a XmlHttpRequest or redirects
+     * to the user route in case it is called in a different manner.
+     * 
+     * @return \Zend\View\Model\JsonModel | NULL
+     */
     public function editAction()
     {
         if($this->getRequest()->isXmlHttpRequest()) {
@@ -62,8 +86,16 @@ class UserController extends AbstractActionController
         }
     }
     
+    /**
+     * This action should synchronize the local database
+     * with the LDAP database.
+     * 
+     * TODO implement this
+     * 
+     * @throws \Exception
+     */
     public function refreshAction ()
     {
-    	return new ViewModel();
+        throw new \Exception("Not implemented yet.");
     }
 }

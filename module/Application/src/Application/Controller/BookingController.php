@@ -34,6 +34,11 @@ class BookingController extends AbstractActionController
     private $resourceMapper;
     
     /**
+     * This is used for logging purposes only.
+     *
+     * TODO a new logging mechanism that does not need to have a mapper
+     * injected into the controller should be used.
+     * 
      * @var Application\Mapper\Incident
      */
     private $incidentMapper;

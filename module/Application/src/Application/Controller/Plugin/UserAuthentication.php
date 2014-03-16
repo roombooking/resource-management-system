@@ -6,6 +6,18 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+/**
+ * UserAuthentication
+ *
+ * A set of convenience methods, allowing to access the authentication
+ * status of a user from controllers without injecting the user mappes.
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
+
 class UserAuthentication extends AbstractPlugin
 {
 
@@ -20,7 +32,8 @@ class UserAuthentication extends AbstractPlugin
     protected $serviceLocator;
 
     /**
-     * Proxy convenience method
+     * Proxy convenience method returning whether the user calling
+     * the controller has an identity (is logged in) or not.
      *
      * @return bool
      */
@@ -30,7 +43,8 @@ class UserAuthentication extends AbstractPlugin
     }
 
     /**
-     * Proxy convenience method
+     * Proxy convenience method providing the identity of a user
+     * logged in.
      *
      * @return mixed
      */

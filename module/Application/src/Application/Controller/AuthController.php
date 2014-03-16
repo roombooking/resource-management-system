@@ -5,19 +5,68 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Entity\User as UserEntity;
 
-
+/**
+ * AuthController
+ *
+ * The auth controller contains logic to authenticate users
+ * with the application.
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
 class AuthController extends AbstractActionController
 {
+    /**
+     * 
+     * @var Application\Form\Login
+     */
     private $loginForm;
+    
+    /**
+     * 
+     * @var Application\Mapper\User
+     */
     private $userMapper;
-
+    
+    /**
+     * The constructor for the authentication controller.
+     * 
+     * @param Application\Mapper\User $userMapper
+     * @param Application\Form\Login $loginForm
+     */
     public function __construct($userMapper, $loginForm)
     {
     	$this->userMapper  = $userMapper;
     	$this->loginForm   = $loginForm;
     }
     
-    //TODO: aufsplitten auf checkAction()
+    
+    /**
+     * This action handles the authentication of users with the application.
+     * 
+     * If it is called by a user that is already authenticated with the
+     * system, the user will be redirected to the home route.
+     * 
+     * If the user is not authenticated yet and provides credentials in a 
+     * valid format (see LoginFilter) the LDAP adapter will be provided
+     * with the username and password entered by the user.
+     * 
+     * Should the LDAP adapter authenticate the user, a new Application\Entity\User
+     * is generated. Shoul a user with the LDAP id provided already exist
+     * in the application database her/his records will be updated.
+     * 
+     * Should no user with the LDAP id provided exist, a new Application\Entity\User
+     * will be inserted.
+     * 
+     * TODO split to checkAction()
+     * 
+     * @return Ambigous <\Zend\Http\Response, \Zend\Stdlib\ResponseInterface>|\Zend\View\Model\ViewModel
+     * 
+     * @see Application\Form\LoginFilter
+     * @see Application\Entity\User
+     */
     public function loginAction()
     {
         // User already logged in -> redirect
@@ -107,6 +156,12 @@ class AuthController extends AbstractActionController
         }
     }
     
+    /**
+     * This action clears the identity of a user logged in and
+     * destroy her/his session.
+     * 
+     * @return Ambigous <\Zend\Http\Response, \Zend\Stdlib\ResponseInterface>
+     */
     public function logoutAction() {
         if($this->userAuthentication()->hasIdentity()) {
             $this->userAuthentication()->getAuthService()->clearIdentity();

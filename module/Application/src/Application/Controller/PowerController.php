@@ -4,12 +4,16 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 use Application\Form\Power;
+
 /**
  * PowerController
+ * 
+ * The power controller contains logic to read and modify powers and
+ * roles.
  *
- * @author
+ * @author Roombooking Study Project (see AUTHORS.md)
  *
- * @version
+ * @version 0.1
  *
  */
 class PowerController extends AbstractActionController
@@ -29,7 +33,14 @@ class PowerController extends AbstractActionController
      */
     private $powerForm;
     
-    
+    /**
+     * The power constructor is provided with mappers for
+     * powers and roles and the form that is used to edit powers.
+     * 
+     * @param Application\Mapper\Power $powerMapper
+     * @param Application\Mapper\Role $roleMapper
+     * @param Application\Form\Power $powerForm
+     */
     public function __construct($powerMapper, $roleMapper, $powerForm)
     {
     	$this->powerMapper = $powerMapper;
@@ -38,7 +49,9 @@ class PowerController extends AbstractActionController
     }
     
     /**
-     * The default action - show the home page
+     * The default action provides over users and their roles/powers.
+     * 
+     * @return \Zend\View\Model\ViewModel
      */
     public function overviewAction()
     {
@@ -49,7 +62,16 @@ class PowerController extends AbstractActionController
     			'roles' => $roles,
     	));
     }
-
+    
+    /**
+     * The add action allows an administrator to map existing roles
+     * with modules/controllers/actions.
+     * 
+     * It is the administrative front-end to user authorisation paradigm
+     * used in this application.
+     * 
+     * @return \Zend\View\Model\ViewModel
+     */
     public function addAction()
     {
         $this->powerForm->setAttribute('action', '/powers/add');
@@ -89,6 +111,10 @@ class PowerController extends AbstractActionController
     	}
     }
     
+    /**
+     * 
+     * @return \Application\Controller\JsonModel
+     */
     public function editAction()
     {
         $this->powerForm->setAttribute('action', '/powers/edit');
@@ -119,6 +145,10 @@ class PowerController extends AbstractActionController
     	}
     }
     
+    /**
+     * 
+     * @return Ambigous <\Zend\Http\Response, \Zend\Stdlib\ResponseInterface>|multitype:number NULL
+     */
     public function deleteAction()
     {
         $id = (int) $this->params()->fromRoute('id', 0);
