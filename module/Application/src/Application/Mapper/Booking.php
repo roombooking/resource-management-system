@@ -5,6 +5,18 @@ use Application\Entity\Booking as BookingEntity;
 use Application\Entity\MinimalBooking as MinimalBookingEntity;
 use Zend\Db\ResultSet\HydratingResultSet;
 
+/**
+ * Booking Mapper
+ *
+ * The booking mapper maps entities of the type
+ * Application\Entity\Booking and Application\Entity\MinimalBooking to their
+ * represenations in the database.
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
 class Booking
 {   
     /**
@@ -17,7 +29,17 @@ class Booking
         $this->hydrator = new \Zend\Stdlib\Hydrator\Reflection;
         $this->adapter = $adapter;
     }
-
+    
+    /**
+     * This methods returns bookings that take plase between start
+     * and end.
+     * 
+     * TODO make this SQL injection safe
+     * 
+     * @param int $start The start as unix timestamp
+     * @param int $end The end as unix timestamp
+     * @return Ambigous <\Zend\Db\ResultSet\ResultSet, \Zend\Db\ResultSet\HydratingResultSet>
+     */
     public function fetchBookingsByStartEnd ($start, $end)
     {
         $entity = new MinimalBookingEntity();
@@ -38,6 +60,14 @@ class Booking
         return $resultSet->initialize($result);
     }
     
+    /**
+     * This method returns bookings with a certain id.
+     * 
+     * TODO make this SQL injection safe
+     * 
+     * @param int $id The id of a user
+     * @return Ambigous <\Zend\Db\ResultSet\ResultSet, \Zend\Db\ResultSet\HydratingResultSet>
+     */
     public function fetchBookingsById ($id)
     {
         $entity = new BookingEntity();
@@ -52,6 +82,18 @@ class Booking
     	return $resultSet->initialize($result);
     }
     
+    /**
+     * This method returns colliding bookings for a given hierarchy in
+     * a given time frame.
+     * 
+     * TODO make this SQL injection safe
+     * 
+     * @param int $hierarchyid The id of the hierarchy the booking is in. 
+     * @param int $resourceid The id of the resource the booking is for.
+     * @param int $start The start as unix timestamp
+     * @param int $end The end as unix timestamp
+     * @return Ambigous <\Zend\Db\ResultSet\ResultSet, \Zend\Db\ResultSet\HydratingResultSet>
+     */
     public function fetchCollidingBookings ($hierarchyid, $resourceid, $start, $end)
     {
     	$entity = new MinimalBookingEntity();
@@ -66,6 +108,22 @@ class Booking
     	return $resultSet->initialize($result);
     }
     
+    /**
+     * This method returns colliding bookings for a given hierarchy in
+     * a given time frame.
+     * 
+     * It does exempt a certain id from the check to allow editing bookings
+     * properly.
+     * 
+     * TODO make this SQL injection safe
+     * 
+     * @param int $hierarchyid The id of the hierarchy the booking is in. 
+     * @param int $resourceid The id of the resource the booking is for.
+     * @param int $bookingid The id of the booking that should be exempt from the collision check.
+     * @param int $start The start as unix timestamp
+     * @param int $end The end as unix timestamp
+     * @return Ambigous <\Zend\Db\ResultSet\ResultSet, \Zend\Db\ResultSet\HydratingResultSet>
+     */
     public function fetchCollidingBookingsForExistingBooking ($hierarchyid, $resourceid, $bookingid, $start, $end)
     {
     	$entity = new MinimalBookingEntity();
@@ -80,32 +138,44 @@ class Booking
     	return $resultSet->initialize($result);
     }
     
+    /**
+     * This method inserts a new entity into the database.
+     * 
+     * TODO make this SQL injection safe
+     * 
+     * @param Application\Entity\Booking $entity The booking entity to insert.
+     */
     public function insert($entity) {
         $statement = $this->adapter->createStatement();
         
-        /*
-         * FIXME Danger! This is not SQL injection safe.
-         */
         $statement->prepare("INSERT INTO roombooking.Bookings (booking_userid, responsible_userid, resourceid, name, description, participant_description, start, end, isprebooking, isdeleted) VALUES(" . $entity->getu_b_userid() . ", " . ($entity->getu_r_userid() == "" ? "null" : $entity->getu_r_userid()) . ", " . $entity->getr_resourceid() . ", '" . $entity->getb_name() . "', '" . $entity->getb_description() . "', '" . $entity->getb_participant_description() . "', FROM_UNIXTIME(" . $entity->getb_start() . "), FROM_UNIXTIME(" . $entity->getb_end() . "), " . $entity->getb_isprebooking() . ", 00);");
         return $statement->execute();
     }
     
+    /**
+     * This method updates an entity in the database.
+     * 
+     * TODO make this SQL injection safe
+     * 
+     * @param Application\Entity\Booking $entity The booking entity to update.
+     */
     public function update($entity) {
     	$statement = $this->adapter->createStatement();
     
-    	/*
-    	 * FIXME Danger! This is not SQL injection safe.
-    	 */
     	$statement->prepare("UPDATE roombooking.Bookings SET responsible_userid=" . ($entity->getu_r_userid() == "" ? "null" : $entity->getu_r_userid()) . ", resourceid=" . $entity->getr_resourceid() . ", name='" . $entity->getb_name() . "', description='" . $entity->getb_description() . "', participant_description='" . $entity->getb_participant_description() . "', start=FROM_UNIXTIME(" . $entity->getb_start() . "), end=FROM_UNIXTIME(" . $entity->getb_end() . "), isprebooking=" . $entity->getb_isprebooking() . " WHERE bookingid=" . $entity->getb_bookingid() . ";");
     	return $statement->execute();
     }
     
+    /**
+     * This method deletes a booking from the database.
+     * 
+     * TODO make this SQL injection safe
+     * 
+     * @param int $id The id of the booking to delete.
+     */
     public function delete($id) {
     	$statement = $this->adapter->createStatement();
     
-    	/*
-    	 * FIXME Danger! This is not SQL injection safe.
-    	 */
     	$statement->prepare("UPDATE roombooking.Bookings SET isdeleted = 1 WHERE bookingid=" . $id . ";");
     	return $statement->execute();
     }

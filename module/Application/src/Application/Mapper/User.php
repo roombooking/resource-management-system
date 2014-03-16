@@ -9,6 +9,17 @@ use Zend\Db\TableGateway\Feature\RowGatewayFeature;
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Insert;
 
+/**
+ * User Mapper
+ *
+ * The incident mapper maps entities of the type Application\Entity\User
+ * to their represenations in the database.
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
 class User extends TableGateway
 {
     protected $tableName = 'Users';
@@ -47,8 +58,9 @@ class User extends TableGateway
     }
     
     /**
+     * Fetches a user with a given id.
      * 
-     * @param int $id
+     * @param int $id The id of the user entity to fetch.
      * @throws \Exception
      * @return Ambigous <multitype:, ArrayObject, NULL, object, \ArrayObject, \Zend\Db\ResultSet\mixed, unknown, boolean>
      */
@@ -68,9 +80,10 @@ class User extends TableGateway
     }
     
     /**
+     * Fetches a user based on her/his given name and surname.
      * 
-     * @param string $prename
-     * @param string $lastname
+     * @param string $prename The given name of the user.
+     * @param string $lastname The surname of the user.
      * @throws \Exception
      * @return Ambigous <multitype:, ArrayObject, NULL, object, \ArrayObject, \Zend\Db\ResultSet\mixed, unknown, boolean>
      */
@@ -91,8 +104,9 @@ class User extends TableGateway
     }
     
     /**
+     * Fetches a user with a given LDAP id.
      * 
-     * @param string $ldapId
+     * @param string $ldapId The LDAP id of the user.
      * @throws \Exception
      * @return Ambigous <multitype:, ArrayObject, NULL, object, \ArrayObject, \Zend\Db\ResultSet\mixed, unknown, boolean>
      */
@@ -110,10 +124,38 @@ class User extends TableGateway
         return $user;
     }
     
+    /**
+     * Inserts a new user to the database.
+     * 
+     * @param Application\Entity\User $entity The user entity to inser.
+     * 
+     * (non-PHPdoc)
+     * @see \Zend\Db\TableGateway\AbstractTableGateway::insert()
+     */
     public function insert($entity) {
         return parent::insert($this->hydrator->extract($entity));
     }
-
+    
+    /**
+     * 
+     * Updates a given user in the database.
+     * 
+     * @param Application\Entity\User $entity The user entity to update.
+     * @return Ambigous <number, \Zend\Db\TableGateway\mixed>
+     */
+    public function updateEntity($entity) {
+    	return parent::update(
+    			$this->hydrator->extract($entity),
+    			$this->idCol . "=" . $entity->getId()
+    	);
+    }
+    
+    /**
+     * Hydrates the results to a resultset.
+     *
+     * @param unknown $results
+     * @return Ambigous <\Zend\Db\ResultSet\ResultSet, \Zend\Db\ResultSet\HydratingResultSet>
+     */
     public function hydrate($results) {
         
 		$users = new \Zend\Db\ResultSet\HydratingResultSet( 
@@ -123,11 +165,4 @@ class User extends TableGateway
 		
 		return $users->initialize($results->toArray());
     }
-    
-	public function updateEntity($entity) {
-		return parent::update( 
-		        $this->hydrator->extract($entity), 
-		        $this->idCol . "=" . $entity->getId()
-		);
-	}
 }

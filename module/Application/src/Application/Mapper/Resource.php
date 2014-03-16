@@ -6,7 +6,18 @@ use Application\Entity\Containment as ConatinmentEntity;
 use Application\Entity\Hierarchy as HierarchyEntity;
 use Application\Entity\Resource as ResourceEntity;
 
-
+/**
+ * Resource Mapper
+ *
+ * The incident mapper maps entities of the type Application\Entity\Containment,
+ * Application\Entity\Hierarchy and Application\Entity\Resource to their
+ * represenations in the database.
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
 class Resource
 {
 	/**
@@ -20,7 +31,14 @@ class Resource
 		$this->adapter = $adapter;
 	}
 	
-public function fetchAllContainments()
+	/**
+	 * Fetches all containments from the database.
+	 * 
+	 * TODO make this SQL injection safe
+	 * 
+	 * @return Ambigous <\Zend\Db\ResultSet\ResultSet, \Zend\Db\ResultSet\HydratingResultSet>
+	 */
+	public function fetchAllContainments()
 	{
 		$entity = new ConatinmentEntity();
 		$statement = $this->adapter->createStatement();
@@ -37,6 +55,14 @@ public function fetchAllContainments()
 		return $resultSet->initialize($result);
 	}
 	
+	/**
+	 * Fetches a containment with a given id.
+	 * 
+	 * TODO make this SQL injection safe
+	 * 
+	 * @param int $id The id of the containment to get.
+	 * @return Ambigous <\Zend\Db\ResultSet\ResultSet, \Zend\Db\ResultSet\HydratingResultSet>
+	 */
 	public function fetchContainmentsById($id)
 	{
 		$entity = new ConatinmentEntity();
@@ -54,6 +80,13 @@ public function fetchAllContainments()
 		return $resultSet->initialize($result);
 	}
 	
+	/**
+	 * Fetches all hierarchies.
+	 * 
+	 * TODO make this SQL injection safe
+	 * 
+	 * @return Ambigous <\Zend\Db\ResultSet\ResultSet, \Zend\Db\ResultSet\HydratingResultSet>
+	 */
 	public function fetchAllHierarchies() {
 	    $entity = new HierarchyEntity();
 	    $statement = $this->adapter->createStatement();
@@ -70,6 +103,14 @@ public function fetchAllContainments()
 	    return $resultSet->initialize($result);
 	}
 	
+	/**
+	 * Fetches a resource by id of the resource and the id
+	 * of the hierarchy containing it.
+	 * 
+	 * @param int $hierarchyid The id of the hierarchy.
+	 * @param int $resourceid The id of the resource.
+	 * @return Ambigous <\Zend\Db\ResultSet\ResultSet, \Zend\Db\ResultSet\HydratingResultSet>
+	 */
 	public function fetchResourceByIds($hierarchyid, $resourceid) {
 	    $entity = new ResourceEntity();
 	    $statement = $this->adapter->createStatement();
