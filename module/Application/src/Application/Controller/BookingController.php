@@ -4,7 +4,6 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
-use Zend\Barcode\Object\Error;
 use Zend\Form\Annotation\ErrorMessage;
 use Application\Entity\Incident as IncidentEntity;
 use Application\Entity\Booking as BookingEntity;
@@ -13,10 +12,13 @@ use \DateTimeZone;
 
 /**
  * BookingController
+ * 
+ * The booking controller contains logic to read and modify
+ * bookings and to read resources.
  *
- * @author
+ * @author Roombooking Study Project (see AUTHORS.md)
  *
- * @version
+ * @version 0.1
  *
  */
 class BookingController extends AbstractActionController
@@ -26,12 +28,29 @@ class BookingController extends AbstractActionController
      */
     private $bookingMapper;
     
+    /**
+     * @var Application\Mapper\Resource
+     */
     private $resourceMapper;
     
+    /**
+     * @var Application\Mapper\Incident
+     */
     private $incidentMapper;
     
+    /**
+     * @var Application\Form\Booking
+     */
     private $bookingForm;
     
+    /**
+     * The constructor for the booking controller.
+     * 
+     * @param Application\Mapper\Booking $bookingMapper
+     * @param Application\Form\Booking $bookingForm
+     * @param Application\Mapper\Resource $resourceMapper
+     * @param Application\Mapper\Incident $incidentMapper
+     */
     public function __construct($bookingMapper, $bookingForm, $resourceMapper, $incidentMapper)
     {
     	$this->bookingMapper = $bookingMapper;
@@ -40,12 +59,35 @@ class BookingController extends AbstractActionController
     	$this->incidentMapper = $incidentMapper;
     }
     
+    /**
+     * The index action is not used at the moment.
+     * 
+     * TODO Provide some sort of list of bookings with a ViewModel.
+     * 
+     * (non-PHPdoc)
+     * @see \Zend\Mvc\Controller\AbstractActionController::indexAction()
+     */
     public function indexAction () {
-        // TODO
+        
     }
     
     /**
-     * Return bookings as JSON response for API use
+     * Return bookings as JSON response for API use.
+     * 
+     * The listAction expects to be called from a GET request with the 
+     * parameters "start" and "end" containing integer values representing
+     * unix timestamps. The parameter "start" represents the start of the
+     * timeframe used, the parameter "end" represents the end of the
+     * timeframe used.
+     * 
+     * Should this action be called by a non-GET request, or without the GET
+     * parameters "start" and "end" or with non-integer values for these
+     * parameters, an empty JsonModel ([]) will be returned.
+     * 
+     * Refer to /public/js/roombooking/calendar.js for the JavaScript calling
+     * this API.
+     * 
+     * @return \Zend\View\Model\JsonModel
      */
     public function listAction ()
     {
@@ -74,11 +116,28 @@ class BookingController extends AbstractActionController
             return new JsonModel();
         }
     }
-
+    
+    /**
+     * This action supplies a ViewModel for the rendering of the booking
+     * detail page.
+     * 
+     * It requires a route parameter "id" to be provided. In order to be
+     * able to retrieve the booking entity belonging to the detail page
+     * the ID is used.
+     * 
+     * The BookingEntity will be provided to the view along with the start
+     * and end dates in the proper format ('Y-m-d\TH:i:s\Z). The DateTime
+     * object assumes the time zone Europe/Berlin.
+     * 
+     * @return \Zend\View\Model\ViewModel
+     */
     public function showAction ()
     {
-        $first = true;
+        /*
+         * TODO check the ID for validity
+         */
         $booking = $this->bookingMapper->fetchBookingsById($this->getEvent()->getRouteMatch()->getParam('id'));
+        
         /*
          * Retrieve first element from array
          */
@@ -109,6 +168,32 @@ class BookingController extends AbstractActionController
         ));
     }
     
+    /**
+     * This action supplies the ViewModel for the view that enables the user
+     * to edit a booking or to create a new booking.
+     * 
+     * Whether a new booking should be created or an existing booking should
+     * be updated is decided on the basis of whether the route parameter
+     * "id" is set. (This parameter is configured to be optional in the routing.
+     * 
+     * Should the "id" parameter not be set, this action is called by directly
+     * accessing the url of the route (without any parameters) or by calling
+     * the url of the route with POST parameters. POST parameters are used
+     * when accessing the route from the calendar GUI by selecting a date range
+     * with the mouse (see /public/js/roombooking/calendar.js).
+     * 
+     * Should the "id" parameter not be set and should no POST parameters 
+     * accompany the request, it is to be assumed, that a new booking should be created
+     * and no date range has been selected in the GUI. In that case a ViewModel
+     * that has not been populated is returned.
+     * 
+     * Should the "id" parameter be set, the bookingMapper will fetch the booking
+     * with this id and will then pre-populate the bookingForm with the appropriate 
+     * values retrieved from the entity. 
+     * 
+     * 
+     * @return \Zend\View\Model\ViewModel
+     */
     public function editAction ()
     {
         $isNew = ($this->getEvent()->getRouteMatch()->getParam('id') == null ? true : false);
@@ -122,8 +207,8 @@ class BookingController extends AbstractActionController
             	if (ctype_digit($startTime) && ctype_digit($endTime) && ($allDay === 'false' || $allDay === 'true')) {
             		/*
             		 * All POST values seem valid.
-            		* Create a ViewModel with the values.
-            		*/
+            		 * Create a ViewModel with the values.
+            		 */
             		$start = DateTime::createFromFormat('U', $startTime);
             		$start->setTimezone(new DateTimeZone("Europe/Berlin"));
             
@@ -157,8 +242,8 @@ class BookingController extends AbstractActionController
             } else {
             	/*
             	 * Not a POST request or invalid POST data.
-            	* Create a ViewModel without variables
-            	*/
+            	 * Create a ViewModel without variables
+            	 */
             
             	$startFormatted = array(
             			'date' => null,
@@ -203,6 +288,10 @@ class BookingController extends AbstractActionController
             		'time' => substr($booking->getb_end(), 11, 5)
             );
             
+            /*
+             * TODO Also pre-populate the field for the person responsible.
+             */
+            
             $this->bookingForm->setstart($startFormatted);
             $this->bookingForm->setend($endFormatted);
             $this->bookingForm->setbookingid($booking->getb_bookingid());
@@ -224,9 +313,20 @@ class BookingController extends AbstractActionController
         }
     }
     
+    /**
+     * This action is called when a booking record should be deleted.
+     * It will not return a view model, but will redirect to the home
+     * route in any case.
+     * 
+     * @return NULL
+     */
     public function deleteAction ()
     {
         $id = $this->getEvent()->getRouteMatch()->getParam('id');
+        
+        /*
+         * TODO handle unset/invalid parameter
+         */
         
         $this->bookingMapper->delete($id);
     	/*
@@ -236,6 +336,13 @@ class BookingController extends AbstractActionController
         $this->stopPropagation();
     }
     
+    /**
+     * This action returns JsonModel details for a given booking id
+     * as JsonModel. It is used for providing the modal that opens
+     * when an existing booking is clicked in the main view. 
+     * 
+     * @return \Zend\View\Model\JsonModel
+     */
     public function detailsAction ()
     {
     	$id = $this->getEvent()->getRouteMatch()->getParam('id');
@@ -245,6 +352,23 @@ class BookingController extends AbstractActionController
     	return new JsonModel($booking);
     }
     
+    /**
+     * The create action is used to create a new booking from data
+     * provided as POST parameters.
+     * 
+     * Should no POST parameters be presents or should the values provided
+     * fail the validation done by Application\Form\BookingFilter an
+     * exception will be thrown.
+     * 
+     * Should the data provided pass the validation a new booking entity
+     * is created. Should no bookingid be present in the POST data, it
+     * is assumed that a new booking should be inserted through the
+     * bookingMapper. Should a bookingid be present in the POST data, an
+     * attempt will be made to update the existing booking with this id.
+     * 
+     * @throws \Exception
+     * @return NULL
+     */
     public function createAction ()
     {
         if ($this->getRequest()->isPost()) {
@@ -324,6 +448,18 @@ class BookingController extends AbstractActionController
         }
     }
     
+    /**
+     * This action checks for colliding bookings and returns
+     * a JsonModel that indicates wheter a collision occured.
+     * 
+     * Should the (optional) "id" route match be set, the id
+     * provided is exempt from the colission check. This option
+     * is used to prevent updates for bookings being denied in cases
+     * where their start/end dates conflict with their old
+     * start/end dates.
+     * 
+     * @return \Zend\View\Model\JsonModel
+     */
     public function checkcollisionAction ()
     {
         $allGetValues = $this->params()->fromQuery();
