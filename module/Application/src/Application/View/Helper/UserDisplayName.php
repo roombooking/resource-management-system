@@ -6,6 +6,14 @@ use Zend\View\Helper\AbstractHelper;
 use Zend\Authentication\AuthenticationService;
 //use ZfcUser\Entity\UserInterface as User;
 
+/**
+ * User Display Name Helper
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
 class UserDisplayName extends AbstractHelper
 {
     /**

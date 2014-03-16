@@ -5,6 +5,14 @@ namespace Application\View\Helper;
 use Zend\View\Helper\AbstractHelper;
 use Zend\Authentication\AuthenticationService;
 
+/**
+ * User Identity Helper
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
 class UserIdentity extends AbstractHelper
 {
     /**

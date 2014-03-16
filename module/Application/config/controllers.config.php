@@ -38,8 +38,7 @@ return array(
 				'Application\Controller\Resource' => function($serviceLocator) {
 					$sl = $serviceLocator->getServiceLocator();
 					return new \Application\Controller\ResourceController(
-							$sl->get('Application\Mapper\Resource'),
-					        $sl->get('Application\Mapper\Incident')
+							$sl->get('Application\Mapper\Resource')
 					);
 				}
 		),
