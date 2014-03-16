@@ -4,8 +4,21 @@ namespace Application\Form;
 use Zend\Form\Form;
 use Zend\Form\Element;
 
+/**
+ * Login Form
+ *
+ * This form is used to provide login functionality.
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
 class Login extends Form
 {
+    /**
+     * The constructor initializes the login form.
+     */
     public function __construct() {
         parent::__construct('login');
         $this->setAttribute('action', '/login');

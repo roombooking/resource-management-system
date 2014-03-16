@@ -4,9 +4,31 @@ use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
 use Zend\Validator;
 
+/**
+ * Booking Filter
+ *
+ * This filter filters and validates the input for a form that
+ * is used to create a new booking or for a form that edits an
+ * existing one.
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
 class BookingFilter extends InputFilter
 {
-
+    
+    /**
+     * The constructor populates the array of fields
+     * to be validated along with their validation methods.
+     * 
+     * TODO 
+     *     - Validate the date by checking that the start is
+     *       before the end
+     *     - Validate that the IDs provided exist in the 
+     *       database. 
+     */
     public function __construct ()
     {
         $this->add(
@@ -64,16 +86,7 @@ class BookingFilter extends InputFilter
         						),
         						array(
         								'name' => 'not_empty'
-        						),
-//         				        TODO
-//         				        Compare this value to the endtimestamp, to make sure start is before end
-//         				        array(
-//         				        		'name' => 'less_than',
-//         				                'options' => array(
-//                                                 'max' => ???,
-//                                                 'inclusive' => true
-//                                             )
-//         				        )
+        						)
         				)
         		));
         
@@ -213,16 +226,6 @@ class BookingFilter extends InputFilter
                                 array(
                                 		'name' => 'digits'
                                 )
-//                              TODO
-//                              This has to be checked with the database.
-//
-//                         		array(
-//                         				'name' => 'record_exists',
-//                         		        'options' => array(
-//                                             'table' => 'Users',
-//                                             'field' => 'userid'
-//                                         )
-//                         		)
                         )
                 ));
     }

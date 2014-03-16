@@ -4,12 +4,27 @@ namespace Application\Form;
 use Zend\Form\Form;
 use Zend\Form\Element;
 
+/**
+ * Power Form
+ *
+ * This form is used to provide functionality to edit powers
+ * for roles.
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
 class Power extends Form
 {
+    /**
+     * The constructor initializes the power form.
+     */
     public function __construct() {
         parent::__construct('power');
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'form');
+        $this->setAttribute('data-abide', '');  // http://foundation.zurb.com/docs/components/abide.html
         $this->setInputFilter(new PowerFilter());
         
         $this->setHydrator(new\Zend\Stdlib\Hydrator\Reflection());

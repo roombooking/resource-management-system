@@ -3,16 +3,26 @@ namespace Application\Form;
 use Zend\Form\Form;
 use Zend\Form\Element;
 
+/**
+ * Booking Form
+ *
+ * This form is used to add new booking or edit existing bookings.
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
 class Booking extends Form
 {
-    /*
-     * userMapper necessary to get the list of "repsonible" users
+    /**
+     * Application\Mapper\User is necessary to get the list of users
+     * for the "responsible user" select.
+     * 
+     * @var Application\Mapper\User
      */
     private $userMapper;
     
-    /*
-     * Time information to pre-populate the form with
-     */
     private $start;
     private $end;
     private $isprebooking;
@@ -23,6 +33,16 @@ class Booking extends Form
     private $bookingdescription;
     private $participantdescription;
     
+    /**
+     * The constructor for the form only constructs the form but does not
+     * initialize it. In order to use the array of form elements initialize()
+     * has to be called.
+     * 
+     * The initialization had to be moved from the constructor to enable
+     * populating the form with data provided in the controller.
+     * 
+     * @param Application\Mapper\User $userMapper
+     */
     public function __construct ($userMapper)
     {
         parent::__construct('booking');
@@ -30,6 +50,13 @@ class Booking extends Form
         $this->userMapper = $userMapper;
     }
     
+    /**
+     * Initializes the form, adding form elements and populating them if 
+     * data is provided.
+     * 
+     * TODO This method calls $this->userMapper->fetchAll(true) which could be
+     * problematic on larger user databases. Reorganize this.
+     */
     public function initialize () {
         $this->setAttribute('action', '/bookings/create');
         $this->setAttribute('method', 'post');

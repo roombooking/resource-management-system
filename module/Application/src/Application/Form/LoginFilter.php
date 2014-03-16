@@ -4,11 +4,28 @@ namespace Application\Form;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
 
+/**
+ * Login Filter
+ *
+ * This filter validates and filters data provided by the login
+ * form.
+ * 
+ * Specifically it checks for the correct syntax of username and
+ * password.
+ *
+ * @author Roombooking Study Project (see AUTHORS.md)
+ *
+ * @version 0.1
+ *
+ */
 class LoginFilter extends InputFilter
 {
+    /**
+     * The constructor populates the array of fields
+     * to be validated along with their validation methods.
+     */
     public function __construct()
     {
-        //TODO: Filter/Validator
         $this->add(array(
         	'name' => 'username',
             'required' => true,
@@ -37,7 +54,6 @@ class LoginFilter extends InputFilter
             ),
         ));
         
-        //TODO: Filter/Validator
         $this->add(array(
         		'name' => 'password',
         		'required' => true,
