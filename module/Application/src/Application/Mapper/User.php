@@ -47,8 +47,9 @@ class User extends TableGateway
      * 
      * @return Ambigous <\Zend\Db\ResultSet\ResultSet, \Zend\Db\ResultSet\HydratingResultSet>
      */
-    public function fetchAll($order = false) {
-        $select = $this->select(function ($select) use ($order) {
+    public function fetchAll($order = false, $deleted = false) {
+        $select = $this->select(function ($select) use ($order, $deleted) {
+            if($deleted === true) $select->where(array('isdeleted' => 1));
             if($order === true) $select->order('lastname ASC');
         });
         

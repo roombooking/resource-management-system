@@ -72,17 +72,13 @@ class UserController extends AbstractActionController
     {
         if($this->getRequest()->isXmlHttpRequest()) {
             $data = $this->getRequest()->getPost();
-            //$updateEntity = new User();
-            //$updateEntity->setId($data['id']);
-            //$updateEntity->setRole($data['role']);
-            //$status = $this->userMapper->updateEntity($updateEntity);
             $this->userMapper->update(array('roleid' => $data['role']), array('userid' => $data['id'] ));
             return new JsonModel(array(
                     'id' => $data['id'],
                     'role' => $data['role'] 
             ));
         } else {
-            $this->redirect()->toRoute('user');
+            return $this->redirect()->toRoute('user');
         }
     }
     
@@ -91,11 +87,75 @@ class UserController extends AbstractActionController
      * with the LDAP database.
      * 
      * TODO implement this
-     * 
-     * @throws \Exception
+     *  
      */
     public function refreshAction ()
     {
-        throw new \Exception("Not implemented yet.");
+        // user authenticated, now update everything
+        // LDAP check: get LDAP user information
+        $ldap_adapter =  $this->userAuthentication()->getAuthService()->getAdapter();
+        $multiOptions = $ldap_adapter->getOptions();
+        $ldap = $ldap_adapter->getLdap();
+        
+        
+        foreach ($multiOptions as $name => $options) {
+            // echo "Trying to bind using server options for '$name'\n";
+            $ldap->setOptions($options);
+            try {
+                $ldap->bind();
+                //echo "SUCCESS: authenticated $acctname\n";
+                break;
+            } catch (\Zend\Ldap\Exception\LdapException $zle) {
+                // echo '  ' . $zle->getMessage() . "\n";
+            	if ($zle->getCode() === \Zend\Ldap\Exception\LdapException::LDAP_X_DOMAIN_MISMATCH) {
+            	   continue;
+                }
+            }
+        }
+        
+        if($ldap->getBoundUser() === false || is_null($ldap->getBoundUser())) {
+            throw new \Exception('No LDAP connection!');
+        } else {
+            $users = $this->userMapper->fetchAll();
+            $ldapBaseDn = $ldap->getBaseDn();
+            
+            foreach ($users as $user) {
+                $objectClass    = \Zend\Ldap\Filter::any('objectClass');
+                $uidnumber      = \Zend\Ldap\Filter::equals('uidnumber', $user->getLdapId()); 
+                
+                $filter         = \Zend\Ldap\Filter::andFilter($objectClass, $uidnumber);
+                                
+       	
+            	$ldapEntries    = $ldap->search($filter, $ldapBaseDn, \Zend\Ldap\Ldap::SEARCH_SCOPE_ONE, array('givenname', 'sn', 'mail', 'uid'));
+            	$count          = $ldapEntries->count();
+            	if ($count === 1) {
+            		$ldapEntry = $ldapEntries->getFirst();
+            		$ldapEntries->close();
+            		
+            		$user->setLoginName($ldapEntry['uid'][0]);
+            		$user->setFirstName($ldapEntry['givenname'][0]);
+            		$user->setLastName($ldapEntry['sn'][0]);
+            		$user->setEmail($ldapEntry['mail'][0]);
+
+            		$this->userMapper->updateEntity($user);
+            	} else {
+            		if ($count === 0) {
+            			$code = \Zend\Ldap\Exception\LdapException::LDAP_NO_SUCH_OBJECT;
+            			$str  = "No object found for: $filter";
+            			
+            			$user->setIsDeleted(true);
+            			$this->userMapper->updateEntity($user);
+            		} else {
+            			$code = \Zend\Ldap\Exception\LdapException::LDAP_OPERATIONS_ERROR;
+            			$str  = "Unexpected result count ($count) for: $filter";
+            		}
+            	}
+            	$ldapEntries->close();
+            }
+            
+        }
+  
+        
+        return $this->redirect()->toRoute('user');;
     }
 }

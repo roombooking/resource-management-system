@@ -101,7 +101,7 @@ class AuthController extends AbstractActionController
             		    // user authenticated, now update everything
             		    // LDAP check: get LDAP user information
             		    $ldap = $ldapAdapter->getLdap();
-            		    $ldapEntry = $ldap->getEntry($ldap->getCanonicalAccountName($this->userAuthentication()->getIdentity(), \Zend\Ldap\Ldap::ACCTNAME_FORM_DN));
+            		    $ldapEntry = $ldap->getEntry($ldap->getCanonicalAccountName($ldapAdapter->getIdentity(), \Zend\Ldap\Ldap::ACCTNAME_FORM_DN));
             		    
             		    $ldapUser = new UserEntity();
             		    $ldapUser->setLdapId($ldapEntry['uidnumber'][0]);

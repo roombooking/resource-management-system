@@ -17,6 +17,7 @@ class User
     //FIXME: Hydrator?
     protected $userid = 0;
     protected $roleid = null;
+    protected $isdeleted = false;
     protected $ldapid = '';
     protected $loginname = '';
     protected $firstname = '';
@@ -29,6 +30,14 @@ class User
     
     public function getId() {
         return $this->userid;
+    }
+    
+    public function setIsDeleted($deleted) {
+        $this->isdeleted = (bool) $deleted;
+    }
+    
+    public function isDeleted() {
+        return (bool) $this->isdeleted;
     }
     
     public function setLdapId($ldapId) {
