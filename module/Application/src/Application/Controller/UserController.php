@@ -132,10 +132,13 @@ class UserController extends AbstractActionController
             		$ldapEntry = $ldapEntries->getFirst();
             		$ldapEntries->close();
             		
+            		$user->setIsDeleted(false);
             		$user->setLoginName($ldapEntry['uid'][0]);
             		$user->setFirstName($ldapEntry['givenname'][0]);
             		$user->setLastName($ldapEntry['sn'][0]);
-            		$user->setEmail($ldapEntry['mail'][0]);
+            		if(isset($ldapEntry['mail']))
+            		    $user->setEmail($ldapEntry['mail'][0]);
+            		
 
             		$this->userMapper->updateEntity($user);
             	} else {

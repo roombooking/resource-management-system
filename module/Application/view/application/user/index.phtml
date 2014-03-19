@@ -24,7 +24,7 @@
 		</thead>
 		<tbody>
          <?php foreach ($users as $user) : ?>
-         <tr class="user-record-row">
+         <tr class="user-record-row<?php if($user->isDeleted()) echo ' deleted'; ?>">
               <td><?php echo $this->escapeHtml($user->getId());?></td>
               <td><?php echo $this->escapeHtml($user->getLdapId());?></td>
               <td><?php echo $this->escapeHtml($user->getLoginName());?></td>

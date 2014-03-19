@@ -68,6 +68,10 @@ tr.user-record-row.working td {
 	color: rgb(180, 180, 180);
 }
 
+tr.user-record-row.deleted td {
+	color: rgb(165, 0, 0);
+}
+
 tr.user-record-row.success {
 	background-color: green;
 }
