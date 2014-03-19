@@ -83,11 +83,13 @@ class PowerController extends AbstractActionController
             $fieldElements[$role['roleid']] = $role['rolename'];
         }
         $this->powerForm->get('roleid')->setValueOptions($fieldElements);
-        $this->powerForm->get('roleid')->setEmptyOption(array('empty_option' => array(
-                                'label' => 'Please choose the role',
-                                'disabled' => true,
-                                'selected' => true
-                         )));
+        $this->powerForm->get('roleid')->setEmptyOption(
+                array('empty_option' => array(
+                    'label' => 'Please choose the role',
+                    'disabled' => true,
+                    'selected' => true
+                ))
+        );
         
     	if($this->getRequest()->isPost()) {
     	    $this->powerForm->setData($this->getRequest()->getPost());
@@ -117,16 +119,6 @@ class PowerController extends AbstractActionController
      */
     public function editAction()
     {
-        $this->powerForm->setAttribute('action', '/powers/edit');
-        
-        $roles = $this->roleMapper->select();
-        $fieldElements = array();
-        
-        foreach ($roles as $role) {
-        	$fieldElements[$role['roleid']] = $role['rolename'];
-        }
-        $this->powerForm->get('roleid')->setValueOptions($fieldElements);
-        
     	if($this->getRequest()->isXmlHttpRequest()) {
     		$data = $this->getRequest()->getPost();
     		//$updateEntity = new User();
@@ -138,8 +130,6 @@ class PowerController extends AbstractActionController
     				'id' => $data['id'],
     				'role' => $data['role']
     		));
-    	} elseif($this->getRequest()->isPost()) {
-    	    $data = $this->getRequest()->getPost();
     	} else {
     		$this->redirect()->toRoute('power');
     	}

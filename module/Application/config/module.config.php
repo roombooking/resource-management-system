@@ -245,6 +245,30 @@ return array(
             										'action' => 'addResources'
             								)
             						)
+            				),
+            				'resourcesDelete' => array(
+            						'type' => 'Segment',
+            						'options' => array(
+            								'route' => '/:id/resources/delete/api',
+            								'constraints' => array(
+            										'id' => '[0-9]+'
+            								),
+            								'defaults' => array(
+            										'action' => 'deleteResources'
+            								)
+            						)
+            				),
+            				'resourcesUpdate' => array(
+            						'type' => 'Segment',
+            						'options' => array(
+            								'route' => '/:id/resources/update/api',
+            								'constraints' => array(
+            										'id' => '[0-9]+'
+            								),
+            								'defaults' => array(
+            										'action' => 'updateResources'
+            								)
+            						)
             				)
             		)
             ),

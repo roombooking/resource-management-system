@@ -82,12 +82,17 @@
 									/*
 									 * TODO
 									 */
-								})
+									console.log('select: ' + data.selected);
+								}).on(
+								'changed.jstree', function (e, data) {
+								    console.log('changed: ' + data.selected);
+								  })								
 								.jstree({
 									"core": {
 										"animation": 0,
 										"check_callback": true,
-										"data": jsTreeData
+										"data": jsTreeData,
+										"multiple": false
 									},
 									"plugins": [
 										"dnd"
