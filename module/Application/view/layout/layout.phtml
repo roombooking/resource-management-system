@@ -34,9 +34,11 @@
 
     <div class="row" id="titlerow">
         <div class="large-2 columns">
+            
             <a href="<?php echo $this->url('home') ?>">
                 <img src="<?php echo $this->basePath() ?>/img/TU-Berlin-Logo.svg" id="tulogo" title="<?php echo $this->translate('Home') ?>" alt="<?php echo $this->translate('Logo of the TU Berlin') ?>">
             </a>
+            
         </div>
         
         <div class="large-10 columns">
@@ -49,9 +51,26 @@
     <div class="row">
         <!-- Nav Sidebar -->
         <div class="large-2 columns">
+            <?php  if($this->userIdentity()) : ?>
             <ul class="side-nav">
-                <li><a href="<?php echo $this->basePath() . '/'; ?>">Home</a></li>
+                <li>Administrative Area
+                    <ul>
+                        <li><a href="<?php echo $this->url('user'); ?>"><?php echo $this->translate('Users') ?></a></li>
+                        <li><a href="<?php echo $this->url('power'); ?>"><?php echo $this->translate('Powers') ?></a></li>
+                        <li><a href="<?php echo $this->url('hierarchy'); ?>"><?php echo $this->translate('Resources') ?></a></li>
+                    </ul>
+                </li>
+                <li><hr></li>
+                <li>User Area
+                    <ul>
+                        <li><a href="<?php echo $this->url('home'); ?>"><?php echo $this->translate('Overview') ?></a></li>
+                        <li><a href="<?php echo $this->url('booking/bookingEdit'); ?>"><?php echo $this->translate('Add Booking') ?></a></li>
+                    </ul>
+                </li>
+                <li><hr></li>
+                <li><a href="<?php echo $this->url('logout'); ?>"><?php echo $this->translate('Logout') ?></a></li>
             </ul>
+            <?php endif; ?>
         </div>
 
         <!-- Main Content Section -->
