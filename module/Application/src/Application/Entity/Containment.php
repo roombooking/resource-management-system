@@ -45,6 +45,7 @@ class Containment {
     protected $r_name;
     protected $r_description;
     protected $r_color;
+    protected $r_isdeleted;
     protected $p_placeid;
     protected $e_equipmentid;
     protected $c_hierarchyid;

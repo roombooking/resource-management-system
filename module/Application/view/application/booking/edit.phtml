@@ -28,7 +28,7 @@ $this->headLink()->prependStylesheet(
 	
     <div class="row">
 		<div class="small-7 column">
-			<h4><?php echo $this->translate('New Room Booking') ?></h4>
+			<h4><?php echo ($form->get('bookingid')->getValue()) ? $this->translate('Edit Room Booking') : $this->translate('New Room Booking'); ?></h4>
 		</div>
 		<div class="small-5 column">
 			<a href="#" id="convertbookingtype" class="button right"><i class="fa fa-undo"></i>

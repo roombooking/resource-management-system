@@ -109,7 +109,7 @@ public function __construct($resourceMapper)
 	 * TODO Validate?
 	 */
             $hierarchyid = $this->params()->fromRoute('hierarchyid');
-            $parentId = $this->params()->fromRoute('parentId');
+            $parentId = $this->params()->fromPost('parentId');
             $resourceName = $this->params()->fromPost('resourceName');
             $resourceDescription = $this->params()->fromPost('resourceDescription');
             $resourceType = $this->params()->fromPost('resourceType');

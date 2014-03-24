@@ -99,7 +99,7 @@
 		</div>
 	</div>
     
-    <?php if ($booking->getu_r_userid() != null) { ?>
+    <?php if ($booking->getu_r_userid() != null) : ?>
     
     <div class="row">
 		<div class="small-3 columns">
@@ -122,10 +122,10 @@
 		</div>
 	</div>
     
-    <?php } ?>
+    <?php endif; ?>
     
     
-    <?php if ($booking->getb_participant_description() != null) { ?>
+    <?php if ($booking->getb_participant_description() != null) : ?>
     
     <div class="row">
 		<div class="small-3 columns">
@@ -144,7 +144,7 @@
 		</div>
 	</div>
     
-    <?php } ?>
+    <?php endif; ?>
     
     <div class="row">
 		<div class="large-12 columns">
@@ -155,7 +155,7 @@
 	</div>
 
 	<ul class="button-group">
-		<li><a href="/bookings/edit/<?php echo $this->escapeHtml($booking->getb_bookingid()); ?>" class="button"><i class="fa fa-pencil"></i> <?php echo $this->translate('Edit Booking'); ?></a></li>
+		<li><a href="<?php echo $this->url('booking/bookingEdit', array('id' => $booking->getb_bookingid()));?>" class="button"><i class="fa fa-pencil"></i> <?php echo $this->translate('Edit Booking'); ?></a></li>
 		<li><a href="delete" class="button alert deletebooking"><i class="fa fa-eraser"></i> <?php echo $this->translate('Delete Booking'); ?></a></li>
 	</ul>
 </div>

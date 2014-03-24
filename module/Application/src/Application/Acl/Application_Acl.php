@@ -11,30 +11,30 @@ class Application_Acl
     
     public function isAllowed($user = null, $request = null, $privilege = null)
     {
-        if (is_null($user) === false && $user !== false && $user instanceof User) {
-            $userId = $user->id;
+        if (is_null($user) === false && $user !== false && is_int($user)) {
+            $userId = $user;
         } else {
             $userId = 0;
         }
-        $db = Zend_Db_Table::getDefaultAdapter(); $stmt = $db->query('
-                    select
-                       module_name,
-                       controller_name,
-                       action_name
-                    from
-                        privilege
-                              join role
-                                      on role.id = privilege.role_id
-                              join userRole
-                                      on userRole.role_id = role.role_id
-                    where
-                        userRole.user_id = ?
-                        and
-                        (
-                            module_name = "%"
-                            or
-                            (
-                                module_name = ?
+        $stmt = $this->adapter->query('
+        select
+           module_name,
+           controller_name,
+           action_name
+        from
+            privilege
+                  join role
+                          on role.id = privilege.role_id
+                  join userRole
+                          on userRole.role_id = role.role_id
+        where
+            userRole.user_id = ?
+            and
+            (
+                module_name = "%"
+                or
+                (
+                    module_name = ?
         and (
                 controller_name = "%"
         or
@@ -58,7 +58,9 @@ class Application_Acl
         $stmt->execute();
         $row = $stmt->fetch(); // Returns a row or false
         if ($row !== false) {
-        return true; } else {
-        return false; }
+            return true;
+        } else {
+            return false;
+        }
     }
 }

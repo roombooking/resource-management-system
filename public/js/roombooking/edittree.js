@@ -159,7 +159,7 @@
 								                    }
 								                },
 								                "Delete": {
-								                    "label": "Delete an employee",
+								                    "label": "Delete a resource",
 								                    "action": function (obj) {
 								                        alert('Not yet implemented.');
 								                        console.log(obj);

@@ -116,8 +116,8 @@ return array(
                                 'bookingEdit' => array(
                                         'type' => 'Segment',
                                         'options' => array(
-                                                // 'route' => '[/:id]/edit',
-                                                'route' => '/edit[/:id]',
+                                                'route' => '[/:id]/edit',
+                                                //'route' => '/edit[/:id]',
                                                 'constraints' => array(
                                                 		'id' => '[0-9]+'
                                                 ),

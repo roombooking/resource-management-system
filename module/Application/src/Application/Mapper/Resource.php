@@ -2,7 +2,7 @@
 namespace Application\Mapper;
 
 use Zend\Db\ResultSet\HydratingResultSet;
-use Application\Entity\Containment as ConatinmentEntity;
+use Application\Entity\Containment as ContainmentEntity;
 use Application\Entity\Hierarchy as HierarchyEntity;
 use Application\Entity\Resource as ResourceEntity;
 
@@ -40,7 +40,7 @@ class Resource
 	 */
 	public function fetchAllContainments()
 	{
-		$entity = new ConatinmentEntity();
+		$entity = new ContainmentEntity();
 		$statement = $this->adapter->createStatement();
 		
 		/*
@@ -65,7 +65,7 @@ class Resource
 	 */
 	public function fetchContainmentsById($id)
 	{
-		$entity = new ConatinmentEntity();
+		$entity = new ContainmentEntity();
 		$statement = $this->adapter->createStatement();
 	
 		/*

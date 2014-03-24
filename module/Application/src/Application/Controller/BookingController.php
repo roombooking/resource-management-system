@@ -73,7 +73,7 @@ class BookingController extends AbstractActionController
      * @see \Zend\Mvc\Controller\AbstractActionController::indexAction()
      */
     public function indexAction () {
-        
+
     }
     
     /**
@@ -141,7 +141,7 @@ class BookingController extends AbstractActionController
         /*
          * TODO check the ID for validity
          */
-        $booking = $this->bookingMapper->fetchBookingsById($this->getEvent()->getRouteMatch()->getParam('id'));
+        $booking = $this->bookingMapper->fetchBookingsById($this->params()->fromRoute('id'));
         
         /*
          * Retrieve first element from array
@@ -274,14 +274,8 @@ class BookingController extends AbstractActionController
         } else {
             $bookingId = $this->getEvent()->getRouteMatch()->getParam('id');
             $bookings = $this->bookingMapper->fetchBookingsById($bookingId);
-            $booking;
-            
-            $first = true;
-            foreach ($bookings as $validbooking) {
-            	if ($first) {
-            		$booking = $validbooking;
-            	}
-            }
+            $booking = $bookings->current();
+
             
             $startFormatted = array(
             		'date' => substr($booking->getb_start(), 0, 10),
@@ -307,6 +301,8 @@ class BookingController extends AbstractActionController
             $this->bookingForm->setbookingdescription($booking->getb_description());
             $this->bookingForm->setparticipantdescription($booking->getb_participant_description());
             $this->bookingForm->initialize();
+
+            $this->bookingForm->get('submit')->setValue('Update');
             
             return new ViewModel(array(
                     $startFormatted,

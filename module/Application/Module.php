@@ -39,14 +39,9 @@ class Module implements
         		return;
         	}
         
-        	// Route is whitelisted
+        	// Route is whitelisted or User is authenticated
         	$name = $match->getMatchedRouteName();
-        	if ($name == 'login') {
-        		return;
-        	}
-        
-        	// User is authenticated
-        	if ($auth->hasIdentity()) {
+        	if ($name == 'login' || $auth->hasIdentity()) {
         		return;
         	}
         
@@ -63,8 +58,8 @@ class Module implements
         	return $response;
         }, -100);
 
-            $moduleRouteListener = new ModuleRouteListener();
-            $moduleRouteListener->attach($eventManager);
+        $moduleRouteListener = new ModuleRouteListener();
+        $moduleRouteListener->attach($eventManager);
     }
 
     public function getConfig()

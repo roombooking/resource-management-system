@@ -23,12 +23,7 @@
 				require([ "fullcalendar", "jqueryui", "jqueryredirect" ], function() {
 					var calendar = $("#calendar");
 					
-					calendar.fullCalendar({
-						/*
-						 * TODO Enable changing appointments by dragging. 
-						 */
-						editable : false,
-						
+					calendar.fullCalendar({						
 						/*
 						 * Sets the background color for all events on the calendar.
 						 */
@@ -199,7 +194,7 @@
 											.append($("<li/>")
 												.append($("<a/>", {
 													"class": "button",
-													"href": "/bookings/edit/" + event.b_bookingid,
+													"href": "/bookings/" + event.b_bookingid + "/edit",
 													"html": "<i class=\"fa fa-pencil\"></i> Edit Booking"
 												})))
 											.append($("<li/>")
@@ -331,6 +326,8 @@
 						 * 
 						 * Default settings for events is that they are not editable.
 						 * This gets overwritten by JSON data.
+						 * 
+						 * TODO Enable changing appointments by dragging. 
 						 */
 						editable : false,
 						
