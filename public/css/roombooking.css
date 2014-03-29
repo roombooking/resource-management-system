@@ -1,6 +1,5 @@
 body {
 	background: rgb(70, 110, 159);
-	background-image: url("../img/bg_bottom.jpg");
 	background-size: 100% auto;
 	background-repeat: no-repeat;
 	background-attachment: fixed;
@@ -33,7 +32,7 @@ table.fc-header {
 	background: rgba(0, 0, 0, 0);
 }
 
-img#tulogo {
+img#logo {
 	display: block;
 	width: 100%;
 	max-width: 6em;

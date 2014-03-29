@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php echo $this->headTitle('Quality and Usability Lab '. $this->translate('Room Booking System'))->setSeparator(' - ')->setAutoEscape(false) ?>
+<?php echo $this->headTitle('pjroombooking '. $this->translate('Room Booking System'))->setSeparator(' - ')->setAutoEscape(false) ?>
 
 <script type="text/javascript">
     // Provide a global window object in order to store configuration for JavaScript components
@@ -36,14 +36,14 @@
         <div class="large-2 columns">
             
             <a href="<?php echo $this->url('home') ?>">
-                <img src="<?php echo $this->basePath() ?>/img/TU-Berlin-Logo.svg" id="tulogo" title="<?php echo $this->translate('Home') ?>" alt="<?php echo $this->translate('Logo of the TU Berlin') ?>">
+                <img src="<?php echo $this->basePath() ?>/img/logo.svg" id="logo" title="<?php echo $this->translate('Home') ?>" alt="<?php echo $this->translate('Logo') ?>">
             </a>
             
         </div>
         
         <div class="large-10 columns">
             <h1>
-                <?php echo $this->translate('Room Booking System') ?> <small>Quality and Usability Lab</small>
+                <?php echo $this->translate('Room Booking System') ?> <small><?php echo $this->translate('pjroombooking') ?></small>
             </h1>
         </div>
     </div>
@@ -81,8 +81,8 @@
         <div class="large-12 columns">
             <hr>
             <p>
-                <strong>Institut für Softwaretechnik und Theoretische Informatik,</strong><br>
-                Quality and Usability Lab (2013 - <?php echo date('Y') ?>)
+                <strong><?php echo $this->translate('pjroombooking') ?></strong><br>
+                <?php echo $this->translate('pjroombooking') ?> (2013 - <?php echo date('Y') ?>)
             </p>
         </div>
     </footer>
