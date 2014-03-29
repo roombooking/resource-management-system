@@ -55,13 +55,13 @@ return array(
 		'ldap' => array(
 				'server1' => array
 				(
-						'host' => '192.168.23.32',
-						'accountDomainName' => 'roombooking.qu.tu-berlin.de',
-						'accountDomainNameShort' => 'roombooking.qu.tu-berlin.de',
+						'host' => '192.168.0.1',
+						'accountDomainName' => 'example.org',
+						'accountDomainNameShort' => 'example.org',
 						'accountCanonicalForm' => 2,
-						'username' => 'CN=admin,DC=roombooking,DC=qu,DC=example,DC=de',
+						'username' => 'CN=admin,DC=example',
 						'password' => '',
-						'baseDn' => 'DC=roombooking,DC=qu,DC=example,DC=de',
+						'baseDn' => 'DC=example',
 						'bindRequiresDn' => true
 				)
 		)
