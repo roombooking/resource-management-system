@@ -8,6 +8,6 @@ We would like to thank the *Quality and Usability Lab, Telekom Innovation Labora
 Authors
 =======
 
-Patrick Grzybowski (<patrick_grzybowski@arcor.de>), Flavio Holstein (<flavio.holstein@googlemail.com>), Fabian Knaack (<knaack@grundbau.tu-berlin.de>), Moritz Platt(<moritz.platt@googlemail.com>)
+Patrick Grzybowski (patrick_grzybowski@arcor.de), Flavio Holstein (flavio.holstein@googlemail.com), Fabian Knaack (knaack@grundbau.tu-berlin.de), Moritz Platt(moritz.platt@googlemail.com)
 
 *Please acknowledge the authors in future versions of this software in accordance with the MIT License (MIT).*
