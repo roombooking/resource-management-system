@@ -223,7 +223,20 @@ return array(
             								)
             						)
             				),
-            				'resourcesEdit' => array(
+            				'idresource' => array(
+            						'type' => 'Segment',
+            						'options' => array(
+            								'route' => '/:id/resources/:rid/api',
+            								'constraints' => array(
+            										'id' => '[0-9]+',
+            										'rid' => '[0-9]+'
+            								),
+            								'defaults' => array(
+            										'action' => 'resourceById'
+            								)
+            						)
+            				),
+            				'hierarchyEdit' => array(
             						'type' => 'Segment',
             						'options' => array(
             								'route' => '/:id/resources/edit',
@@ -243,34 +256,50 @@ return array(
             										'id' => '[0-9]+'
             								),
             								'defaults' => array(
-            										'action' => 'addResources'
+            										'action' => 'addResource'
+            								)
+            						)
+            				),
+            				'resourcesEdit' => array(
+            						'type' => 'Segment',
+            						'options' => array(
+            								'route' => '/:id/resources/:rid/edit/api',
+            								'constraints' => array(
+            										'id' => '[0-9]+',
+            										'rid' => '[0-9]+'
+            								),
+            								'defaults' => array(
+            										'action' => 'editResource'
             								)
             						)
             				),
             				'resourcesDelete' => array(
             						'type' => 'Segment',
             						'options' => array(
-            								'route' => '/:id/resources/delete/api',
+            								'route' => '/:id/resources/:rid/delete/api',
             								'constraints' => array(
-            										'id' => '[0-9]+'
+            										'id' => '[0-9]+',
+            										'rid' => '[0-9]+'
             								),
             								'defaults' => array(
-            										'action' => 'deleteResources'
+            										'action' => 'deleteResource'
             								)
             						)
             				),
+            				
             				'resourcesUpdate' => array(
             						'type' => 'Segment',
             						'options' => array(
-            								'route' => '/:id/resources/update/api',
+            								'route' => '/:id/resources/:rid/update/api',
             								'constraints' => array(
-            										'id' => '[0-9]+'
+            										'id' => '[0-9]+',
+            										'rid' => '[0-9]+'
             								),
             								'defaults' => array(
-            										'action' => 'updateResources'
+            										'action' => 'updateResource'
             								)
             						)
-            				)
+            				),
             		)
             ),
             'power' => array(
@@ -321,6 +350,19 @@ return array(
             				),
             		),
             ),
+            'incidents' => array(
+            		'type' => 'Segment',
+            		'options' => array(
+            				'route'    => '/incidents[/page/:page]',
+            				'scheme'   => 'https',
+            				'defaults' => array(
+            						'__NAMESPACE__' => 'Application\Controller',
+            						'controller' => 'Incident',
+            						'action'     => 'overview',
+            						'page' => 1
+            				),
+            		),
+    		),
         ),
     ),
     'translator' => array(

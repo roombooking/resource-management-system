@@ -1,0 +1,83 @@
+<div class="large-10 columns">
+	<h4><?php echo $this->translate('Incident Overview') ?></h4>
+    
+    <?php
+     // add at the end of the file after the table
+     echo $this->paginationControl(
+         // the paginator object
+         $this->paginator,
+         // the scrolling style
+         'sliding',
+         // the partial to use to render the control
+         array('partial/paginator.phtml', 'Application'),
+         // the route to link to when a user clicks a control link
+         array(
+             'route' => 'incidents'
+         )
+     );
+     ?>
+    
+	<!-- Table -->
+	<table class="users">
+		<thead>
+			<tr>
+				<th><?php echo $this->translate('Internal ID') ?></th>
+				<th><?php echo $this->translate('Time') ?></th>
+				<th><?php echo $this->translate('Class') ?></th>
+				<th><?php echo $this->translate('Description') ?></th>
+				<th><?php echo $this->translate('UserID') ?></th>
+				<th><?php echo $this->translate('BookingID') ?></th>
+				<th><?php echo $this->translate('ResourceID') ?></th>
+			</tr>
+		</thead>
+		<tbody>
+        <?php foreach ($this->paginator as $incident) : // <-- change here! ?>
+        <?php 
+            switch($incident->getClass()) {
+                case 0:
+                    $class = 'Info';
+                    break;
+                case 1:
+                	$class = 'Warning';
+                	break;
+            	case 2:
+            		$class = 'Error';
+            		break;
+        		case 3:
+        			$class = 'Crititcal';
+        			break;
+            }
+        ?>
+         <tr class="user-record-row">
+             <td><?php echo $this->escapeHtml($incident->getIncidentId());?></td>
+             <td><?php echo $this->escapeHtml($incident->getTime()); ?></td>
+             <td><?php echo $class;?></td>
+             <td><?php echo $this->escapeHtml($incident->getDescription());?></td>
+             <td><?php echo $this->escapeHtml($incident->getUserId());?></td>
+             <td><?php echo $this->escapeHtml($incident->getBookingId());?></td>
+             <td><?php echo $this->escapeHtml($incident->getResourceId());?></td>
+         </tr>
+        <?php endforeach; ?>
+        </tbody>
+	</table>
+	<?php
+     // add at the end of the file after the table
+     echo $this->paginationControl(
+         // the paginator object
+         $this->paginator,
+         // the scrolling style
+         'sliding',
+         // the partial to use to render the control
+         array('partial/paginator.phtml', 'Application'),
+         // the route to link to when a user clicks a control link
+         array(
+             'route' => 'incidents'
+         )
+     );
+     ?>
+</div>
+
+<!-- User View Specific JavaScript Components -->
+<?php $this->inlineScript()
+    ->prependFile($this->basePath() . '/js/roombooking/incident.js')
+?>
