@@ -30,6 +30,9 @@
 				 * Overwrite the Foundation default password
 				 * RegEx with a trivial one (non-empty strings) for
 				 * a more failsave password validation on login.
+				 * 
+				 * TODO Use the same RegEx the application uses to
+				 * validate passwords.
 				 */
 				Foundation.libs.abide.settings.patterns.password = /\S/;
 				
