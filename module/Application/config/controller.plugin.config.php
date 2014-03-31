@@ -8,5 +8,12 @@ return array(
 					$controllerPlugin->setAuthService($authService);
 					return $controllerPlugin;
 				},
+				'logger' => function ($sm) {
+					$serviceLocator = $sm->getServiceLocator();
+					$incidentMapper = $serviceLocator->get('Application\Mapper\Incident');
+					$controllerPlugin = new Application\Controller\Plugin\Logger;
+					$controllerPlugin->setIncidentMapper($incidentMapper);
+					return $controllerPlugin;
+				},
 		),
 );
