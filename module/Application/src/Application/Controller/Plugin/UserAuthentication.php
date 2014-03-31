@@ -4,7 +4,6 @@ namespace Application\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * UserAuthentication
@@ -25,11 +24,6 @@ class UserAuthentication extends AbstractPlugin
      * @var AuthenticationService
      */
     protected $authService;
-
-    /**
-     * @var ServiceLocatorInterface
-     */
-    protected $serviceLocator;
 
     /**
      * Proxy convenience method returning whether the user calling
