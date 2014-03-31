@@ -34,16 +34,6 @@ class BookingController extends AbstractActionController
     private $resourceMapper;
     
     /**
-     * This is used for logging purposes only.
-     *
-     * TODO a new logging mechanism that does not need to have a mapper
-     * injected into the controller should be used.
-     * 
-     * @var Application\Mapper\Incident
-     */
-    private $incidentMapper;
-    
-    /**
      * @var Application\Form\Booking
      */
     private $bookingForm;
@@ -54,14 +44,12 @@ class BookingController extends AbstractActionController
      * @param Application\Mapper\Booking $bookingMapper
      * @param Application\Form\Booking $bookingForm
      * @param Application\Mapper\Resource $resourceMapper
-     * @param Application\Mapper\Incident $incidentMapper
      */
-    public function __construct($bookingMapper, $bookingForm, $resourceMapper, $incidentMapper)
+    public function __construct($bookingMapper, $bookingForm, $resourceMapper)
     {
     	$this->bookingMapper = $bookingMapper;
     	$this->resourceMapper = $resourceMapper;
     	$this->bookingForm = $bookingForm;
-    	$this->incidentMapper = $incidentMapper;
     }
     
     /**
@@ -273,44 +261,50 @@ class BookingController extends AbstractActionController
             }
         } else {
             $bookingId = $this->getEvent()->getRouteMatch()->getParam('id');
-            $bookings = $this->bookingMapper->fetchBookingsById($bookingId);
+            //TODO: fix $bookings->current(): if the id is correct just return the object
+            $bookings = $this->bookingMapper->fetchBookingsById($bookingId);            
             $booking = $bookings->current();
 
-            
-            $startFormatted = array(
-            		'date' => substr($booking->getb_start(), 0, 10),
-            		'time' => substr($booking->getb_start(), 11, 5)
-            );
-            
-            $endFormatted = array(
-            		'date' => substr($booking->getb_end(), 0, 10),
-            		'time' => substr($booking->getb_end(), 11, 5)
-            );
-            
-            /*
-             * TODO Also pre-populate the field for the person responsible.
-             */
-            
-            $this->bookingForm->setstart($startFormatted);
-            $this->bookingForm->setend($endFormatted);
-            $this->bookingForm->setbookingid($booking->getb_bookingid());
-            $this->bookingForm->sethierarchyid($booking->geth_hierarchyid());
-            $this->bookingForm->setresourceid($booking->getr_resourceid());
-            $this->bookingForm->setisprebooking(($booking->getb_isprebooking() == "1" ? true : false));
-            $this->bookingForm->settitle($booking->getb_name());
-            $this->bookingForm->setbookingdescription($booking->getb_description());
-            $this->bookingForm->setparticipantdescription($booking->getb_participant_description());
-            $this->bookingForm->initialize();
-
-            $this->bookingForm->get('submit')->setValue('Update');
-            
-            return new ViewModel(array(
-                    $startFormatted,
-            		$endFormatted,
-            		'isPrebooking' => ($booking->getb_isprebooking() == "1" ? true : false),
-            		'form' => $this->bookingForm,
-                    
-            ));
+            // Check if user is creator
+            if($booking->getu_b_userid() == $this->userAuthentication()->getIdentity()) {
+                $startFormatted = array(
+                		'date' => substr($booking->getb_start(), 0, 10),
+                		'time' => substr($booking->getb_start(), 11, 5)
+                );
+                
+                $endFormatted = array(
+                		'date' => substr($booking->getb_end(), 0, 10),
+                		'time' => substr($booking->getb_end(), 11, 5)
+                );
+                
+                /*
+                 * TODO Also pre-populate the field for the person responsible.
+                 */
+                
+                $this->bookingForm->setstart($startFormatted);
+                $this->bookingForm->setend($endFormatted);
+                $this->bookingForm->setbookingid($booking->getb_bookingid());
+                $this->bookingForm->sethierarchyid($booking->geth_hierarchyid());
+                $this->bookingForm->setresourceid($booking->getr_resourceid());
+                $this->bookingForm->setisprebooking(($booking->getb_isprebooking() == "1" ? true : false));
+                $this->bookingForm->settitle($booking->getb_name());
+                $this->bookingForm->setbookingdescription($booking->getb_description());
+                $this->bookingForm->setparticipantdescription($booking->getb_participant_description());
+                $this->bookingForm->initialize();
+    
+                $this->bookingForm->get('submit')->setValue('Update');
+                
+                return new ViewModel(array(
+                        $startFormatted,
+                		$endFormatted,
+                		'isPrebooking' => ($booking->getb_isprebooking() == "1" ? true : false),
+                		'form' => $this->bookingForm,
+                        
+                ));
+            } else {
+                $this->getResponse()->getContent(403);
+                throw new \Exception('Insufficient rights to edit this booking!');
+            }
         }
     }
     
@@ -325,16 +319,19 @@ class BookingController extends AbstractActionController
     {
         $id = $this->getEvent()->getRouteMatch()->getParam('id');
         
+        //TODO: check if user got rights
+        
         /*
          * TODO handle unset/invalid parameter
          */
         
         $this->bookingMapper->delete($id);
+        
     	/*
          * Redirect to home page
          */
-        $this->redirect()->toRoute('home');
-        $this->stopPropagation();
+        return $this->redirect()->toRoute('home');
+        //$this->stopPropagation();
     }
     
     /**
@@ -348,9 +345,12 @@ class BookingController extends AbstractActionController
     {
     	$id = $this->getEvent()->getRouteMatch()->getParam('id');
     
-    	$booking = $this->bookingMapper->fetchBookingsById($id);
+    	$bookings = $this->bookingMapper->fetchBookingsById($id);
     
-    	return new JsonModel($booking);
+    	return new JsonModel(array(
+    	        'booking' => \Zend\Stdlib\ArrayUtils::iteratorToArray($bookings),
+    	        'userid' => $this->userAuthentication()->getIdentity()
+        ));
     }
     
     /**
@@ -424,23 +424,13 @@ class BookingController extends AbstractActionController
                      */
                     $booking->setb_bookingid($bookingid);
                     $this->bookingMapper->update($booking);
-                }
-                
-                /*
-                 * Log this incident
-                 */
-                $incident = new IncidentEntity();
-                $incident->setuserid($this->userAuthentication()->getIdentity());
-                $incident->setdescription('A new booking titled "' . $title . '" has been created.');
-                $incident->setresourceid($resourceid);
-                $incident->setclass(0);
-                $this->incidentMapper->insert($incident);
+                }                
                 
                 /*
                  * Redirect to home page
                  */
-                $this->redirect()->toRoute('home');
-                $this->stopPropagation();
+                return $this->redirect()->toRoute('home');
+                //$this->stopPropagation();
             } else {
                 throw new \Exception("Form data received is invalid.");
             }

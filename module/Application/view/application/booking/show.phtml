@@ -155,8 +155,9 @@
 	</div>
 
 	<ul class="button-group">
-		<li><a href="<?php echo $this->url('booking/bookingEdit', array('id' => $booking->getb_bookingid()));?>" class="button"><i class="fa fa-pencil"></i> <?php echo $this->translate('Edit Booking'); ?></a></li>
-		<li><a href="delete" class="button alert deletebooking"><i class="fa fa-eraser"></i> <?php echo $this->translate('Delete Booking'); ?></a></li>
+		<?php if($booking->getu_b_userid() == $this->userIdentity()) : ?><li><a href="<?php echo $this->url('booking/bookingEdit', array('id' => $booking->getb_bookingid()));?>" class="button"><i class="fa fa-pencil"></i> <?php echo $this->translate('Edit Booking'); ?></a></li>
+		<li><a href="delete" class="button alert deletebooking"><i class="fa fa-eraser"></i> <?php echo $this->translate('Delete Booking'); ?></a></li><?php endif; ?>
+		<li><a href="<?php echo $this->url('home'); ?>" class="button"><i class="fa fa-arrow-circle-o-left"></i> <?php echo $this->translate('Back to Overview'); ?></a></li>
 	</ul>
 </div>
 
