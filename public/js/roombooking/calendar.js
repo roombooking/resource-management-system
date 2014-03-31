@@ -116,7 +116,8 @@
 							})();
 							
 							$.get("bookings/" + eventId + "/details/api",function(data) {
-								var event = data[0];
+								var event = data['booking'][0];
+								var userid = data['userid']; //FIX: better solution to get the logged in userid
 								
 								var modal = $("<div/>", {
 									"class": "content"
@@ -191,13 +192,13 @@
 													"href": "/bookings/" + event.b_bookingid + "/show",
 													"html": "View Booking"
 												})))
-											.append($("<li/>")
+											.append((event.u_b_userid == userid) ? $("<li/>")
 												.append($("<a/>", {
 													"class": "button",
 													"href": "/bookings/" + event.b_bookingid + "/edit",
 													"html": "<i class=\"fa fa-pencil\"></i> Edit Booking"
-												})))
-											.append($("<li/>")
+												})) : '')
+											.append((event.u_b_userid == userid) ? $("<li/>")
 												.append($("<a/>", {
 													"class": "button alert",
 													"href": "/bookings/" + event.b_bookingid + "/delete",
@@ -210,7 +211,7 @@
 													} else {
 														return false;
 													}
-												}))))))
+												})) : ''))))
 									.append($("<a/>", {
 										"class": "close-reveal-modal",
 										"html": "&#215;"

@@ -160,6 +160,27 @@ class Containment {
     }
     
     /**
+    * Set isdeleted
+    *
+    * @param bool $isdeleted
+    * @return void
+    */
+    public function setr_isdeleted($isdeleted)
+    {
+    	$this->r_isdeleted = $isdeleted;
+    }
+    
+    /**
+    * Gets isdeleted
+    *
+    * @return bool
+    */
+    public function getr_isdeleted()
+    {
+    	return $this->r_isdeleted;
+    }
+    
+    /**
     * Sets p_placeid
     *
     * @param type $p_placeid
