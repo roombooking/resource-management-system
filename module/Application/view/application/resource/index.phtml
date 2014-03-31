@@ -22,8 +22,8 @@
 		 <?php else : ?>
          <?php foreach ($hierarchies as $hierarchy) : ?>
          <tr class="user-record-row">
-              <td><a href="<?php echo $this->url('hierarchy/resourcesEdit', array('id' => $hierarchy->geth_hierarchyid()));?>"><?php echo $hierarchy->geth_hierarchyid();?></a></td>
-              <td><a href="<?php echo $this->url('hierarchy/resourcesEdit', array('id' => $hierarchy->geth_hierarchyid()));?>"><?php echo $this->escapeHtml($hierarchy->geth_name());?></a></td>
+              <td><a href="<?php echo $this->url('hierarchy/hierarchyEdit', array('id' => $hierarchy->geth_hierarchyid()));?>"><?php echo $hierarchy->geth_hierarchyid();?></a></td>
+              <td><a href="<?php echo $this->url('hierarchy/hierarchyEdit', array('id' => $hierarchy->geth_hierarchyid()));?>"><?php echo $this->escapeHtml($hierarchy->geth_name());?></a></td>
          </tr>
          <?php endforeach; ?>
          <?php endif; ?>
