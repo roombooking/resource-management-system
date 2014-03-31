@@ -1,7 +1,11 @@
 <?php
 namespace Application\Mapper;
 
+use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\ResultSet\HydratingResultSet;
+use Zend\Db\TableGateway\Feature\RowGatewayFeature;
+use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Insert;
 use Zend\Db\Sql\Select;
 use Zend\Paginator\Adapter\DbSelect;
 use Zend\Paginator\Paginator;
@@ -19,21 +23,12 @@ use Application\Entity\Incident as IncidentEntity;
  * @version 0.1
  *
  */
-class Incident
+class Incident extends TableGateway
 {
-    /**
-     * DB Adapter
-     *
-     * @var AdapterInterface $adapter
-     */
-    private $adapter;
-    
-    /**
-     * Hydrator
-     *
-     * @var HydratorInterface $hydrator
-     */
-    private $hydrator;
+    protected $tableName = 'Incidents';
+    protected $idCol = 'incidentid';
+    protected $entityPrototype = null;
+    protected $hydrator = null;
     
     /**
      * 
@@ -41,7 +36,8 @@ class Incident
      */
     public function __construct($adapter)
     {
-        $this->adapter = $adapter;
+        parent::__construct($this->tableName, $adapter, new RowGatewayFeature($this->idCol));
+        $this->entityPrototype = new IncidentEntity();
         $this->hydrator = new \Zend\Stdlib\Hydrator\Reflection();
     }
     
@@ -53,20 +49,46 @@ class Incident
      public function fetchAll()
      {
           // create a new Select object for the table Incident
-         $select = new Select('Incidents');
+         $select = new Select($tableName);
          $select->order('incidentid DESC');
          // create a new result set based on the Incident entity
-         $resultSet = new HydratingResultSet($this->hydrator, new IncidentEntity());
+         $resultSet = new HydratingResultSet($this->hydrator, $this->entityPrototype);
          // create a new pagination adapter object
          $paginatorAdapter = new DbSelect(
              // our configured select object
              $select,
              // the adapter to run it against
-             $this->adapter,
+             $this->getAdapter(),
              // the result set to hydrate
              $resultSet
          );
          $paginator = new Paginator($paginatorAdapter);
          return $paginator;
+     }
+     
+     /**
+      * Inserts an incident into the database.
+      *
+      * @param Application\Entity\Incident $entity The incident entity to insert.
+      *
+      * (non-PHPdoc)
+      * @see \Zend\Db\TableGateway\AbstractTableGateway::insert()
+      */
+     public function insert($entity) {
+     	return parent::insert($this->hydrator->extract($entity));
+     }
+     
+     /**
+      * Hydrates the results to a resultset.
+      *
+      * @param unknown $results
+      * @return Ambigous <\Zend\Db\ResultSet\ResultSet, \Zend\Db\ResultSet\HydratingResultSet>
+      */
+     public function hydrate($results) {
+     	$users = new \Zend\Db\ResultSet\HydratingResultSet(
+     			$this->hydrator,
+     			$this->entityPrototype
+     	);
+     	return $users->initialize($results->toArray());
      }
 }
