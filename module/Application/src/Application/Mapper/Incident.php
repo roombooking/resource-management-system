@@ -49,7 +49,7 @@ class Incident extends TableGateway
      public function fetchAll()
      {
           // create a new Select object for the table Incident
-         $select = new Select($tableName);
+         $select = new Select($this->tableName);
          $select->order('incidentid DESC');
          // create a new result set based on the Incident entity
          $resultSet = new HydratingResultSet($this->hydrator, $this->entityPrototype);
