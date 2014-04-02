@@ -31,6 +31,12 @@ class AuthController extends AbstractActionController
     private $userMapper;
     
     /**
+     * 
+     * @var \Zend\Filter\StripTags
+     */
+    private $filter;
+    
+    /**
      * The constructor for the authentication controller.
      * 
      * @param Application\Mapper\User $userMapper
@@ -40,6 +46,7 @@ class AuthController extends AbstractActionController
     {
     	$this->userMapper  = $userMapper;
     	$this->loginForm   = $loginForm;
+    	$this->filter = new \Zend\Filter\StripTags();
     }
     
     
@@ -91,6 +98,7 @@ class AuthController extends AbstractActionController
             		// wrong credentials
             		if(!$authResult->isValid())
             		{
+            		    $this->logger()->insert(1, 'Auth::login error: User "'.$this->filter($data['username']).'" tried to login.');
             			return new ViewModel(
             					array(
             							'form' => $this->loginForm,
@@ -123,18 +131,18 @@ class AuthController extends AbstractActionController
                             
                             $this->userMapper->updateEntity($user);
                             $this->userAuthentication()->getAuthService()->getStorage()->write((int) $user->getId());
-                            //TODO: Log Userupdate
-            		    	
+                            
+                            $this->logger()->insert(0, 'Auth::login: User "'. $user->getFirstName() . ' ' . $user->getLastName() .'" logged in an has been updated.', $this->userAuthentication()->getIdentity());
             		    } catch (\Exception $e) {
             		        //if an error is thrown, the user does not exist and should be inserted
             		        $this->userMapper->insert($ldapUser);
             		        $this->userAuthentication()->getAuthService()->getStorage()->write((int) $this->userMapper->getLastInsertValue());
-            		        //TODO: Log User Insert
+
+            		        $this->logger()->insert(0, 'Auth::login: User "'. $ldapUser->getFirstName() . ' ' . $ldapUser->getLastName() .'" logged in for the first time an has been created in the database.', $this->userAuthentication()->getIdentity());
             		    }
             		    
             		    //TODO: Hard kodierte User mit alle rechten ausstatten.
             		    
-            		    //TODO: Log updaten?!
             		    return $this->redirect()->toRoute('home');
                         //$this->stopPropagation();
             		}

@@ -324,8 +324,12 @@ class BookingController extends AbstractActionController
         /*
          * TODO handle unset/invalid parameter
          */
-        
-        $this->bookingMapper->delete($id);
+        try {
+            $this->bookingMapper->delete($id);
+            $this->logger()->insert(0, 'Booking::delete: The booking (ID: #'. $id .') has been deleted.', $this->userAuthentication()->getIdentity(), $id);
+        } catch(\Exception $e) {
+            $this->logger()->insert(1, 'Booking::delete error: '. $e->getMessage(), $this->userAuthentication()->getIdentity());
+        }
         
     	/*
          * Redirect to home page
@@ -396,7 +400,7 @@ class BookingController extends AbstractActionController
                 $title = $data['title'];
                 $bookingdescription = $data['bookingdescription'];
                 $participantdescription = $data['participantdescription'];
-                $responsibility = $data['responsibility'];
+                $responsibility = $data['responsibility'];                
                 
                 /*
                  * Create booking entity and insert it
@@ -417,13 +421,30 @@ class BookingController extends AbstractActionController
                     /*
                      * new Booking: insert
                      */
-                    $this->bookingMapper->insert($booking);
+                    try {
+                        $bookingId = $this->bookingMapper->insert($booking);
+                        $this->logger()->insert(0, 'Booking::insert: A new booking titled "'. $booking->getb_name() .'" has been created.',  $this->userAuthentication()->getIdentity(), $bookingId, $booking->getr_resourceid());
+                    } catch (\Exception $e) {
+                        $this->logger()->insert(1, 'Booking::insert error: '. $e->getMessage(), $this->userAuthentication()->getIdentity());
+                    }
                 } else {
+                    $booking->setb_bookingid($bookingid);
+                    
+                    $oldBooking = $this->bookingMapper->fetchBookingsById($bookingid);
+                    if($oldBooking->getu_b_userid() != $this->userAuthentication()->getIdentity()) {
+                        throw new \Exception('Insufficient rights to edit this booking!');
+                    }
+                    
                     /*
                      * existing booking: update
                      */
-                    $booking->setb_bookingid($bookingid);
-                    $this->bookingMapper->update($booking);
+                    try {
+                        $this->bookingMapper->update($booking);
+                        $this->logger()->insert(0, 'Booking::update: The booking titled "'. $booking->getb_name() .'" has been updated.',  $this->userAuthentication()->getIdentity(), $booking->getb_bookingid(), $booking->getr_resourceid());
+                        
+                    } catch(\Exception $e) {
+                        $this->logger()->insert(1, 'Booking::update error: '. $e->getMessage(), $this->userAuthentication()->getIdentity());
+                    }
                 }                
                 
                 /*

@@ -1,3 +1,9 @@
+<?php
+// module/Application/view/application/user/index.phtml:
+
+$title = 'User Overview';
+$this->headTitle($title);
+?>
 <div class="large-10 columns">
 	<h4><?php echo $this->translate('User Overview') ?></h4>
 	
@@ -13,7 +19,7 @@
 	<table class="users">
 		<thead>
 			<tr>
-				<th><?php echo $this->translate('Internal ID') ?></th>
+				<th><?php echo $this->translate('ID') ?></th>
 				<th><?php echo $this->translate('LDAP UID') ?></th>
 				<th><?php echo $this->translate('Username') ?></th>
 				<th><?php echo $this->translate('First Name') ?></th>

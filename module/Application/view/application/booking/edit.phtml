@@ -1,3 +1,9 @@
+<?php
+// module/Application/view/application/power/overview.phtml:
+
+$title = ($form->get('bookingid')->getValue()) ? $this->translate('Edit Room Booking') : $this->translate('New Room Booking');
+$this->headTitle($title);
+?>
 <!-- Add/edit Specific CSS Components -->
 <?php
 $this->headLink()->prependStylesheet(

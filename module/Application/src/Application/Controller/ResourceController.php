@@ -147,7 +147,7 @@ public function __construct($resourceMapper)
             $resourceDescription = $this->params()->fromPost('resourceDescription');
             $resourceType = $this->params()->fromPost('resourceType');
             $resourceBookable = $this->params()->fromPost('resourceBookable');
-            $resourceColor = $this->params()->fromPost('resourceColor');
+            $resourceColor = ($validator->isValid($this->params()->fromPost('resourceColor')) ? $this->params()->fromPost('resourceColor') : null);
             
             $resourceEntity = new ContainmentEntity();
             $resourceEntity->seth_hierarchyid($hierarchyid);
@@ -204,8 +204,8 @@ public function __construct($resourceMapper)
     		$resourceDescription = $this->params()->fromPost('resourceDescription');
     		$resourceType = $this->params()->fromPost('resourceType');
     		$resourceBookable = $this->params()->fromPost('resourceBookable');
-    		$resourceColor = $this->params()->fromPost('resourceColor');
-
+            $resourceColor = ($validator->isValid($this->params()->fromPost('resourceColor')) ? $this->params()->fromPost('resourceColor') : null);
+    		
             $resourceEntity = new ContainmentEntity();
             $resourceEntity->seth_hierarchyid($hierarchyId);
             $resourceEntity->setc_hierarchyid($hierarchyId);

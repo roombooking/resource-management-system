@@ -1,8 +1,14 @@
 <?php
 namespace Application\Mapper;
+
 use Application\Entity\Booking as BookingEntity;
 use Application\Entity\MinimalBooking as MinimalBookingEntity;
 use Zend\Db\ResultSet\HydratingResultSet;
+use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Expression;
+use Zend\Paginator\Adapter\DbSelect;
+use Zend\Paginator\Paginator;
 
 /**
  * Booking Mapper
@@ -124,6 +130,60 @@ class Booking
         $resultSet = new HydratingResultSet($this->hydrator, $entity);
         
         return $resultSet->initialize($result);
+    }
+    
+    /**
+     * This method returns bookings with a certain id.
+     *
+     * TODO make this SQL injection safe
+     * http://framework.zend.com/manual/2.3/en/modules/zend.db.sql.html
+     *
+     * @param int $id
+     *            The id of a user
+     * @return Ambigous <\Zend\Db\ResultSet\ResultSet,
+     *         \Zend\Db\ResultSet\HydratingResultSet>
+     */
+    public function fetchBookingsByUserId ($userId)
+    {
+        // create a new Select object for the table Incident
+        $select = new Select($this->tableName);
+        $select->order('incidentid DESC');
+        // create a new result set based on the Incident entity
+        $resultSet = new HydratingResultSet($this->hydrator, new BookingEntity());
+        // create a new pagination adapter object
+        $paginatorAdapter = new DbSelect(
+        		// our configured select object
+        		$select,
+        		// the adapter to run it against
+        		$this->getAdapter(),
+        		// the result set to hydrate
+        		$resultSet
+        );
+        $paginator = new Paginator($paginatorAdapter);
+        return $paginator;
+        
+    	/*$entity = new BookingEntity();
+    
+    	$sql = "SELECT b.bookingid AS b_bookingid, b.name AS b_name, b.description AS b_description, b.participant_description AS b_participant_description, DATE_FORMAT(b.start, '%Y-%m-%dT%TZ') AS b_start, DATE_FORMAT(b.end, '%Y-%m-%dT%TZ') AS b_end, b.isprebooking AS b_isprebooking, b.isdeleted AS b_isdeleted, u_r.userid AS u_r_userid, u_r.roleid AS u_r_roleid, u_r.ldapid AS u_r_ldapid, u_r.loginname AS u_r_loginname, u_r.firstname AS u_r_firstname, u_r.lastname AS u_r_lastname, u_r.emailaddress AS u_r_emailaddress, u_b.userid AS u_b_userid, u_b.ldapid AS u_b_ldapid, u_b.loginname AS u_b_loginname, u_b.firstname AS u_b_firstname, u_b.lastname AS u_b_lastname, u_b.emailaddress AS u_b_emailaddress, r.resourceid AS r_resourceid, r.isbookable AS r_isbookable, r.isdeleted AS r_isdeleted, r.name AS r_name, r.description AS r_description, r.color AS r_color, u_b.roleid AS u_b_roleid, e.equipmentid AS e_equipmentid, p.size AS p_size, p.seatnumber AS p_seatnumber, p.placeid AS p_placeid, c.containmentid AS c_containmentid, c.parent AS c_parent, c.name AS c_name, c.description AS c_description, h.hierarchyid AS h_hierarchyid " .
+    			"FROM Users u_b " .
+    			"RIGHT OUTER JOIN Bookings b ON u_b.userid = b.booking_userid " .
+    			"LEFT OUTER JOIN Users u_r ON b.responsible_userid = u_r.userid " .
+    			"LEFT OUTER JOIN Resources r ON b.resourceid = r.resourceid " .
+    			"LEFT OUTER JOIN Equipments e ON r.resourceid = e.resourceid " .
+    			"LEFT OUTER JOIN Places p ON r.resourceid = p.resourceid " .
+    			"LEFT OUTER JOIN Containments c ON r.resourceid = c.child " .
+    			"LEFT OUTER JOIN Hierarchies h ON c.hierarchyid = h.hierarchyid " .
+    			"WHERE b.bookingid = ?";
+    	$parameters = array(
+    			$userId
+    	);
+    
+    	$statement = $this->adapter->createStatement($sql);
+    	$result = $statement->execute($parameters);
+    
+    	$resultSet = new HydratingResultSet($this->hydrator, $entity);
+    
+    	return $resultSet->initialize($result);*/
     }
 
     /**
@@ -257,15 +317,10 @@ class Booking
                 $entity->getb_isprebooking()
         );
         
-        try {
-            $statement = $this->adapter->createStatement($sql);
-            $out = $statement->execute($parameters);
-            $this->logger()->insert(0, 'A new booking titled "'. $entity->getb_name() .'" has been created.', $entity->getu_b_userid, $this->adapter->getDriver()->getLastGeneratedValue(), $entity->getr_resourceid());
-        } catch(\Exception $e) {
-            $this->logger()->insert(1, 'Booking::insert error: '. $e->getMessage(), $this->userAuthentication()->getIdentity());
-        }
-        
-        return $out;
+        $statement = $this->adapter->createStatement($sql);
+        $out = $statement->execute($parameters);
+    
+        return $this->adapter->getDriver()->getLastGeneratedValue();
     }
 
     /**
@@ -292,13 +347,9 @@ class Booking
                 $entity->getb_bookingid()
         );
         
-        try {
-            $statement = $this->adapter->createStatement($sql);
-            $out = $statement->execute($parameters);
-            $this->logger()->insert(0, 'The booking titled "'. $entity->getb_name() .'" has been updated.', $entity->getu_b_userid, $entity->getb_bookingid(), $entity->getr_resourceid());
-        } catch(\Exception $e) {
-            $this->logger()->insert(1, 'Booking::insert error: '. $e->getMessage(), $this->userAuthentication()->getIdentity());
-        }
+
+        $statement = $this->adapter->createStatement($sql);
+        $out = $statement->execute($parameters);
         
         return $out;
     }
@@ -317,14 +368,9 @@ class Booking
         $sql = "UPDATE Bookings SET isdeleted = 1 WHERE bookingid = ?";
         $parameters = array($id);
         
-        try {
-            $statement = $this->adapter->createStatement($sql);
-            $out = $statement->execute($parameters);
-            $this->logger()->insert(0, 'The booking (ID: #'. $entity->getb_name() .') has been updated.', $this->userAuthentication()->getIdentity(), $id);
-        } catch(\Exception $e) {
-            $this->logger()->insert(1, 'Booking::insert error: '. $e->getMessage(), $this->userAuthentication()->getIdentity());
-        }
-        
+        $statement = $this->adapter->createStatement($sql);
+        $out = $statement->execute($parameters);
+   
         return $out;
     }
 }

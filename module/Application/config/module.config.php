@@ -55,6 +55,20 @@ return array(
             				),
             		),
             ),
+            'booking' => array(
+            		'type' => 'Literal',
+            		'options' => array(
+            				'route'    => '/bookings',
+            				'defaults' => array(
+            						'__NAMESPACE__' => 'Application\Controller',
+            						'controller' => 'Booking',
+            						'action'     => 'index',
+            				),
+            		),
+            		'may_terminate' => true,
+            		'child_routes' => array(
+            		),
+            ),
             'user' => array(
             		'type' => 'Literal',
             		'options' => array(
@@ -98,96 +112,96 @@ return array(
             				),
             		),
             		'may_terminate' => true,
-                        'child_routes' => array(
-                                /*
-                                 * The list/api route returns a JSON representation of
-                                 * bookings from given start/end values, provided as
-                                 * GET parameters.
-                                 */
-                                'bookingList' => array(
-                                        'type' => 'Literal',
-                                        'options' => array(
-                                                'route' => '/list/api',
-                                                'defaults' => array(
-                                                        'action' => 'list'
-                                                )
-                                        )
-                                ),
-                                'bookingEdit' => array(
-                                        'type' => 'Segment',
-                                        'options' => array(
-                                                'route' => '[/:id]/edit',
-                                                //'route' => '/edit[/:id]',
-                                                'constraints' => array(
-                                                		'id' => '[0-9]+'
-                                                ),
-                                                'defaults' => array(
-                                                        'action' => 'edit'
-                                                )
-                                        )
-                                ),
-                                'bookingCreate' => array(
-                                		'type' => 'Literal',
-                                		'options' => array(
-                                				'route' => '/create',
-                                				'defaults' => array(
-                                						'action' => 'create'
-                                				)
-                                		)
-                                ),
-                                /* 
-                                 * The details/:id/api route returns a JSON representation of
-                                 * all details available for a given booking id.
-                                 */
-                                'bookingDetails' => array(
-                                		'type' => 'Segment',
-                                		'options' => array(
-                                				'route' => '/:id/details/api',
-                                				'constraints' => array(
-                                						'id' => '[0-9]+'
-                                				),
-                                				'defaults' => array(
-                                						'action' => 'details'
-                                				)
-                                		)
-                                ),
-                                'bookingShow' => array(
-                                		'type' => 'Segment',
-                                		'options' => array(
-                                				'route' => '/:id/show',
-                                				'constraints' => array(
-                                						'id' => '[0-9]+'
-                                				),
-                                				'defaults' => array(
-                                						'action' => 'show'
-                                				)
-                                		)
-                                ),
-                                'bookingDelete' => array(
-                                		'type' => 'Segment',
-                                		'options' => array(
-                                				'route' => '/:id/delete',
-                                				'constraints' => array(
-                                						'id' => '[0-9]+'
-                                				),
-                                				'defaults' => array(
-                                						'action' => 'delete'
-                                				)
-                                		)
-                                ),
-                                'bookingCheckCollision' => array(
-                                		'type' => 'Segment',
-                                		'options' => array(
-                                				'route' => '/checkcollision/api[/:id]',
-                                				'constraints' => array(
-                                						'id' => '[0-9]+'
-                                				),
-                                				'defaults' => array(
-                                						'action' => 'checkcollision'
-                                				)
-                                		)
-                                )
-                        ),
+                    'child_routes' => array(
+                            /*
+                             * The list/api route returns a JSON representation of
+                             * bookings from given start/end values, provided as
+                             * GET parameters.
+                             */
+                            'bookingList' => array(
+                                    'type' => 'Literal',
+                                    'options' => array(
+                                            'route' => '/list/api',
+                                            'defaults' => array(
+                                                    'action' => 'list'
+                                            )
+                                    )
+                            ),
+                            'bookingEdit' => array(
+                                    'type' => 'Segment',
+                                    'options' => array(
+                                            'route' => '[/:id]/edit',
+                                            //'route' => '/edit[/:id]',
+                                            'constraints' => array(
+                                            		'id' => '[0-9]+'
+                                            ),
+                                            'defaults' => array(
+                                                    'action' => 'edit'
+                                            )
+                                    )
+                            ),
+                            'bookingCreate' => array(
+                            		'type' => 'Literal',
+                            		'options' => array(
+                            				'route' => '/create',
+                            				'defaults' => array(
+                            						'action' => 'create'
+                            				)
+                            		)
+                            ),
+                            /* 
+                             * The details/:id/api route returns a JSON representation of
+                             * all details available for a given booking id.
+                             */
+                            'bookingDetails' => array(
+                            		'type' => 'Segment',
+                            		'options' => array(
+                            				'route' => '/:id/details/api',
+                            				'constraints' => array(
+                            						'id' => '[0-9]+'
+                            				),
+                            				'defaults' => array(
+                            						'action' => 'details'
+                            				)
+                            		)
+                            ),
+                            'bookingShow' => array(
+                            		'type' => 'Segment',
+                            		'options' => array(
+                            				'route' => '/:id/show',
+                            				'constraints' => array(
+                            						'id' => '[0-9]+'
+                            				),
+                            				'defaults' => array(
+                            						'action' => 'show'
+                            				)
+                            		)
+                            ),
+                            'bookingDelete' => array(
+                            		'type' => 'Segment',
+                            		'options' => array(
+                            				'route' => '/:id/delete',
+                            				'constraints' => array(
+                            						'id' => '[0-9]+'
+                            				),
+                            				'defaults' => array(
+                            						'action' => 'delete'
+                            				)
+                            		)
+                            ),
+                            'bookingCheckCollision' => array(
+                            		'type' => 'Segment',
+                            		'options' => array(
+                            				'route' => '/checkcollision/api[/:id]',
+                            				'constraints' => array(
+                            						'id' => '[0-9]+'
+                            				),
+                            				'defaults' => array(
+                            						'action' => 'checkcollision'
+                            				)
+                            		)
+                            )
+                    ),
             ),
             'hierarchy' => array(
             		'type' => 'Literal',

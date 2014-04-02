@@ -1,5 +1,11 @@
+<?php
+// module/Application/view/application/resource/index.phtml:
+
+$title = $this->translate('Hierarchy Overview');
+$this->headTitle($title);
+?>
 <div class="large-10 columns">
-    <h4><?php echo $this->translate('Hierarchy Overview') ?></h4>
+    <h4><?php echo $this->translate('Hierarchy Overview'); ?></h4>
     
     <p>
         <?php echo $this->escapeHtml($this->translate('Hierarchies contain rooms and/or equipment.'));?>
