@@ -65,7 +65,7 @@
 						 * When parsing ISO8601 dates, whether UTC offsets should be
 						 * ignored while processing event source data.
 						 */
-						ignoreTimezone : false,
+						ignoreTimezone : true,
 						
 						/*
 						 * Determines the time-text that will be displayed on each event.
@@ -395,8 +395,9 @@
 					 * http://www.webdevelopersnotes.com/tips/html/javascript_date_and_time.php3
 					 */
 					var getNiceDate = function(date, allDay) {
+						console.log(date);
 						var curr_date = date.getDate();
-						
+
 						var months = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
 						
 						var sup = "";
@@ -413,13 +414,18 @@
 						if (allDay) {
 							return (date.getDate() + "<sup>" + sup + "</sup> " + months[date.getMonth()] + " " + date.getFullYear());
 						} else {
-							var minutes = new String(date.getMinutes());
+							/*
+							 * FIXME: UTC / time zone support
+							 */
+							var minutes = new String(date.getUTCMinutes());
 							
 							if (minutes.length == 1) {
 								minutes = "0" + minutes;
 							}
-							
-							return (date.getDate() + "<sup>" + sup + "</sup> " + months[date.getMonth()] + " " + date.getFullYear() + " " + date.getHours() + ":" + minutes);
+							/*
+							 * FIXME: UTC / time zone support
+							 */
+							return (date.getDate() + "<sup>" + sup + "</sup> " + months[date.getMonth()] + " " + date.getFullYear() + " " + date.getUTCHours() + ":" + minutes);
 						}
 					};
 				});
