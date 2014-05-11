@@ -73,6 +73,8 @@ class UserController extends AbstractActionController
         if($this->getRequest()->isXmlHttpRequest()) {
             $data = $this->getRequest()->getPost();
             $this->userMapper->update(array('roleid' => $data['role']), array('userid' => $data['id'] ));
+            $this->logger()->insert(0, 'User::edit: User (ID: #'.$data['id'].') has been awarded to role: ID #'.$data['role'], $this->userAuthentication()->getIdentity());
+            
             return new JsonModel(array(
                     'id' => $data['id'],
                     'role' => $data['role'] 
@@ -114,6 +116,7 @@ class UserController extends AbstractActionController
         }
         
         if($ldap->getBoundUser() === false || is_null($ldap->getBoundUser())) {
+            $this->logger()->insert(2, 'User::refresh error: No LDAP connection', $this->userAuthentication()->getIdentity());
             throw new \Exception('No LDAP connection!');
         } else {
             $users = $this->userMapper->fetchAll();
@@ -148,16 +151,17 @@ class UserController extends AbstractActionController
             			
             			$user->setIsDeleted(true);
             			$this->userMapper->updateEntity($user);
+            			$this->logger()->insert(0, 'User::refresh: ' . $str . '. User has been marked as deleted.', $this->userAuthentication()->getIdentity());
             		} else {
             			$code = \Zend\Ldap\Exception\LdapException::LDAP_OPERATIONS_ERROR;
             			$str  = "Unexpected result count ($count) for: $filter";
+            			$this->logger()->insert(2, 'User::refresh: ' . $str, $this->userAuthentication()->getIdentity());
             		}
             	}
             	$ldapEntries->close();
             }
-            
+            $this->logger()->insert(0, 'User::refresh: the user database has been updated.', $this->userAuthentication()->getIdentity());
         }
-  
         
         return $this->redirect()->toRoute('user');;
     }
