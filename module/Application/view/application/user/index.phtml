@@ -6,9 +6,9 @@ $this->headTitle($title);
 ?>
 <div class="large-10 columns">
 	<h4><?php echo $this->translate('User Overview') ?></h4>
-	
-	<a href="<?php echo $this->url('user/userRefresh');?>" class="button synchronize-ldap-button right"><?php echo $this->translate('Synchronize with LDAP') ?></a>
-	
+    <div class="clearfix">
+    	<a href="<?php echo $this->url('user/userRefresh');?>" class="button synchronize-ldap-button right"><?php echo $this->translate('Synchronize with LDAP') ?></a>
+	</div>
 	<?php if($users->count() === 0) : ?>
 	<div data-alert class="alert-box">
         <?php echo $this->translate('No users in database.') ?> <a href="#" class="close">&times;</a>
@@ -24,7 +24,7 @@ $this->headTitle($title);
 				<th><?php echo $this->translate('Username') ?></th>
 				<th><?php echo $this->translate('First Name') ?></th>
 				<th><?php echo $this->translate('Last Name') ?></th>
-				<th><?php echo $this->translate('E-Mail') ?></th>
+				<th class="show-for-medium-up"><?php echo $this->translate('E-Mail') ?></th>
 				<th><?php echo $this->translate('Role') ?></th>
 			</tr>
 		</thead>
@@ -36,7 +36,7 @@ $this->headTitle($title);
               <td><?php echo $this->escapeHtml($user->getLoginName());?></td>
               <td><?php echo $this->escapeHtml($user->getFirstName());?></td>
               <td><?php echo $this->escapeHtml($user->getLastName());?></td>
-              <td><?php echo $this->escapeHtml($user->getEmail());?></td>
+              <td class="show-for-medium-up"><?php echo $this->escapeHtml($user->getEmail());?></td>
               <td><select data-id="<?php echo $this->escapeHtml($user->getId()); ?>">
                   <?php foreach ($roles as $role) : ?>
                   <option value="<?php echo $role->getId(); ?>" <?php if($role->getId() == $user->getRole()) echo 'selected';?>><?php echo $this->escapeHtml($role->getName());?></option>
@@ -47,8 +47,9 @@ $this->headTitle($title);
          <?php endforeach; ?>
         </tbody>
 	</table>
-	
-	<a href="<?php echo $this->url('user/userRefresh');?>" class="button synchronize-ldap-button right"><?php echo $this->translate('Synchronize with LDAP') ?></a>
+    <div class="clearfix">	
+	   <a href="<?php echo $this->url('user/userRefresh');?>" class="button synchronize-ldap-button right"><?php echo $this->translate('Synchronize with LDAP') ?></a>
+    </div>
 </div>
 
 <!-- User View Specific JavaScript Components -->

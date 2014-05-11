@@ -7,8 +7,9 @@ $this->headTitle($title);
 <div class="large-10 columns">
  
     <h4><?php echo $this->escapeHtml($title); ?></h4>
-    <a href="<?php echo $this->url('power/powerAdd');?>" class="button synchronize-ldap-button right"><?php echo $this->translate('Add new Power'); ?></a>
-    
+    <div class="clearfix">
+        <a href="<?php echo $this->url('power/powerAdd');?>" class="button synchronize-ldap-button right"><?php echo $this->translate('Add new Power'); ?></a>
+    </div>
       <!-- Table -->
       <table class="table">
         <thead>
@@ -46,6 +47,8 @@ $this->headTitle($title);
         </tbody>
       </table>
       <!-- Default panel contents -->
-      <a href="<?php echo $this->url('power/powerAdd');?>" class="button synchronize-ldap-button right"><?php echo $this->translate('Add new Power'); ?></a>
+      <div class="clearfix">  
+        <a href="<?php echo $this->url('power/powerAdd');?>" class="button synchronize-ldap-button right"><?php echo $this->translate('Add new Power'); ?></a>
+      </div>
     
 </div>
