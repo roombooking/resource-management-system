@@ -290,9 +290,13 @@ class BookingController extends AbstractActionController
                 $this->bookingForm->settitle($booking->getb_name());
                 $this->bookingForm->setbookingdescription($booking->getb_description());
                 $this->bookingForm->setparticipantdescription($booking->getb_participant_description());
+                                
                 $this->bookingForm->initialize();
     
                 $this->bookingForm->get('submit')->setValue('Update');
+                // person responsible
+                $this->bookingForm->get('responsibility')->setValue($booking->getu_r_userid());
+                
                 
                 return new ViewModel(array(
                         $startFormatted,
@@ -390,6 +394,7 @@ class BookingController extends AbstractActionController
             }
             
             if ($this->bookingForm->isValid()) {
+                
                 $data = $this->bookingForm->getData();
                 
                 $resourceid = $data['resourceid'];
@@ -430,7 +435,8 @@ class BookingController extends AbstractActionController
                 } else {
                     $booking->setb_bookingid($bookingid);
                     
-                    $oldBooking = $this->bookingMapper->fetchBookingsById($bookingid);
+                    $oldBookings = $this->bookingMapper->fetchBookingsById($bookingid);
+                    $oldBooking = $oldBookings->current();
                     if($oldBooking->getu_b_userid() != $this->userAuthentication()->getIdentity()) {
                         throw new \Exception('Insufficient rights to edit this booking!');
                     }
