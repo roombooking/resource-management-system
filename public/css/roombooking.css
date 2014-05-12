@@ -6,6 +6,10 @@ body {
 	background-position: bottom;
 }
 
+.table {
+	width: 100%;
+}
+
 .row {
 	max-width: 1020px;
 	background: rgba(255, 255, 255, 0.9);
@@ -145,3 +149,10 @@ h4.booking_prebooking {
 /*
  *	Modal Styles
  */
+.table-powers {
+	width: 100%;
+}
+
+.table-powers .button {
+	margin: 0;
+}
