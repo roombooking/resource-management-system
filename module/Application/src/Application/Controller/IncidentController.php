@@ -35,6 +35,11 @@ class IncidentController extends AbstractActionController
      */
     public function overviewAction ()
     {
+        if(!$this->acl()->isAllowed($this->userAuthentication()->getRole(), 'show_log')) {
+        	$this->getResponse()->getContent(403);
+        	throw new \Exception('Insufficient rights!');
+        }
+        
         // grab the paginator from the IncidentTable
         $paginator = $this->incidentMapper->fetchAll();
         // set the current page to what has been passed in query string, or to 1 if none set

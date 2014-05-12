@@ -10,14 +10,14 @@ $this->headTitle($title);
     <div class="clearfix">
         <a href="<?php echo $this->url('power/powerAdd');?>" class="button synchronize-ldap-button right"><?php echo $this->translate('Add new Power'); ?></a>
     </div>
-      <!-- Table -->
-      <table class="table">
+    <!-- Table -->
+      <table class="table-powers">
         <thead>
          <tr>
-             <th>#</th>
+             <!-- <th>#</th> -->
              <th><?php echo $this->translate('Role') ?></th>
-             <th><?php echo $this->translate('Module') ?></th>
-             <th><?php echo $this->translate('Controller') ?></th>
+             <!--<th><?php echo $this->translate('Module') ?></th>
+             <th><?php echo $this->translate('Controller') ?></th> -->
              <th><?php echo $this->translate('Action') ?></th>
              <th>&nbsp;</th>
          </tr>
@@ -30,18 +30,12 @@ $this->headTitle($title);
          <?php endif; ?>
          <?php foreach ($powers as $power) : ?>
          <tr>
-             <td><?php echo $this->escapeHtml($power->getPowerId());?></td>
-             <td>
-                <select data-id="<?php echo $this->escapeHtml($power->getPowerId()); ?>">
-                <?php foreach ($roles as $role) : ?>
-                    <option value="<?php echo $role->getId(); ?>"<?php if($role->getId() == $power->getRoleId()) echo 'selected';?>><?php echo $this->escapeHtml($role->getName());?></option>
-                <?php endforeach; ?>
-                </select> 
-             </td>
-             <td><?php echo $this->escapeHtml($power->getModule());?></td>
-             <td><?php echo $this->escapeHtml($power->getController());?></td>
+             <!-- <td><?php echo $this->escapeHtml($power->getPowerId());?></td> -->
+             <td><?php echo $this->escapeHtml($roles[$power->getRoleId()]);?></td>
+             <!-- <td><?php echo $this->escapeHtml($power->getModule());?></td>
+             <td><?php echo $this->escapeHtml($power->getController());?></td> -->
              <td><?php echo $this->escapeHtml($power->getAction());?></td>
-             <td><a href="<?php echo $this->url('power/powerEdit', array('id' => $power->getPowerId()));?>"><?php echo $this->translate('Edit') ?></a> <a href="<?php echo $this->url('power/powerDelete', array('id' => $power->getPowerId()));?>"><?php echo $this->translate('Delete') ?></a></td>
+             <td><a href="<?php echo $this->url('power/powerEdit', array('id' => $power->getPowerId()));?>" class="button tiny"><i class="fa fa-pencil"></i> <?php echo $this->translate('Edit') ?></a> <a href="<?php echo $this->url('power/powerDelete', array('id' => $power->getPowerId()));?>" class="button tiny alert"><i class="fa fa-eraser"></i> <?php echo $this->translate('Delete') ?></a></td>
          </tr>
          <?php endforeach; ?>
         </tbody>

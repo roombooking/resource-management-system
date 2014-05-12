@@ -29,7 +29,8 @@ class UserIdentity extends AbstractHelper
     public function __invoke()
     {
         if ($this->getAuthService()->hasIdentity()) {
-            return $this->getAuthService()->getIdentity();
+            $identity = $this->getAuthService()->getIdentity();
+            return $identity['role'];
         } else {
             return false;
         }

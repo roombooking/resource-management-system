@@ -45,9 +45,13 @@ class Power extends TableGateway
      * 
      * @return Ambigous <\Zend\Db\ResultSet\ResultSet, \Zend\Db\ResultSet\HydratingResultSet>
      */
-    public function fetchAll() {
+    public function fetchAll($order = false) {
+        $select = $this->select(function ($select) use ($order) {
+        	if($order === true) $select->order('roleid, action ASC');
+        });
+        
         return $this->hydrate(
-        		$this->select()
+        		$select
         );
     }
     
@@ -86,7 +90,7 @@ class Power extends TableGateway
     public function updateEntity($entity) {
     	return parent::update(
     			$this->hydrator->extract($entity),
-    			$this->idCol . "=" . $entity->getId()
+    			$this->idCol . "=" . $entity->getPowerId()
     	);
     }
     
@@ -102,5 +106,13 @@ class Power extends TableGateway
 				$this->entityPrototype
 		);
 		return $users->initialize($results->toArray());
+    }
+    
+    public function deletePowerById($id) {
+    	if(is_int($id) && $id > 0) {
+    		return $this->delete(array($this->idCol => $id));
+    	} else {
+    		throw new \Exception('ID is not an integer!');
+    	}
     }
 }

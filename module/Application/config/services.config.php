@@ -62,5 +62,10 @@ return array(
         					$sm->get('Zend\Db\Adapter\Adapter')
         			);
         		},
+        		'Application\Service\AclService' => function ($sm) {
+        			return new \Application\Service\AclService(
+        					$sm->get('Application\Mapper\Power')
+        			);
+        		},
         ),
 );

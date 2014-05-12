@@ -23,13 +23,29 @@ class PowerFilter extends InputFilter
      */
     public function __construct()
     {
+        /*$this->add(array(
+        		'name' => 'module',
+        		'filters'  => array(
+        				array('name' => 'StripTags'),
+        				array('name' => 'StringTrim'),
+        		),
+        ));
+        
         $this->add(array(
-        	'name' => 'controller',
-            'required' => true,
-            'filters'  => array(
-            		array('name' => 'StripTags'),
-            		array('name' => 'StringTrim'),
-            ),
+        		'name' => 'controller',
+        		'filters'  => array(
+        				array('name' => 'StripTags'),
+        				array('name' => 'StringTrim'),
+        		),
+        )); */
+        
+        $this->add(array(
+        		'name' => 'action',
+        		'required' => true,
+        		'filters'  => array(
+        				array('name' => 'StripTags'),
+        				array('name' => 'StringTrim'),
+        		),
         ));
     }
 }

@@ -93,12 +93,12 @@ class AuthController extends AbstractActionController
             		$ldapAdapter->setIdentity($data['username']);
             		$ldapAdapter->setCredential($data['password']);
             		
-            		$authResult = $this->userAuthentication()->getAuthService()->authenticate();
+        		    $authResult = $this->userAuthentication()->getAuthService()->authenticate();
             		
             		// wrong credentials
             		if(!$authResult->isValid())
             		{
-            		    $this->logger()->insert(1, 'Auth::login error: User "'.$this->filter($data['username']).'" tried to login.');
+            		    $this->logger()->insert(1, 'Auth::login error: User "'.$this->filter->filter($data['username']).'" tried to login.');
             			return new ViewModel(
             					array(
             							'form' => $this->loginForm,
@@ -116,7 +116,7 @@ class AuthController extends AbstractActionController
             		    $ldapUser->setLoginName($data['username']);
             		    //FIXME: role should not be hard coded
             		    $ldapUser->setRole(3);
-            		    $ldapUser->setEmail($ldapEntry['mail'][0]);
+            		    if(isset($ldapEntry['mail'][0])) $ldapUser->setEmail($ldapEntry['mail'][0]);
             		    $ldapUser->setFirstName($ldapEntry['givenname'][0]);
             		    $ldapUser->setLastName($ldapEntry['sn'][0]);
             		    
@@ -130,13 +130,13 @@ class AuthController extends AbstractActionController
                             $user->setLastName($ldapUser->getLastName());
                             
                             $this->userMapper->updateEntity($user);
-                            $this->userAuthentication()->getAuthService()->getStorage()->write((int) $user->getId());
+                            $this->userAuthentication()->getAuthService()->getStorage()->write(array("userid" => (int) $user->getId(), "role" => $user->getRole()));
                             
-                            $this->logger()->insert(0, 'Auth::login: User "'. $user->getFirstName() . ' ' . $user->getLastName() .'" logged in an has been updated.', $this->userAuthentication()->getIdentity());
+                            $this->logger()->insert(0, 'Auth::login: User "'. $user->getFirstName() . ' ' . $user->getLastName() .'" logged in and has been updated.', $this->userAuthentication()->getIdentity());
             		    } catch (\Exception $e) {
             		        //if an error is thrown, the user does not exist and should be inserted
             		        $this->userMapper->insert($ldapUser);
-            		        $this->userAuthentication()->getAuthService()->getStorage()->write((int) $this->userMapper->getLastInsertValue());
+            		        $this->userAuthentication()->getAuthService()->getStorage()->write(array("userid" => (int) $this->userMapper->getLastInsertValue(), "role" => $user->getRole()));
 
             		        $this->logger()->insert(0, 'Auth::login: User "'. $ldapUser->getFirstName() . ' ' . $ldapUser->getLastName() .'" logged in for the first time an has been created in the database.', $this->userAuthentication()->getIdentity());
             		    }

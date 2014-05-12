@@ -2,8 +2,8 @@
 namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-
 use Application\Form\Power;
+use Application\Entity\Power as PowerEntity;
 
 /**
  * PowerController
@@ -34,6 +34,13 @@ class PowerController extends AbstractActionController
     private $powerForm;
     
     /**
+     * @var array
+     */
+    private $roles = array();
+    
+    
+    
+    /**
      * The power constructor is provided with mappers for
      * powers and roles and the form that is used to edit powers.
      * 
@@ -46,6 +53,12 @@ class PowerController extends AbstractActionController
     	$this->powerMapper = $powerMapper;
     	$this->roleMapper  = $roleMapper;
     	$this->powerForm   = $powerForm;
+    	
+    	$rolesObj = $this->roleMapper->fetchAll();
+    	foreach ($rolesObj as $role) :
+    	   $this->roles[$role->getId()] = $role->getName();
+    	endforeach;
+    	$this->powerForm->get('roleid')->setValueOptions($this->roles);
     }
     
     /**
@@ -55,11 +68,15 @@ class PowerController extends AbstractActionController
      */
     public function overviewAction()
     {
-    	$powers = $this->powerMapper->fetchAll();
-    	$roles = $this->roleMapper->fetchAll();
+        if(!$this->acl()->isAllowed($this->userAuthentication()->getRole(), 'show_power_list')) {
+        	$this->getResponse()->getContent(403);
+        	throw new \Exception('Insufficient rights!');
+        }
+    	$powers = $this->powerMapper->fetchAll(true);
+    	    	
     	return new ViewModel(array(
     			'powers' => $powers,
-    			'roles' => $roles,
+    			'roles' => $this->roles,
     	));
     }
     
@@ -74,30 +91,37 @@ class PowerController extends AbstractActionController
      */
     public function addAction()
     {
+        if(!$this->acl()->isAllowed($this->userAuthentication()->getRole(), 'add_power')) {
+        	$this->getResponse()->getContent(403);
+        	throw new \Exception('Insufficient rights!');
+        }
         $this->powerForm->setAttribute('action', '/powers/add');
         
-        $roles = $this->roleMapper->select();
-        $fieldElements = array();
-        
-        foreach ($roles as $role) { 
-            $fieldElements[$role['roleid']] = $role['rolename'];
-        }
-        $this->powerForm->get('roleid')->setValueOptions($fieldElements);
         $this->powerForm->get('roleid')->setEmptyOption(
-                array('empty_option' => array(
-                    'label' => 'Please choose the role',
-                    'disabled' => true,
-                    'selected' => true
-                ))
+        		array(
+        				'label' => 'Please choose the role',
+        				'disabled' => true,
+        				'selected' => true
+        		)
         );
         
     	if($this->getRequest()->isPost()) {
     	    $this->powerForm->setData($this->getRequest()->getPost());
+    	    	
         
         	if($this->powerForm->isValid()) {
-        		$data = $this->powerForm->getData();
-                
+        		$powerEntity = $this->powerForm->getData();
+        		$powerEntity->setModule('%');
+        		$powerEntity->setController('%');
         		
+        		
+        		$this->powerMapper->insert($powerEntity);
+        		$this->logger()->insert(0, 'Power::add: New Power (ID: # '.$this->powerMapper->getLastInsertValue().') has been added ('.$this->roles[$powerEntity->getRoleId()].'/'.$powerEntity->getModule().'/'.$powerEntity->getController().'/'.$powerEntity->getAction().')', $this->userAuthentication()->getIdentity());
+        		/*
+        		 * Redirect to home page
+        		*/
+        		return $this->redirect()->toRoute('power');
+        		//$this->stopPropagation();
         	} else {
         		return new ViewModel(
         				array(
@@ -108,7 +132,8 @@ class PowerController extends AbstractActionController
         	}
         } else {
     		return new ViewModel(array(
-    			    'form' => $this->powerForm, 
+    			    'form' => $this->powerForm,
+    		        'loginError' => false
     		));
     	}
     }
@@ -119,19 +144,54 @@ class PowerController extends AbstractActionController
      */
     public function editAction()
     {
-    	if($this->getRequest()->isXmlHttpRequest()) {
-    		$data = $this->getRequest()->getPost();
-    		//$updateEntity = new User();
-    		//$updateEntity->setId($data['id']);
-    		//$updateEntity->setRole($data['role']);
-    		//$status = $this->userMapper->updateEntity($updateEntity);
-    		$this->userMapper->update(array('roleid' => $data['role']), array('powerid' => $data['id'] ));
-    		return new JsonModel(array(
-    				'id' => $data['id'],
-    				'role' => $data['role']
+        if(!$this->acl()->isAllowed($this->userAuthentication()->getRole(), 'edit_power')) {
+        	$this->getResponse()->getContent(403);
+        	throw new \Exception('Insufficient rights!');
+        }
+        $powerId = $this->getEvent()->getRouteMatch()->getParam('id');
+        
+        if($this->getRequest()->isPost()) {
+    	    $this->powerForm->setData($this->getRequest()->getPost());
+        
+        	if($this->powerForm->isValid()) {
+        		$powerEntity = $this->powerForm->getData();
+        		$powerEntity->setPowerId($powerId);
+        		$powerEntity->setModule('%');
+        		$powerEntity->setController('%');
+                
+        		$this->powerMapper->updateEntity($powerEntity);
+        		$this->logger()->insert(0, 'Power::edit: Power (ID: # '.$this->powerMapper->getLastInsertValue().') has been edited ('.$this->roles[$powerEntity->getRoleId()].'/'.$powerEntity->getModule().'/'.$powerEntity->getController().'/'.$powerEntity->getAction().')', $this->userAuthentication()->getIdentity());
+        		/*
+        		 * Redirect to home page
+        		*/
+        		return $this->redirect()->toRoute('power');
+        		//$this->stopPropagation();
+        	} else {
+        		return $this->redirect()->toRoute('power/powerEdit', array('id' => $powerId));
+        	}
+        } else {
+            
+            $powerEntity = $this->powerMapper->getId($powerId);
+            if($powerEntity->current() == null) {
+                throw new \Exception('PowerID unknown');
+            } else {
+                $powerEntity = $powerEntity->current();
+            }
+            
+            $this->powerForm->setAttribute('action', '/powers/edit/' . $powerId);
+            $this->powerForm->get('submit')->setValue('Edit Power');           
+             
+            $this->powerForm->get('module')->setValue($powerEntity->getModule());
+            $this->powerForm->get('controller')->setValue($powerEntity->getController());
+            $this->powerForm->get('action')->setValue($powerEntity->getAction());
+            $this->powerForm->get('roleid')->setValue($powerEntity->getRoleId());
+            
+            $viewModel = new ViewModel(array(
+    			    'form' => $this->powerForm, 
     		));
-    	} else {
-    		$this->redirect()->toRoute('power');
+            $viewModel->setTemplate('application/power/add.phtml');
+            
+            return $viewModel;
     	}
     }
     
@@ -141,27 +201,17 @@ class PowerController extends AbstractActionController
      */
     public function deleteAction()
     {
+        if(!$this->acl()->isAllowed($this->userAuthentication()->getRole(), 'delete_power')) {
+        	$this->getResponse()->getContent(403);
+        	throw new \Exception('Insufficient rights!');
+        }
+        
         $id = (int) $this->params()->fromRoute('id', 0);
-        if (!$id) {
-            return $this->redirect()->toRoute('power');
-        }
         
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $del = $request->getPost('del', 'No');
-            
-            if ($del == 'Yes') {
-                $id = (int) $request->getPost('id');
-                $this->getAlbumTable()->deleteAlbum($id);
-            }
-            
-            // Redirect to list of albums
-            return $this->redirect()->toRoute('album');
+        if ($id > 0) {
+            $this->powerMapper->deletePowerById($id);
         }
-        
-        return array(
-            'id'    => $id,
-            'album' => $this->getAlbumTable()->getAlbum($id)
-        );
+        return $this->redirect()->toRoute('power');
+        //$this->stopPropagation();
     }
 }

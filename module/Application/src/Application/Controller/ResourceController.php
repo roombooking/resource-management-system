@@ -45,6 +45,11 @@ public function __construct($resourceMapper)
  * @see \Zend\Mvc\Controller\AbstractActionController::indexAction()
  */
     public function indexAction () {
+        if(!$this->acl()->isAllowed($this->userAuthentication()->getRole(), 'show_resource_list')) {
+        	$this->getResponse()->getContent(403);
+        	throw new \Exception('Insufficient rights!');
+        }
+        
         /*
          * TODO Define an index action should it become
          * necessary.
@@ -65,8 +70,8 @@ public function __construct($resourceMapper)
  	* @return \Zend\View\Model\JsonModel
  	*/
     public function containmentAction ()
-    {   
-        if($this->getRequest()->isXmlHttpRequest()) {
+    {
+        if($this->getRequest()->isXmlHttpRequest() && $this->acl()->isAllowed($this->userAuthentication()->getRole(), 'show_resource_list')) {
         	return new JsonModel($this->resourceMapper->fetchAllContainments());
         } else {
         	return $this->getResponse()->setStatusCode(403);
@@ -80,8 +85,8 @@ public function __construct($resourceMapper)
      * @return \Zend\View\Model\JsonModel
      */
     public function containmentByIdAction ()
-    {
-        if($this->getRequest()->isXmlHttpRequest()) {
+    {        
+        if($this->getRequest()->isXmlHttpRequest() && $this->acl()->isAllowed($this->userAuthentication()->getRole(), 'show_resource_list')) {
         	$id = $this->params()->fromRoute('id');
         
     	    return new JsonModel($this->resourceMapper->fetchContainmentsById($id));
@@ -99,6 +104,10 @@ public function __construct($resourceMapper)
      */
     public function resourcesAction ()
     {   
+        if(!$this->acl()->isAllowed($this->userAuthentication()->getRole(), 'show_resource_list')) {
+        	$this->getResponse()->getContent(403);
+        	throw new \Exception('Insufficient rights!');
+        }
         
         $hierarchyId = $this->params()->fromRoute('id');
         
@@ -115,8 +124,8 @@ public function __construct($resourceMapper)
      * @return \Zend\View\Model\JsonModel, \Zend\
      */
     public function resourceByIdAction ()
-    {
-        if($this->getRequest()->isXmlHttpRequest()) {
+    {        
+        if($this->getRequest()->isXmlHttpRequest() && $this->acl()->isAllowed($this->userAuthentication()->getRole(), 'show_resource_details')) {
         	$hierachyid = $this->params()->fromRoute('id');
         	$resourceid = $this->params()->fromRoute('rid');
         
@@ -134,7 +143,7 @@ public function __construct($resourceMapper)
      * @return \Zend\View\Model\JsonModel
      */
     public function addResourceAction() {
-        if ($this->getRequest()->isPost()) {
+        if ($this->getRequest()->isPost() && $this->acl()->isAllowed($this->userAuthentication()->getRole(), 'add_resource')) {
             /**
              * TODO
              *      - Validate POST data
@@ -147,7 +156,7 @@ public function __construct($resourceMapper)
             $resourceDescription = $this->params()->fromPost('resourceDescription');
             $resourceType = $this->params()->fromPost('resourceType');
             $resourceBookable = $this->params()->fromPost('resourceBookable');
-            $resourceColor = ($validator->isValid($this->params()->fromPost('resourceColor')) ? $this->params()->fromPost('resourceColor') : null);
+            //$resourceColor = ($validator->isValid($this->params()->fromPost('resourceColor')) ? $this->params()->fromPost('resourceColor') : null);
             
             $resourceEntity = new ContainmentEntity();
             $resourceEntity->seth_hierarchyid($hierarchyid);
@@ -156,7 +165,7 @@ public function __construct($resourceMapper)
             $resourceEntity->setr_name($resourceName);
             $resourceEntity->setr_description($resourceDescription);
             $resourceEntity->setr_isbookable($resourceBookable);
-            $resourceEntity->setr_color($resourceColor);
+            //$resourceEntity->setr_color($resourceColor);
             
 
            try {
@@ -197,14 +206,14 @@ public function __construct($resourceMapper)
     	/*
     	 * TODO Validate?
     	*/
-    	if ($this->getRequest()->isPost() && $this->getRequest()->isXmlHttpRequest()) {
+    	if ($this->getRequest()->isPost() && $this->getRequest()->isXmlHttpRequest() && $this->acl()->isAllowed($this->userAuthentication()->getRole(), 'edit_resource')) {
     		$hierarchyId = $this->params()->fromRoute('id');
     		$resourceId = $this->params()->fromRoute('rid');
     		$resourceName = $this->params()->fromPost('resourceName');
     		$resourceDescription = $this->params()->fromPost('resourceDescription');
     		$resourceType = $this->params()->fromPost('resourceType');
     		$resourceBookable = $this->params()->fromPost('resourceBookable');
-            $resourceColor = ($validator->isValid($this->params()->fromPost('resourceColor')) ? $this->params()->fromPost('resourceColor') : null);
+           // $resourceColor = ($validator->isValid($this->params()->fromPost('resourceColor')) ? $this->params()->fromPost('resourceColor') : null);
     		
             $resourceEntity = new ContainmentEntity();
             $resourceEntity->seth_hierarchyid($hierarchyId);
@@ -213,7 +222,7 @@ public function __construct($resourceMapper)
             $resourceEntity->setr_name($resourceName);
             $resourceEntity->setr_description($resourceDescription);
             $resourceEntity->setr_isbookable($resourceBookable);
-            $resourceEntity->setr_color($resourceColor);
+           // $resourceEntity->setr_color($resourceColor);
             
 
             try {
@@ -242,7 +251,7 @@ public function __construct($resourceMapper)
      * @return \Zend\View\Model\JsonModel
      */
     public function deleteResourceAction() {
-        if ($this->getRequest()->isXmlHttpRequest()) {
+        if ($this->getRequest()->isXmlHttpRequest() && $this->acl()->isAllowed($this->userAuthentication()->getRole(), 'delete_resource')) {
         	/*
         	 * TODO Validate?
         	 */
@@ -278,7 +287,7 @@ public function __construct($resourceMapper)
         /*
          * TODO Validate?
          */
-        if ($this->getRequest()->isPost() && $this->getRequest()->isXmlHttpRequest()) {
+        if ($this->getRequest()->isPost() && $this->getRequest()->isXmlHttpRequest() && $this->acl()->isAllowed($this->userAuthentication()->getRole(), 'edit_resource')) {
             $hierarchyId = (int) $this->params()->fromRoute('id');
             $resourceId = (int) $this->params()->fromRoute('rid');
             $newParentId = (int) $this->params()->fromPost('newParentId');

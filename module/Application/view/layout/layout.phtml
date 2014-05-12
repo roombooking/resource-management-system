@@ -53,19 +53,23 @@
         <div class="large-2 columns">
             <?php  if($this->userIdentity()) : ?>
             <ul class="side-nav">
+                <?php //FIXME: use Zend Navigation
+                    if($this->acl()->isAllowed($this->userIdentity(), 'show_user_details') OR $this->acl()->isAllowed($this->userIdentity(), 'show_power_list') OR $this->acl()->isAllowed($this->userIdentity(), 'show_resource_list') OR $this->acl()->isAllowed($this->userIdentity(), 'show_log')) :
+                ?>
                 <li>Administrative Area
                     <ul>
-                        <li><a href="<?php echo $this->url('user'); ?>"><?php echo $this->translate('Users') ?></a></li>
-                        <li><a href="<?php echo $this->url('power'); ?>"><?php echo $this->translate('Powers') ?></a></li>
-                        <li><a href="<?php echo $this->url('hierarchy'); ?>"><?php echo $this->translate('Resources') ?></a></li>
-                        <li><a href="<?php echo $this->url('incidents'); ?>"><?php echo $this->translate('Log') ?></a></li>
+                        <?php if($this->acl()->isAllowed($this->userIdentity(), 'show_user_details')) : ?><li><a href="<?php echo $this->url('user'); ?>"><?php echo $this->translate('Users') ?></a></li><?php endif; ?>
+                        <?php if($this->acl()->isAllowed($this->userIdentity(), 'show_power_list')) : ?><li><a href="<?php echo $this->url('power'); ?>"><?php echo $this->translate('Powers') ?></a></li><?php endif; ?>
+                        <?php if($this->acl()->isAllowed($this->userIdentity(), 'show_resource_list')) : ?><li><a href="<?php echo $this->url('hierarchy'); ?>"><?php echo $this->translate('Resources') ?></a></li><?php endif; ?>
+                        <?php if($this->acl()->isAllowed($this->userIdentity(), 'show_log')) : ?><li><a href="<?php echo $this->url('incidents'); ?>"><?php echo $this->translate('Log') ?></a></li><?php endif; ?>
                     </ul>
                 </li>
                 <li><hr></li>
+                <?php endif; ?>
                 <li>User Area
                     <ul>
                         <li><a href="<?php echo $this->url('home'); ?>"><?php echo $this->translate('Overview') ?></a></li>
-                        <li><a href="<?php echo $this->url('booking/bookingEdit'); ?>"><?php echo $this->translate('Add Booking') ?></a></li>
+                        <?php if($this->acl()->isAllowed($this->userIdentity(), 'show_log')) : ?><li><a href="<?php echo $this->url('booking/bookingEdit'); ?>"><?php echo $this->translate('Add Booking') ?></a></li><?php endif; ?>
                     </ul>
                 </li>
                 <li><hr></li>

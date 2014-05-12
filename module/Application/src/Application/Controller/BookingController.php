@@ -84,6 +84,11 @@ class BookingController extends AbstractActionController
      */
     public function listAction ()
     {
+        if(!$this->acl()->isAllowed($this->userAuthentication()->getRole(), 'show_calendar')) {
+        	$this->getResponse()->getContent(403);
+        	throw new \Exception('Insufficient rights!');
+        }
+        
         $allGetValues = $this->params()->fromQuery();
         $allGetParams = array_keys($allGetValues);
         
@@ -126,6 +131,10 @@ class BookingController extends AbstractActionController
      */
     public function showAction ()
     {
+        if(!$this->acl()->isAllowed($this->userAuthentication()->getRole(), 'show_appointment_details')) {
+        	$this->getResponse()->getContent(403);
+        	throw new \Exception('Insufficient rights!');
+        }
         /*
          * TODO check the ID for validity
          */
@@ -191,7 +200,7 @@ class BookingController extends AbstractActionController
     {
         $isNew = ($this->getEvent()->getRouteMatch()->getParam('id') == null ? true : false);
         
-        if ($isNew) {
+        if ($isNew && $this->acl()->isAllowed($this->userAuthentication()->getRole(), 'add_own_appointment')) {
             if ($this->getRequest()->isPost()) {
             	$startTime = $this->params()->fromPost('startTime');
             	$endTime = $this->params()->fromPost('endTime');
@@ -264,9 +273,10 @@ class BookingController extends AbstractActionController
             //TODO: fix $bookings->current(): if the id is correct just return the object
             $bookings = $this->bookingMapper->fetchBookingsById($bookingId);            
             $booking = $bookings->current();
+            unset($bookings);
 
             // Check if user is creator
-            if($booking->getu_b_userid() == $this->userAuthentication()->getIdentity()) {
+            if(($booking->getu_b_userid() == $this->userAuthentication()->getIdentity()) OR $this->acl()->isAllowed($this->userAuthentication()->getRole(), 'edit_foreign_appointment')) {
                 $startFormatted = array(
                 		'date' => substr($booking->getb_start(), 0, 10),
                 		'time' => substr($booking->getb_start(), 11, 5)
@@ -324,17 +334,25 @@ class BookingController extends AbstractActionController
         $id = $this->getEvent()->getRouteMatch()->getParam('id');
         
         //TODO: check if user got rights
-        
-        /*
-         * TODO handle unset/invalid parameter
-         */
         try {
-            $this->bookingMapper->delete($id);
-            $this->logger()->insert(0, 'Booking::delete: The booking (ID: #'. $id .') has been deleted.', $this->userAuthentication()->getIdentity(), $id);
+            $bookings = $this->bookingMapper->fetchBookingsById($id);
+            $booking = $bookings->current();
+            unset($bookings);
         } catch(\Exception $e) {
-            $this->logger()->insert(1, 'Booking::delete error: '. $e->getMessage(), $this->userAuthentication()->getIdentity());
+            
         }
-        
+
+        if((isset($booking) && $booking->getu_b_userid() == $this->userAuthentication()->getIdentity()) OR $this->acl()->isAllowed($this->userAuthentication()->getRole(), 'delete_foreign_appointment')) {            
+            /*
+             * TODO handle unset/invalid parameter
+             */
+            try {
+                $this->bookingMapper->delete($id);
+                $this->logger()->insert(0, 'Booking::delete: The booking (ID: #'. $id .') has been deleted.', $this->userAuthentication()->getIdentity(), $id);
+            } catch(\Exception $e) {
+                $this->logger()->insert(1, 'Booking::delete error: '. $e->getMessage(), $this->userAuthentication()->getIdentity());
+            }
+        }
     	/*
          * Redirect to home page
          */
@@ -351,6 +369,11 @@ class BookingController extends AbstractActionController
      */
     public function detailsAction ()
     {
+        if(!$this->acl()->isAllowed($this->userAuthentication()->getRole(), 'show_appointment_details')) {
+        	$this->getResponse()->getContent(403);
+        	throw new \Exception('Insufficient rights!');
+        }      
+        
     	$id = $this->getEvent()->getRouteMatch()->getParam('id');
     
     	$bookings = $this->bookingMapper->fetchBookingsById($id);
@@ -423,6 +446,10 @@ class BookingController extends AbstractActionController
                 
                 
                 if ($bookingid == "") {
+                    if(!$this->acl()->isAllowed($this->userAuthentication()->getRole(), 'add_own_appointment')) {
+                    	$this->getResponse()->getContent(403);
+                    	throw new \Exception('Insufficient rights!');
+                    }
                     /*
                      * new Booking: insert
                      */
@@ -437,8 +464,11 @@ class BookingController extends AbstractActionController
                     
                     $oldBookings = $this->bookingMapper->fetchBookingsById($bookingid);
                     $oldBooking = $oldBookings->current();
-                    if($oldBooking->getu_b_userid() != $this->userAuthentication()->getIdentity()) {
-                        throw new \Exception('Insufficient rights to edit this booking!');
+                    
+                    if(!$this->acl()->isAllowed($this->userAuthentication()->getRole(), 'edit_foreign_appointment')) {
+                        if($oldBooking->getu_b_userid() != $this->userAuthentication()->getIdentity()) {
+                            throw new \Exception('Insufficient rights to edit this booking!');
+                        }
                     }
                     
                     /*

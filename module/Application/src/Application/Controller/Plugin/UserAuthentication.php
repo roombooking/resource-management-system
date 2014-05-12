@@ -44,8 +44,22 @@ class UserAuthentication extends AbstractPlugin
      */
     public function getIdentity()
     {
-        return $this->getAuthService()->getIdentity();
+        $identity = $this->getAuthService()->getIdentity();
+    	return $identity['userid'];
     }
+    
+    /**
+     * Proxy convenience method providing the role of a user
+     * logged in.
+     *
+     * @return mixed
+     */
+    public function getRole()
+    {
+        $identity = $this->getAuthService()->getIdentity();
+    	return $identity['role'];
+    }
+    
 
     /**
      * Get authService.

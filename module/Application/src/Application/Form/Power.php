@@ -28,8 +28,9 @@ class Power extends Form
         $this->setInputFilter(new PowerFilter());
         
         $this->setHydrator(new\Zend\Stdlib\Hydrator\Reflection());
-        $this->setObject(new \Application\Entity\Power());        
-
+        $this->setObject(new \Application\Entity\Power());
+        
+        
         $this->add(array(    
         		'name' => 'roleid',
         		'type' => 'Select',
@@ -43,19 +44,20 @@ class Power extends Form
         $this->add(array(
             	'name' => 'module',
                 'attributes' => array(
-                        'type' => 'text',
+                        'type' => 'hidden',
                         'id' => 'form-powers-module',
-                        'placeholder' => '%',
+                        'value' => '%',
+                        'disabled' => true
                 ),
         ));
         
         $this->add(array(
         		'name' => 'controller',
         		'attributes' => array(
-        				'type' => 'text',
+        				'type' => 'hidden',
         				'id' => 'form-powers-controller',
-        				'required' => 'required',
-        				'autofocus' => true
+        		        'placeholder' => 'Controller-Name',
+        		        'disabled' => true
         		),
         ));
         
@@ -64,7 +66,9 @@ class Power extends Form
         		'attributes' => array(
         				'type' => 'text',
         				'id' => 'form-powers-action',
+        		        'placeholder' => 'Action-Name',
         				'required' => 'required',
+        				'autofocus' => true
         		),
         ));
 
@@ -83,7 +87,7 @@ class Power extends Form
         		'name' => 'submit',
                 'type' => 'Submit',
         		'attributes' => array(
-    				    'value' => 'Submit',
+    				    'value' => 'Add Power',
         		        'class' => 'button',      
         		),
         ));

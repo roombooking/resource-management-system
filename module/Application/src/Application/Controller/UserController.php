@@ -35,7 +35,7 @@ class UserController extends AbstractActionController
     public function __construct($userMapper, $roleMapper)
     {
         $this->userMapper = $userMapper;
-        $this->roleMapper = $roleMapper;
+        $this->roleMapper = $roleMapper;   
     } 
     
     /**
@@ -47,6 +47,10 @@ class UserController extends AbstractActionController
      */
     public function indexAction ()
     {
+        if(!$this->acl()->isAllowed($this->userAuthentication()->getRole(), 'show_user_details')) {
+        	$this->getResponse()->getContent(403);
+        	throw new \Exception('Insufficient rights to edit this booking!');
+        }
         /*
          * TODO prepare pagination
          */
@@ -70,7 +74,7 @@ class UserController extends AbstractActionController
      */
     public function editAction()
     {
-        if($this->getRequest()->isXmlHttpRequest()) {
+        if($this->getRequest()->isXmlHttpRequest() && $this->acl()->isAllowed($this->userAuthentication()->getRole(), 'edit_user_roles')) {
             $data = $this->getRequest()->getPost();
             $this->userMapper->update(array('roleid' => $data['role']), array('userid' => $data['id'] ));
             $this->logger()->insert(0, 'User::edit: User (ID: #'.$data['id'].') has been awarded to role: ID #'.$data['role'], $this->userAuthentication()->getIdentity());
@@ -93,6 +97,11 @@ class UserController extends AbstractActionController
      */
     public function refreshAction ()
     {
+        if(!$this->acl()->isAllowed($this->userAuthentication()->getRole(), 'delete_user_roles')) {
+        	$this->getResponse()->getContent(403);
+        	throw new \Exception('Insufficient rights to edit this booking!');
+        }
+        
         // user authenticated, now update everything
         // LDAP check: get LDAP user information
         $ldap_adapter =  $this->userAuthentication()->getAuthService()->getAdapter();

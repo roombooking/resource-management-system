@@ -15,5 +15,11 @@ return array(
 					$controllerPlugin->setIncidentMapper($incidentMapper);
 					return $controllerPlugin;
 				},
+				'acl' => function ($sm) {
+					$serviceLocator = $sm->getServiceLocator();
+					$aclService = $serviceLocator->get('Application\Service\AclService');
+					$controllerPlugin = new Application\Controller\Plugin\ApplicationAcl($aclService);
+					return $controllerPlugin;
+				},
 		),
 );

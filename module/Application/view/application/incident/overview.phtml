@@ -27,7 +27,7 @@ $this->headTitle($title);
 	<table class="users">
 		<thead>
 			<tr>
-				<th><?php echo $this->translate('Internal ID') ?></th>
+				<!-- <th><?php echo $this->translate('Internal ID') ?></th> -->
 				<th><?php echo $this->translate('Time') ?></th>
 				<th><?php echo $this->translate('Class') ?></th>
 				<th><?php echo $this->translate('Description') ?></th>
@@ -55,7 +55,7 @@ $this->headTitle($title);
             }
         ?>
          <tr class="user-record-row">
-             <td><?php echo $this->escapeHtml($incident->getIncidentId());?></td>
+             <!-- <td><?php echo $this->escapeHtml($incident->getIncidentId());?></td> -->
              <td><?php echo $this->escapeHtml($incident->getTime()); ?></td>
              <td><?php echo $class;?></td>
              <td><?php echo $this->escapeHtml($incident->getDescription());?></td>
