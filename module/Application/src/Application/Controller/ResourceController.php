@@ -71,7 +71,7 @@ public function __construct($resourceMapper)
  	*/
     public function containmentAction ()
     {
-        if($this->getRequest()->isXmlHttpRequest() && $this->acl()->isAllowed($this->userAuthentication()->getRole(), 'show_resource_list')) {
+        if($this->getRequest()->isXmlHttpRequest() && $this->acl()->isAllowed($this->userAuthentication()->getRole(), 'add_own_appointment')) {
         	return new JsonModel($this->resourceMapper->fetchAllContainments());
         } else {
         	return $this->getResponse()->setStatusCode(403);

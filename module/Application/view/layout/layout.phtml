@@ -69,7 +69,7 @@
                 <li>User Area
                     <ul>
                         <li><a href="<?php echo $this->url('home'); ?>"><?php echo $this->translate('Overview') ?></a></li>
-                        <?php if($this->acl()->isAllowed($this->userIdentity(), 'show_log')) : ?><li><a href="<?php echo $this->url('booking/bookingEdit'); ?>"><?php echo $this->translate('Add Booking') ?></a></li><?php endif; ?>
+                        <?php if($this->acl()->isAllowed($this->userIdentity(), 'add_own_appointment')) : ?><li><a href="<?php echo $this->url('booking/bookingEdit'); ?>"><?php echo $this->translate('Add Booking') ?></a></li><?php endif; ?>
                     </ul>
                 </li>
                 <li><hr></li>
