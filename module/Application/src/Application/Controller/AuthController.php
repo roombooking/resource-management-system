@@ -4,6 +4,9 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Application\Entity\User as UserEntity;
+use Zend\Log\Logger;
+use Zend\Log\Writer\Stream as LogWriter;
+use Zend\Log\Filter\Priority as LogFilter;
 
 /**
  * AuthController
@@ -94,7 +97,28 @@ class AuthController extends AbstractActionController
             		$ldapAdapter->setCredential($data['password']);
             		
         		    $authResult = $this->userAuthentication()->getAuthService()->authenticate();
-            		
+        		    $log_path = './data/ldap.log';
+        		    
+        		    if ($log_path) {
+        		    	$messages = $authResult->getMessages();
+        		    	        		    	
+        		    	$logger = new Logger;
+        		    	$writer = new LogWriter($log_path);
+        		    	
+        		    
+        		    	$logger->addWriter($writer);
+        		    
+        		    	$filter = new LogFilter(Logger::DEBUG);
+        		    	$writer->addFilter($filter);        		    	 
+        		    
+        		    	foreach ($messages as $i => $message) {
+        		    		if ($i-- > 1) { // $messages[2] and up are log messages
+        		    			$message = str_replace("\n", "\n  ", $message);
+        		    			$logger->debug("Ldap: $i: $message");
+        		    		}
+        		    	}
+        		    }
+            		        		    
             		// wrong credentials
             		if(!$authResult->isValid())
             		{
