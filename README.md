@@ -1,5 +1,5 @@
-pjroombooking
-=============
+Resource Management System
+==========================
 This project aims to provide a web application for resource reservation and room booking for small to mid-size organisations.
 It is a *ZEND2* application written in PHP and designed to run on a typical "LAMP"-Stack, making use of several third party components ([See LICENSE](LICENSE.md)).
 For authentication the application requires an LDAP server to be accessible.
